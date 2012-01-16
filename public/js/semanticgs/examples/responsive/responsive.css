@@ -1,0 +1,8 @@
+@import '../../stylesheets/reset.css';
+@import '../../stylesheets/demo.css';
+body{width:100%;*zoom:1;}body:before,body:after{content:"";display:table;}
+body:after{clear:both;}
+header{margin-bottom:1em;}
+section{display:inline;float:left;width:72.91666666666666%;margin:0 1.0416666666666665%;}
+aside{display:inline;float:left;width:22.916666666666664%;margin:0 1.0416666666666665%;}
+@media screen and (max-width: 720px){#maincolumn,#sidebar{display:inline;float:left;width:97.91666666666666%;margin:0 1.0416666666666665%;margin-bottom:1em;}}

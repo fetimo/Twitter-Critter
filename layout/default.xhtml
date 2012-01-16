@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+
+        <title>#{@title}</title>
+
+        #{css('aestheti')}
+        <link href='http://fonts.googleapis.com/css?family=The+Girl+Next+Door' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+    	<div id="content">
+	    	<header>
+	    		<h1><a href="/"><img src="/images/critter_logo.png" alt="Critter logo"></a></h1>
+	    		<section>
+					<h3 id="what-this">What is this?</h3>
+					<p id="description">Critter is an environment made entirely by Twitter users (that's you!). All you have to do is tweet with the hashtag <strong>#critter</strong> to make your own critter or enter your Twitter username <a href="/">in here</a>.</p>
+				</section>
+			</header>
+        	#{@content}
+        	#{js('jquery')}
+        </div>
+        <script>
+        	$(document).ready(function() {
+        		$('#what-this').click(function() {
+					$('#description').slideToggle(400);
+				});
+				//for ios
+				/*$('#what-this').bind("touchstart", function(e) {
+					$('#description').slideToggle(400);
+				});*/
+			});
+        	
+        	//google analytics
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-28366608-1']);
+			_gaq.push(['_trackPageview']);
+			
+			(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
+    </body>
+</html>

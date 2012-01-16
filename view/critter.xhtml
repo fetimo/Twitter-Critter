@@ -1,0 +1,40 @@
+<?r unless @critter.nil? ?>
+<script id="critter-json" type="application/json">#{@critter}</script>
+<aside class="right-box">
+	<?r if session[:access_token] and @username == session[:access_token].params[:screen_name] ?>
+		<h3>Friends</h3>
+		<?r session[:friends].each do |f| #from http://blog.xambr.com/2009/11/26/ramaze-partials-with-etanni/ ?>
+	    	#{ render_partial :friend, { :friend=>f } }
+		<?r end
+	end ?>
+</aside>
+<canvas id="your-critter" width="400" height="370"></canvas>
+<?r unless session[:access_token] ?>
+<form method="post" action="/evolve">
+	<button>Adopt &amp; Evolve</button>
+</form>
+<?r end ?>
+#{js('your-critter')}
+<!--#{js('easel/lib/easel')}
+#{js('critter')}-->
+#{js('jquery')}
+#{js('underscore')}
+#{js('backbone')}
+
+<script>
+var Critter = Backbone.Model.extend({
+	url: '../critters/#{@username}',
+	initialize: function () {
+		this.fetch();
+	}
+});
+
+var your_critter = new Critter();
+
+console.log(your_critter);
+
+</script>
+
+<?r else ?>
+<p>No Critter called #{@username} exists yet! You can <a href="/">give life to it though</a>.</p>
+<?r end ?>
