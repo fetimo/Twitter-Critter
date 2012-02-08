@@ -1,0 +1,123 @@
+var canvas = document.getElementById('your-critter'),
+	stage = new Stage(canvas), 
+	your_critter = new Critter();
+	
+(function getAttributes() {
+	/* there is a delay between getting the json file and backbone parsing it, we must wait a few milliseconds before proceeding */
+	if (_.isEmpty(your_critter.attributes)) {
+		_.delay(getAttributes, 100);
+	} else display();
+})();
+
+function display() {
+	critter_container = new Container();
+	var critter = your_critter.attributes;
+	for (var key in critter) {
+		if (critter.hasOwnProperty(key)) {
+			switch (key) {
+				case 'arms':
+					var arms = new Bitmap('../images/critter_assets/arms/'+ critter[key] + '.png');
+				break;
+				case 'eye_colour':
+					var eyes = new Container;
+					var socket = new Bitmap('../images/critter_assets/eyes/base_eyes.png');
+					var pupils = new Bitmap('../images/critter_assets/eyes/'+ critter[key] + '.png');
+					eyes.addChild(socket, pupils);
+				break;
+				case 'eye_shape':
+				break;
+				case 'neck':
+				break;
+				case 'legs':
+					var legs = new Bitmap('../images/critter_assets/legs/'+ critter[key] + '.png');
+				break;
+				case 'face':
+					var face = new Bitmap('../images/critter_assets/face/'+ critter[key] + '.png');
+				break;
+				case 'hands':
+					var hands = new Bitmap('../images/critter_assets/hands/'+ critter[key] + '.png');
+				break;
+				case 'hair_colour':
+					var hair_colour = new Bitmap('../images/critter_assets/hair_colour/'+ critter[key] + '.png');
+				break;
+				case 'hair_length':
+					var hair_length = new Bitmap('../images/critter_assets/hair_length/'+ critter[key] + '.png');
+				break;
+				case 'body_colour':
+					var body = new Bitmap('../images/critter_assets/bodies/'+ critter[key] + '.png');
+				break;
+				case 'body_weight':
+				break;
+				case 'body_tail':
+					if (critter[key] != 'none') {
+						var body_tail = new Bitmap('../images/critter_assets/body_tail/'+ critter[key] + '.png');
+					}
+				break;
+				case 'accessory':
+					if (critter[key] != 'none') {
+						var accessory = new Bitmap('../images/critter_assets/accessory/'+ critter[key] + '.png');
+					}
+				break;
+			}
+		}
+	}
+		
+	if (body.image.width > 0) eyes.x = body.image.width/2 - 35;
+	eyes.y = 60;
+	eyes.children[1].regY = 5;
+	
+	critter_container.addChild(body, eyes);
+	
+	stage.addChild(critter_container);
+	stage.update();
+	Ticker.addListener(window);
+	Ticker.setFPS(40);	
+}
+
+function animateEyes() {
+	var eyeAnimations = [0,1]; //array of available functions
+	var waitTime = Math.round(2000+(Math.random()*(8000-2000)));
+	
+	/* actual animations */
+	function leftToRight() {
+		var pupils = critter_container.children[1].children[1];
+		if (pupils.x < 3) {
+			pupils.x += Math.round(Math.random()*4);
+		} else { 
+			setTimeout(function() { pupils.x -= 3 }, waitTime);
+		}
+	}
+	
+	function upDown() {
+		var pupils = critter_container.children[1].children[1];
+		if (pupils.y < 3) {
+			pupils.y += Math.round(Math.random()*4);
+		} else { 
+			setTimeout(function() { pupils.y -= 3 }, waitTime);
+		}
+	}
+	
+	var animate = Math.round(Math.random()*eyeAnimations.length); //grab a random animation
+	//check which animation will be played
+	if (animate === 0 || animate === 1) {
+		leftToRight();
+	} else if (animate === 2) {
+		upDown();
+	}
+	//add a delay before doing again
+	//_.delay(animateEyes, wait);
+}
+
+var timer = 0;
+
+function tick() {
+	//if (timer > 5) {
+		if (Math.round(Math.random()*40) === 4) { //http://xkcd.com/221/
+			animateEyes();
+		}
+		timer = 0;
+	//} else {
+	//	timer += 2;
+	//}
+	stage.update();	
+}

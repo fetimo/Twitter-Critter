@@ -17,6 +17,13 @@ require File.join(File.dirname(__FILE__), 'critter_algorithm')
 class MainController < Controller
 	# the index action is called automatically when no other action is specified
 	
+	provide(:js, :type => 'application/javascript') do |action, value|
+		value
+	end
+	provide(:css, :type => 'text/css') do |action, value|
+		value
+	end
+		
 	layout do |path|
 		if path === 'critters'
 			:api
@@ -24,6 +31,8 @@ class MainController < Controller
 			:default
 		end
 	end
+	
+	set_layout 'index' => [:index]
 	
 	def index
 		@title = 'Critter Signup'
@@ -118,10 +127,18 @@ class MainController < Controller
 	
 	def critters(username)
 		response['Content-Type'] = 'application/json'
-
-		DB.fetch('SELECT critter FROM critters WHERE name = ? LIMIT 1', username) do |row|
-			@critter = row[:critter]
+		
+		if request.get? 
+			DB.fetch('SELECT critter FROM critters WHERE name = ? LIMIT 1', username) do |row|
+				@critter = row[:critter]
+			end
 		end
+		
+	#	if request.get? 
+     #  json = { 'data' => 'Service Two Data' }.to_json 
+     #elsif request.put? 
+     #  json = { 'result' => 'Service Two result' }.to_json 
+     #elsif request.delete?
 		
 		@critter
 	end
@@ -185,3 +202,10 @@ class MainController < Controller
 		return 'There is no \'notemplate.xhtml\' associated with this action.'
 	end
 end
+
+=begin
+Setting mime types
+
+https://github.com/rack/rack/blob/master/lib/rack/mime.rb#L21-39
+Rack::Mime::MIME_TYPES['.foo'] = 'foo/bar'
+=end

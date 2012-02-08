@@ -24,94 +24,9 @@ a {
 
 /* @end */
 
-body {
-	width: 100%;
-	font: 1em/1.5em "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;	
-	background: #f5f5f5 url('../images/bright_squares.png') repeat left top;
-
-}
-
 #content {
 	margin: 0 auto;
-	width: 70%;
-}
-
-p a {
-	text-decoration: underline;
-}
-
-form {
-	margin: 0 auto;
-	width: 100%;
-	height: 10%;
-	position: relative;
-}
-
-input {
-	padding: 16px;
-	width: 95%;
-	font: bold 5em/1.5em "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
-	border: 1px solid #333;
-	border-radius: 3px;
-	box-shadow: inset 1px 1px 5px #444;
-}
-
-section {
-    margin: 0 auto;
-    width: 400px;
-    position: relative;
-}
-
-header section {
-	float: right;
-	margin-right: 1.25%;
-	margin-bottom: 1.25%;
-	width: 43%;
-	background-color: rgba(255, 255, 255,0.65);
-	-webkit-border-bottom-right-radius: 5px;
-	-webkit-border-bottom-left-radius: 5px;
-	-moz-border-radius-bottomright: 5px;
-	-moz-border-radius-bottomleft: 5px;
-	border-bottom-right-radius: 5px;
-	border-bottom-left-radius: 5px;
-	padding: 1.5%;
-	font: 1em/1.9em 'The Girl Next Door', cursive;
-	box-shadow: 0px 3px 5px #444;
-}
-
-header h3, #what-this {
-	margin: 0;
-	cursor: pointer;
-}
-
-#description {
-	display: none;
-	margin-bottom: 0;
-}
-
-h1 {
-	display: inline-block;
-    color: rgb(237, 92, 45);
-    width: 30%;
-    padding-bottom: 2em;
-    //vertical-align: top;
-    //-webkit-transform: rotate(-8deg);
-    //-moz-transform: rotate(-8deg);
-    //-o-transform: rotate(-8deg);
-    -webkit-transition: .25s all ease-in-out;
-    -moz-transition: .25s all ease-in-out;
-    -o-transition: .25s all ease-in-out;
-    transition: .25s all ease-in-out;
-}
-
-h1:hover {
-	/*-webkit-transform: rotate(-8deg) scale(1.05);
-    -moz-transform: rotate(-8deg) scale(1.05);
-    -o-transform: rotate(-8deg) scale(1.05);*/
-    -webkit-transform: scale(1.05);
-    -moz-transform: scale(1.05);
-    -o-transform: scale(1.05);
-    transform: scale(1.05);
+	width: 50%;
 }
 
 canvas {
@@ -133,5 +48,202 @@ aside {
 
 aside h3 {
 	margin-top: 0;
-	font: 1.5em 'The Girl Next Door', cursive;
+	font: 1.5em 'Aller Light', cursive;
 }
+
+/* Joe's CSS */
+
+body {
+	background-color: #e9e5dc;
+	background-image: url(../images/paper.jpg);
+	font-family: "Aller Light", "Helvetica Neue, Helvetica, Ariel, sans-serif";
+	font-size: 14px;
+	line-height: 28px;
+}
+
+.clear {
+	clear: both;
+}
+
+header {
+	width: 320px;
+	margin: 50px auto 80px auto;
+}
+
+header img {
+	display: block;
+	width: 279px;
+	margin: 10px auto;
+}
+
+header p {
+	color: #46220e;
+	font-size: 250%;
+	line-height: 120%;
+	text-align: center;
+	text-shadow: #FFF 0px 1px 1px;
+}
+
+button {
+	cursor: pointer;
+}
+
+.main-cta {
+	height: 100px;
+	background-image: url(../images/wood.jpg);
+	background-position: top center;
+}
+
+.main-cta form {
+	width: 680px;
+	height: 100px;
+	margin: 0 auto;
+	padding: 20px;
+}
+
+.main-cta form input {
+	font-family: "Aller Light", "Helvetica Neue, Helvetica, Ariel, sans-serif";
+	font-size: 200%;
+	background-color: rgba(255,255,255,0.2);
+	color: #FFF;
+	border: none;
+	border-radius: 4px;
+	margin: 0 10px;
+	padding: 10px;
+	height: 40px;
+	width: 400px;
+	box-shadow: 0px 1px 0px rgba(255,255,255,0.8), inset 0px 2px 2px rgba(0,0,0,0.6);
+}
+
+.main-cta form button {
+	font-family: "Aller Light", "Helvetica Neue, Helvetica, Ariel, sans-serif";
+	font-weight: normal;
+	font-size: 160%;
+	background-image: linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
+	background-image: -o-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
+	background-image: -moz-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
+	background-image: -webkit-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
+	background-image: -ms-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0, rgb(143,56,55)),
+		color-stop(1, rgb(248,55,55))
+	);
+	color: #FFF;
+	text-shadow: rgba(0,0,0,0.4) 0px 1px 0px;
+	border: 1px solid #903737;
+	border-radius: 4px;
+	margin: 0 10px;
+	height: 60px;
+	width: 200px;
+	box-shadow: inset 0px 1px 0px rgba(255,255,255,0.4), 0px 1px 1px rgba(0,0,0,0.6);
+}
+
+::-webkit-input-placeholder, :-moz-placeholder, :-o-placeholder {
+    color:    #FFF;
+    text-shadow: rgba(0,0,0,0.4) 0px 1px 1px;
+}
+
+#topBar {
+	background-image: url(../images/topwood.jpg);
+	background-position: top center;
+	background-repeat: repeat-x;
+	height: 50px;
+	box-shadow: 0px 5px 5px rgba(0,0,0,0.3);
+	position: relative; //fixes box-shadow issue
+	z-index: 1;
+}
+
+#topBar img {
+	margin: auto;
+	display: block;
+}
+
+#content {
+	background-image: url(../images/environment.jpg);
+	height: 400px;
+	padding: 50px 0;
+	box-shadow: 0px 5px 5px rgba(0,0,0,0.3);
+	position: relative;
+	z-index: -1;
+	width: 100%;
+}
+
+.friends {
+	background-color: #fff;
+	border-radius: 4px;
+	box-shadow: 0px 3px 3px rgba(0,0,0,0.3);
+	width: 760px;
+	height: 50px;
+	padding: 20px;
+	margin: auto;
+	margin-top: -35px;
+}
+
+.friend {
+	margin: 0 10px;
+}
+
+.friend img {
+	width: 48px;
+	margin: 0 10px 0 0;
+	float: left;
+}
+
+.friend p {
+	width: 102px;
+	float: left;
+	margin-top: 0.6em;
+	line-height: 0.8em;
+}
+
+.friend p.username{
+	color: #9f682f;
+}
+
+footer {
+	width: 35%;
+	margin: 40px auto;
+	color: #a18b6b;
+	text-align: center;
+}
+
+footer p.copyright {
+	font-size: 80%;
+	line-height: 1.2em;
+}
+
+#carousel_inner {  
+	float: left; 
+	width: 720px;
+	overflow: hidden;
+}  
+  
+#carousel_inner ul {  
+	position: relative;  
+	left: 0;  
+	list-style-type: none;
+	width: 9999px; 
+}  
+  
+#carousel_inner ul li {  
+	float: left; 
+	width: 165px; 
+}  
+  
+#carousel_inner ul li img {  
+	.margin-bottom: -4px; /* IE is making a 4px gap below an image inside of an anchor (<a href...>) so this is to fix that */  
+	cursor: pointer;  
+	cursor: hand;  
+}
+
+#left_scroll, #right_scroll {  
+	float: left;  
+}
+
+#left_scroll img, #right_scroll img {  
+	cursor: pointer;  
+	cursor: hand;  
+}  

@@ -1,3 +1,6 @@
+var your_critter = new Critter();
+(function() {
+
 // Get a reference to the element.
 var elem = document.getElementById('your-critter');
 
@@ -21,11 +24,20 @@ if (elem && elem.getContext) {
 		    
 		    clearCanvas(context,elem);
 		      
-		    var c_json = document.getElementById('critter-json').text;
+		    //var c_json = document.getElementById('critter-json').text;
+		   
+		 	getAttributes();
 		    
-            var critter = JSON.parse(c_json);
-            ySpace = 39;
+			function getAttributes() {
+				if (_.isEmpty(your_critter.attributes)) {
+					_.delay(display, 10);
+				} else return true;
+			}
             
+            var critter = your_critter.attributes;
+                        
+            ySpace = 39;
+
             for (var key in critter) {
 				if (critter.hasOwnProperty(key)) {
 					switch (key) {
@@ -88,10 +100,16 @@ if (elem && elem.getContext) {
 								ySpace += 30;
 							}
 						break;
+						
 					}
 				}
 			}
 		}
 		display();
+		
 	}
 }
+	
+	//your_critter.save(); sends POST request to crittr.me/critters/username
+	//console.log(your_critter);
+})();

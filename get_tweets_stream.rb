@@ -36,8 +36,14 @@ RULES = {
 	:eye_colour => {
 		'd' => 'green',
 		'e' => 'blue',
-		'f' => 'red',
-		'i' => 'brown'
+		'f' => 'orange',
+		'i' => 'brown',
+		'Q' => 'yellow',
+		'R' => 'deep_blue',
+		'S' => 'small_black',
+		'T' => 'purple',
+		'U' => 'pink',
+		'V' => 'black'
 	},
 	:eye_shape => {
 		'g' => 'wide',
