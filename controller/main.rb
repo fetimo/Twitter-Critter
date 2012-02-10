@@ -128,6 +128,8 @@ class MainController < Controller
 	def critters(username)
 		response['Content-Type'] = 'application/json'
 		
+		username.delete!('@')
+		
 		if request.get? 
 			DB.fetch('SELECT critter FROM critters WHERE name = ? LIMIT 1', username) do |row|
 				@critter = row[:critter]

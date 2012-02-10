@@ -24,35 +24,6 @@ a {
 
 /* @end */
 
-#content {
-	margin: 0 auto;
-	width: 50%;
-}
-
-canvas {
-	border-radius: 1px;
-	background: rgba(255,255,255,0.5);
-	border: 1px dashed;
-	position: relative;
-	margin: 0 auto;
-	width: 400px;
-	padding: 10px;
-}
-
-aside {
-	float: right;
-	margin-right: 1.25%;
-	width: 20%;
-	min-width: 96px;
-}
-
-aside h3 {
-	margin-top: 0;
-	font: 1.5em 'Aller Light', cursive;
-}
-
-/* Joe's CSS */
-
 body {
 	background-color: #e9e5dc;
 	background-image: url(../images/paper.jpg);
@@ -152,7 +123,7 @@ button {
 	background-repeat: repeat-x;
 	height: 50px;
 	box-shadow: 0px 5px 5px rgba(0,0,0,0.3);
-	position: relative; //fixes box-shadow issue
+	position: relative; /* fixes box-shadow issue */
 	z-index: 1;
 }
 
@@ -164,11 +135,22 @@ button {
 #content {
 	background-image: url(../images/environment.jpg);
 	height: 400px;
+	width: 100%;
 	padding: 50px 0;
 	box-shadow: 0px 5px 5px rgba(0,0,0,0.3);
-	position: relative;
+	//position: relative;
 	z-index: -1;
-	width: 100%;
+}
+
+canvas {
+	background-color: #fff;
+	border-radius: 4px;
+	box-shadow: 0px 3px 3px rgba(0,0,0,0.3);
+	width: 400px;
+	padding: 1.45em;
+	position: relative;
+	display: block;
+	margin: 0 auto;
 }
 
 .friends {
@@ -179,7 +161,7 @@ button {
 	height: 50px;
 	padding: 20px;
 	margin: auto;
-	margin-top: -35px;
+	margin-top: -10px;
 }
 
 .friend {

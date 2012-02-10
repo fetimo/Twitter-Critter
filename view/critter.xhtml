@@ -1,49 +1,50 @@
 <div id="content">
 <?r unless @critter.nil? ?>
-	<canvas id="your-critter" width="400" height="370"></canvas>
-	<?r unless session[:access_token] ?>
-	<form method="post" action="/evolve">
-		<button>Adopt &amp; Evolve</button>
-	</form>
-	<?r end ?>
+	<canvas id="your-critter" width="400" height="360">Critter requires canvas, upgrade to a nice browser.</canvas>
 </div>
-	<?r if session[:access_token] and @username == session[:access_token].params[:screen_name] ?>
-	<section class="friends" id="carousel_container">	
-		<div id="left_scroll"><img src="../images/back.png" alt="Backwards"></div>
-		<div id="carousel_inner">  
-        	<ul> 
-				<?r session[:friends].each do |f| #from http://blog.xambr.com/2009/11/26/ramaze-partials-with-etanni/ ?>
-			    	#{ render_partial :friend, { :friend=>f } }
-				<?r end ?>
-			</ul>
-		</div>
-		<div id='right_scroll'><img src="../images/next.png" alt="Forwards"></div>
-	</section>
+<?r unless session[:access_token] ?>
+<form method="post" action="/evolve">
+	<button>Adopt &amp; Evolve</button>
+</form>
+<?r end ?>
+<?r if session[:access_token] and @username == session[:access_token].params[:screen_name] ?>
+<section class="friends">	
+	<?r if session[:friends].count > 4 ?>
+	<div id="left_scroll"><img src="../images/back.png" alt="Backwards"></div>
 	<?r end ?>
-<footer>
-	<p>Critter is a fun and simple way to bring your tweets to life.</p>
-	<p class="copyright">&copy; 2012 Tim Stone.  A degree project submitted in partial fulfilment of the requirements for the degree of Batchelor of the Arts in Interactive Media Production at Bournemouth University.</p>
-</footer>
-#{js('easel/lib/easel')}
-<!--#{js('critter')}-->
+	<div id="carousel_inner">  
+    	<ul> 
+			<?r session[:friends].sort.each do |f| #from http://blog.xambr.com/2009/11/26/ramaze-partials-with-etanni/ ?>
+		    	#{ render_partial :friend, { :friend=>f } }
+			<?r end ?>
+		</ul>
+	</div>
+	<?r if session[:friends].count > 4 ?>
+	<div id='right_scroll'><img src="../images/next.png" alt="Forwards"></div>
+	<?r end ?>
+</section>
+<?r end ?>
 <!-- load libraries -->
+<!--#{js('easel/lib/easel')}-->
 #{js('jquery')}
+#{js('jquery-ui')}
 #{js('underscore')}
 #{js('backbone')}
 #{js('carousel')}
+#{js('your-critter')}
 <script>
 /*
 	Setup Critter model, url defaults to the username requested
 */
 var Critter = Backbone.Model.extend({
-	url: '../critters/#{@username}',
-	initialize: function () {
-		this.fetch();
+	initialize: function (u) {
+		this.fetch({url:'../critters/'+u});
 	}
 });
+var your_critter = new Critter('#{@username}');
+build(your_critter);
 </script>
-#{js('your-critter')}
-
+#{js('friends')}
 <?r else ?>
 <p>No Critter called #{@username} exists yet! You can <a href="/">give life to it though</a>.</p>
 <?r end ?>
