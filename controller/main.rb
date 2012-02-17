@@ -160,7 +160,11 @@ class MainController < Controller
 	end
 		
 	def auth
-						
+				
+		if request.params['denied']
+			redirect MainController.r(:index)
+		end
+					
 		if session[:request_token].eql? nil then 
 			logger.error "request token was nil at auth stage"
 			redirect MainController.r(:evolve) 
