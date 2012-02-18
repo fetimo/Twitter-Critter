@@ -35,7 +35,6 @@ class MainController < Controller
 	set_layout 'index' => [:index]
 	
 	def index
-		@title = 'Critter Signup'
 	end
 	
 	def user		
@@ -89,13 +88,13 @@ class MainController < Controller
 	
 	def critter(username)
 		@username = username
-		@title = "Critter #{@username}"		
 		DB.fetch('SELECT critter FROM critters WHERE name = ? LIMIT 1', @username) do |row|
 			@critter = row[:critter]
 		end
 		
-		if session[:access_token] and username == session[:access_token].params[:screen_name] and session[:friends].nil?
+		if session[:access_token] and username == session[:access_token].params[:screen_name]
 			# only do this if you're on your own critter page due to limitations with the twitter api and friends
+			#TODO: Expire friends session after x time
 						
 			p = session[:access_token].params
 			
@@ -107,22 +106,38 @@ class MainController < Controller
 			end
 						
 			friends = Twitter.friend_ids
-						
-			@friends_w_critter = Array.new
 			
-			dataset = DB[:critters]
-			
-			friends.ids.each do |f|
-				friends_db = dataset.where(:uid => f).limit(1)
-				friend = friends_db.get(:name)
-				@friends_w_critter.push(friend)
+			if session[:friends].nil?			
+				friends_w_critter = Array.new
+				
+				dataset = DB[:critters]
+				
+				friends.ids.each do |f|
+					friends_db = dataset.where(:uid => f).limit(1)
+					friend = friends_db.get(:name)
+					friends_w_critter.push(friend)
+				end
+				
+				friends_w_critter.compact! #removes blank entries leaving us with just the friends
+				session[:friends] = friends_w_critter
 			end
 			
-			@friends_w_critter.compact! #removes blank entries leaving us with just the friends
-			
-			session[:friends] = @friends_w_critter
+			if session[:friends].count < 3
+				@suggested_friend = {
+					'name' =>	Twitter.user(friends.ids.sample)[:name],
+					'username' => Twitter.user(friends.ids.sample)[:screen_name]
+				}
+			end
+						
+			#session[:suggest_friend] = @suggested_friend		
 			
 		end
+	end
+	
+	def logout
+		session.delete(:friends)
+		session.delete(:access_token)
+		redirect MainController.r(:index)
 	end
 	
 	def critters(username)
@@ -166,7 +181,6 @@ class MainController < Controller
 		end
 					
 		if session[:request_token].eql? nil then 
-			logger.error "request token was nil at auth stage"
 			redirect MainController.r(:evolve) 
 		end
 		

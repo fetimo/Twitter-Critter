@@ -24,9 +24,9 @@ Ramaze::Cache.options.sequel = Ramaze::Cache::Sequel.using(
 )
 
 # Setup memcache
-Ramaze::Cache.options.session = Ramaze::Cache::MemCache.using(
-	:compression => true
-)
+#Ramaze::Cache.options.session = Ramaze::Cache::MemCache.using(
+#	:compression => true
+#)
 
 Rack::Mime::MIME_TYPES['.js'] = 'application/javascript'
 Rack::Mime::MIME_TYPES['.css'] = 'text/css'

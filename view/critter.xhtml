@@ -2,28 +2,33 @@
 <?r unless @critter.nil? ?>
 	<canvas id="your-critter" width="400" height="360">Critter requires canvas, upgrade to a nice browser.</canvas>
 </div>
-<?r unless session[:access_token] ?>
+	<?r unless session[:access_token] ?>
 <form method="post" action="/evolve">
 	<button>Adopt &amp; Evolve</button>
 </form>
-<?r end ?>
-<?r if session[:access_token] and @username == session[:access_token].params[:screen_name] ?>
-<section class="friends">	
-	<?r if session[:friends].count > 4 ?>
-	<div id="left_scroll"><img src="../images/back.png" alt="Backwards"></div>
 	<?r end ?>
+	<?r if session[:access_token] and @username == session[:access_token].params[:screen_name] ?>
+<section class="friends">	
+		<?r if session[:friends].count > 4 ?>
+	<div id="left_scroll"><img src="../images/back.png" alt="Backwards"></div>
+		<?r end ?>
 	<div id="carousel_inner">  
     	<ul> 
 			<?r session[:friends].sort.each do |f| #from http://blog.xambr.com/2009/11/26/ramaze-partials-with-etanni/ ?>
 		    	#{ render_partial :friend, { :friend=>f } }
 			<?r end ?>
+			<?r if @suggested_friend ?>
+				<p>Why not make a critter for <a href="/critter/#{@suggested_friend['username']}">#{@suggested_friend['name']}</a>?</p>
+			<?r end ?>
 		</ul>
 	</div>
-	<?r if session[:friends].count > 4 ?>
+		<?r if session[:friends].count > 4 ?>
 	<div id='right_scroll'><img src="../images/next.png" alt="Forwards"></div>
-	<?r end ?>
+		<?r end ?>
 </section>
-<?r end ?>
+
+<form action="/logout" method="post"><button>Logout</button></form>
+	<?r end ?>
 <!-- load libraries -->
 <!--#{js('easel/lib/easel')}-->
 #{js('jquery')}
