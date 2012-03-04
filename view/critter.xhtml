@@ -13,7 +13,7 @@
 		    	#{ render_partial :friend, { :friend=>f } }
 			<?r end ?>
 			<?r if @suggested_friend ?>
-				<p>Why not make a critter for <a href="/critter/#{@suggested_friend['username']}">#{@suggested_friend['name']}</a>?</p>
+				<p>You look a bit lonely,<br>why not make a Critter for <a href="/user/#{@suggested_friend['username']}">#{@suggested_friend['name']}</a>?</p>
 			<?r end ?>
 		</ul>
 	</div>
@@ -61,5 +61,5 @@ build(your_critter);
 </script>
 #{js('friends')}
 <?r else ?>
-<p>No Critter called #{@username} exists yet! You can <a href="/">give life to it though</a>.</p>
+<p>No Critter called #{@username} exists yet! You can <a href="/user/#{@username}">give life to it though</a>.</p>
 <?r end ?>

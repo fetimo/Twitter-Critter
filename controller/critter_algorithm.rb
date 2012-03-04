@@ -18,21 +18,21 @@ DB = Sequel.connect('mysql2://fetimocom1:iBMbSSIz@mysql.fetimo.com/twittercritte
 
 RULES = {
 	:arms => {
-		'a' => 'short',
+		'd' => 'short',
 		'b' => 'long',
 		'c' => 'hairy'
 	},
 	:eye_colour => {
-		'd' => 'green',
+		'a' => 'green',
 		'e' => 'blue',
-		'f' => 'orange',
+		'o' => 'orange',
 		'i' => 'brown',
-		'Q' => 'yellow',
-		'R' => 'deep_blue',
-		'S' => 'small_black',
-		'T' => 'purple',
-		'U' => 'pink',
-		'V' => 'black'
+		'u' => 'yellow',
+		'A' => 'deep_blue',
+		'E' => 'small_black',
+		'I' => 'purple',
+		'O' => 'pink',
+		'U' => 'black'
 	},
 	:eye_shape => {
 		'g' => 'wide',
@@ -46,7 +46,7 @@ RULES = {
 	},
 	:legs => {
 		'n' => 'long',
-		'o' => 'short',
+		'f' => 'short',
 		'p' => 'four'
 	},
 	:face => {
@@ -54,7 +54,7 @@ RULES = {
 		'r' => 'button nose',
 		's' => 'glasses',
 		't' => 'horns',
-		'u' => 'freckly'
+		'Q' => 'freckly'
 	},
 	:hands => {
 		'v' => 'paws',
@@ -62,7 +62,7 @@ RULES = {
 	},
 	:hair_colour => {
 		'y' => 'black',
-		'A' => 'pink',
+		'R' => 'pink',
 		'B' => 'red',
 		'D' => 'blond'
 	},
@@ -72,11 +72,11 @@ RULES = {
 	},
 	'x' => 'bow',
 	:body_colour => {
-		'E' => 'blue',
+		'S' => 'blue',
 		'F' => 'yellow',
 		'G' => 'pink',
 		'H' => 'red',
-		'I' => 'white',
+		'T' => 'white',
 		'J' => 'green'
 	},
 	:body_weight => {
@@ -88,7 +88,7 @@ RULES = {
 		'N' => 'thin tail',
 	},
 	:accessory => {
-		'O' => 'shell',
+		'V' => 'shell',
 		'P' => 'spiky'
 	}
 }

@@ -37,49 +37,53 @@ class MainController < Controller
 	def index
 	end
 	
-	def user		
+	def user(username = nil)
+		@user = ::User.new
 		if request.post?
-			@user = ::User.new
 			#gets username from posted query string, uses this to get tweet from timeline
 			@user[:username] = request[:username]
+		elsif request.get?
+			@user[:username] = username
+		else
+			redirect MainController.r(:index)
+		end
 
-			@user[:username].delete!('@') #removes @ in username		
-			
-			begin
-				@data = Twitter.user_timeline(@user[:username]).first.text
-				user_info = Twitter.users(@user[:username])
-				@uid = user_info[0].id
-			rescue
-				#useful for if user 404s or Twitter offline
-				redirect MainController.r(:critter, @user[:username])
-			end
-			
-			@default_critter = {
-				#default values
-				:location => 0,
-				:name => 'Steve',
-				:arms => 'medium',
-				:eye_colour => 'brown',
-				:eye_shape => 'normal',
-				:neck => 'medium',
-				:legs => 'medium',
-				:face => 'blank',
-				:hands => 'simple',
-				:hair_colour => 'brown',
-				:hair_length => 'medium',
-				:body_colour => 'black',
-				:body_weight => 'medium',
-				:body_tail => 'none',
-				:accessory => 'none',
-				:critter => '',
-				:uid => @uid
-			}
-			
-			generate = Critter.new(@data, @user[:username], @default_critter)
-			@critter = generate.critter
-									
+		@user[:username].delete!('@') #removes @ in username		
+		
+		begin
+			@data = Twitter.user_timeline(@user[:username]).first.text
+			user_info = Twitter.users(@user[:username])
+			@uid = user_info[0].id
+		rescue
+			#useful for if user 404s or Twitter offline
 			redirect MainController.r(:critter, @user[:username])
 		end
+		
+		@default_critter = {
+			#default values
+			:location => 0,
+			:name => 'Steve',
+			:arms => 'medium',
+			:eye_colour => 'purple',
+			:eye_shape => 'normal',
+			:neck => 'medium',
+			:legs => 'medium',
+			:face => 'blank',
+			:hands => 'simple',
+			:hair_colour => 'brown',
+			:hair_length => 'medium',
+			:body_colour => 'black',
+			:body_weight => 'medium',
+			:body_tail => 'none',
+			:accessory => 'none',
+			:critter => '',
+			:uid => @uid
+		}
+		
+		generate = Critter.new(@data, @user[:username], @default_critter)
+		@critter = generate.critter
+								
+		redirect MainController.r(:critter, @user[:username])
 	end
 	
 	def world
@@ -123,9 +127,10 @@ class MainController < Controller
 			end
 			
 			if session[:friends].count < 3
+				friend = Twitter.user(friends.ids.sample)
 				@suggested_friend = {
-					'name' =>	Twitter.user(friends.ids.sample)[:name],
-					'username' => Twitter.user(friends.ids.sample)[:screen_name]
+					'name' => friend[:name],
+					'username' => friend[:screen_name]
 				}
 			end			
 		end
