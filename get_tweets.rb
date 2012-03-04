@@ -19,10 +19,10 @@ require 'logger'
 DB = Sequel.connect('mysql2://fetimocom1:iBMbSSIz@mysql.fetimo.com/twittercritter')
 
 Twitter.configure do |config|
-	config.consumer_key = '3s7bWz9YWoXGyhg6lwVQsg'
-	config.consumer_secret = 'l8ZPe0N8ahMBKYZ8bhNNYnGjAybekHmlRDlYu466KM'
-	config.oauth_token = '158797209-LWClN8XcWLwvKp1Loe8i4lnPokPtNJVwECQ6RzAg'
-	config.oauth_token_secret = 'CoxCsHKxyrL73IlddyCrk6J5DirbEbRI3tkIPxqTU'
+	config.consumer_key = 'DQicogvXxpbW7oleCfV3Q'
+	config.consumer_secret = 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6oM'
+	config.oauth_token = '158797209-ovcnbKy1Zxl0uP0nWqqWVyUUYwbFWz963pz2r8'
+	config.oauth_token_secret = 'VvgzYzcarPl1H6gtwX4L1Qu7kLewYcT2cqp75hK7s'
 end
 
 RULES = {

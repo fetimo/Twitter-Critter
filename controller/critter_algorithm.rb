@@ -51,7 +51,7 @@ RULES = {
 	},
 	:face => {
 		'q' => 'big nose',
-		'r' => 'small nose',
+		'r' => 'button nose',
 		's' => 'glasses',
 		't' => 'horns',
 		'u' => 'freckly'

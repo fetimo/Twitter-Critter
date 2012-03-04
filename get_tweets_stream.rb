@@ -19,10 +19,10 @@ require 'logger'
 DB = Sequel.connect('mysql2://fetimocom1:iBMbSSIz@mysql.fetimo.com/twittercritter')
 
 TweetStream.configure do |config|
-	config.consumer_key = '3s7bWz9YWoXGyhg6lwVQsg'
-	config.consumer_secret = 'l8ZPe0N8ahMBKYZ8bhNNYnGjAybekHmlRDlYu466KM'
-	config.oauth_token = '158797209-jqDNaGC6yk4KlSe3mD9zsBjMPyc5iNreuCIuzU'
-	config.oauth_token_secret = '4wbnSvNxUwQKWpCXEGxQcK3TrDfTpo8oC5qMeiPedZo'
+	config.consumer_key = 'DQicogvXxpbW7oleCfV3Q'
+	config.consumer_secret = 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6oM'
+	config.oauth_token = '158797209-ovcnbKy1Zxl0uP0nWqqWVyUUYwbFWz963pz2r8'
+	config.oauth_token_secret = 'VvgzYzcarPl1H6gtwX4L1Qu7kLewYcT2cqp75hK7s'
 	config.auth_method = :oauth
 	config.parser = :yajl
 end
@@ -260,28 +260,32 @@ class Critter
 	end
 end
 
-begin	
+puts 'begin'
 	TweetStream::Client.new.track('#critter') do |result|
+		p result
 		Critter.new(result)
 	end
+
+=begin
+	
 rescue Errno::ENOENT
-	sleep(5)
 	$LOG.info "ENOENT error - attempting to retry"
+	sleep(5)
 	retry
 rescue Errno::ETIMEDOUT
-	sleep(5)
 	$LOG.info " Operation timed out - attempting to retry"
+	sleep(5)
 	retry
 rescue Errno::ECONNRESET
-	sleep(5)
 	$LOG.info "Connection reset by peer - attempting to retry"
+	sleep(5)
 	retry
 rescue # This rescues StandardError and its children
-	sleep(5)
 	$LOG.error "Somewhat bad exception #{$!.class} #{$!} happened - I'm giving up"
+	sleep(5)
 	raise
 rescue Exception
-	sleep(5)
 	$LOG.fatal "Really bad exception #{$!.class} #{$!} happened - I'm giving up"
+	sleep(5)
 	raise
-end
+=end

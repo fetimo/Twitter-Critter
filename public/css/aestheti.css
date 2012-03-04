@@ -1,16 +1,16 @@
 /* @group Reset */
-html, body, a, fieldset, div, section, form, label, legend, video {
-	margin:0;
-	padding:0;
-	border:0;
-	outline:0;
-	font-size:100%;
-	vertical-align:baseline;
-	background:transparent;
+html, body, a, fieldset, div, section, form, img, label, legend, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
 }
 
 body {
-	line-height:1;
+	line-height: 1;
 }
 
 :focus {
@@ -27,7 +27,7 @@ a {
 body {
 	background-color: #e9e5dc;
 	background-image: url(../images/paper.jpg);
-	font-family: "Aller Light", "Helvetica Neue, Helvetica, Ariel, sans-serif";
+	font-family: "Aller Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 14px;
 	line-height: 28px;
 }
@@ -73,7 +73,7 @@ button {
 }
 
 .main-cta form input {
-	font-family: "Aller Light", "Helvetica Neue, Helvetica, Ariel, sans-serif";
+	font-family: "Aller Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 200%;
 	background-color: rgba(255,255,255,0.2);
 	color: #FFF;
@@ -87,10 +87,9 @@ button {
 }
 
 .main-cta form button {
-	font-family: "Aller Light", "Helvetica Neue, Helvetica, Ariel, sans-serif";
+	font-family: "Aller Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-weight: normal;
 	font-size: 160%;
-	background-image: linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
 	background-image: -o-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
 	background-image: -moz-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
 	background-image: -webkit-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
@@ -102,6 +101,7 @@ button {
 		color-stop(0, rgb(143,56,55)),
 		color-stop(1, rgb(248,55,55))
 	);
+	background-image: linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
 	color: #FFF;
 	text-shadow: rgba(0,0,0,0.4) 0px 1px 0px;
 	border: 1px solid #903737;
@@ -113,7 +113,7 @@ button {
 }
 
 ::-webkit-input-placeholder, :-moz-placeholder, :-o-placeholder {
-    color:    #FFF;
+    color: #FFF;
     text-shadow: rgba(0,0,0,0.4) 0px 1px 1px;
 }
 
@@ -132,25 +132,57 @@ button {
 	display: block;
 }
 
+#topBar form {
+	float: right;
+	margin-top: -32px;
+}
+
+#topBar form button {
+	background-image: -o-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
+	background-image: -moz-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
+	background-image: -webkit-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
+	background-image: -ms-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0, rgb(143,56,55)),
+		color-stop(1, rgb(248,55,55))
+	);
+	background-image: linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
+	border: medium none currentColor;
+	border-radius: 3px;
+	box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.400), 0px 1px 1px rgba(0, 0, 0, 0.600);
+	color: #FFFFFF;
+	cursor: pointer;
+	margin-right: 1em;
+	padding: .5em;
+}
+
 #content {
 	background-image: url(../images/environment.jpg);
 	height: 400px;
 	width: 100%;
 	padding: 50px 0;
 	box-shadow: 0px 5px 5px rgba(0,0,0,0.3);
-	//position: relative;
 	z-index: -1;
 }
 
 canvas {
-	background-color: #fff;
+	//background-color: #fff;
 	border-radius: 4px;
-	box-shadow: 0px 3px 3px rgba(0,0,0,0.3);
-	width: 400px;
+	//box-shadow: 0px 3px 3px rgba(0,0,0,0.3);
+	width: 800px;
 	padding: 1.45em;
 	position: relative;
 	display: block;
 	margin: 0 auto;
+}
+
+#ecosystem {
+	width: 400px;
+	background-color: #fff;
+	box-shadow: 0px 3px 3px rgba(0,0,0,0.3);
 }
 
 .friends {
@@ -166,6 +198,7 @@ canvas {
 
 .friend {
 	margin: 0 10px;
+	list-style: none;
 }
 
 .friend img {
@@ -228,4 +261,4 @@ footer p.copyright {
 #left_scroll img, #right_scroll img {  
 	cursor: pointer;  
 	cursor: hand;  
-}  
+}

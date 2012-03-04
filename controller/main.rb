@@ -99,8 +99,8 @@ class MainController < Controller
 			p = session[:access_token].params
 			
 			Twitter.configure do |config|
-				config.consumer_key = '3s7bWz9YWoXGyhg6lwVQsg'
-				config.consumer_secret = 'l8ZPe0N8ahMBKYZ8bhNNYnGjAybekHmlRDlYu466KM'
+				config.consumer_key = 'DQicogvXxpbW7oleCfV3Q'
+				config.consumer_secret = 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
 				config.oauth_token = p[:oauth_token]
 				config.oauth_token_secret = p[:oauth_token_secret]
 			end
@@ -127,10 +127,7 @@ class MainController < Controller
 					'name' =>	Twitter.user(friends.ids.sample)[:name],
 					'username' => Twitter.user(friends.ids.sample)[:screen_name]
 				}
-			end
-						
-			#session[:suggest_friend] = @suggested_friend		
-			
+			end			
 		end
 	end
 	
@@ -163,8 +160,8 @@ class MainController < Controller
 	def evolve
 		
 		client = TwitterOAuth::Client.new(
-			:consumer_key => '3s7bWz9YWoXGyhg6lwVQsg',
-			:consumer_secret => 'l8ZPe0N8ahMBKYZ8bhNNYnGjAybekHmlRDlYu466KM'
+			:consumer_key => 'DQicogvXxpbW7oleCfV3Q',
+			:consumer_secret => 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
 		)
 				
 		request_token = client.request_token(:oauth_callback => 'http://crittr.me/auth')
@@ -185,8 +182,8 @@ class MainController < Controller
 		end
 		
 		client = TwitterOAuth::Client.new(
-			:consumer_key => '3s7bWz9YWoXGyhg6lwVQsg',
-			:consumer_secret => 'l8ZPe0N8ahMBKYZ8bhNNYnGjAybekHmlRDlYu466KM'
+			:consumer_key => 'DQicogvXxpbW7oleCfV3Q',
+			:consumer_secret => 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
 		)
 						
 		access_token = client.authorize(
@@ -198,16 +195,14 @@ class MainController < Controller
 		session[:access_token] = access_token
 				
 		p = access_token.params
-					
+			
 		if client.authorized?
-=begin
 			begin
 				@auth_users = DB[:authorised_users]
-				@auth_users.insert(p[:oauth_token], p[:oauth_token_secret], p[:user_id], p[:screen_name])
+				@auth_users.insert(p[:user_id], p[:screen_name])
 			rescue Sequel::DatabaseError
-				logger.error "database error (probably because user has already authorised Critter)"
+				#logger.error "database error (probably because user has already authorised Critter)"
 			end
-=end
 						
 			redirect MainController.r(:critter, p[:screen_name])
 		end

@@ -7,8 +7,6 @@
 var canvas,
 	stage;
 
-
-
 (function() {
 	canvas = document.getElementById('your-critter');
 	stage = new Stage(canvas);

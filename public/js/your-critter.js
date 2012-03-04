@@ -1,96 +1,125 @@
+// Get a reference to the element.
+var	critter_container = new Container();
+//var critter_container2 = new Container();
+
 function build(crit) {
-	// Get a reference to the element.
-	var elem = document.getElementById('your-critter');
 	// Always check for properties and methods, to make sure your code doesn't break in other browsers.
 	if (elem && elem.getContext) {
-		// Get the 2d context.
-		// Remember: you can only initialize one context per element.
+		// Remember: you can only initialize one context per element.	
 		var context = elem.getContext('2d');
-		if (context) {		
-			function display() {
-			    function clearCanvas(context, canvas) {
-					context.clearRect(0, 0, canvas.width, canvas.height);
-					var w = canvas.width;
-					canvas.width = 1;
-					canvas.width = w;
-					context.font         = '20px sans-serif';
-					context.textBaseline = 'top';
-					context.fillText  ('Your critter', 0, 10);
-				}
-			    
-			    clearCanvas(context,elem);		   
-			    	            
-	            var critter = crit.attributes;
-	            ySpace = 39;
-	            for (var key in critter) {
+		
+		if (context) {
+			function process() {
+				//var critter_container = new Container();
+				var critter = crit.attributes;
+				for (var key in critter) {
 					if (critter.hasOwnProperty(key)) {
 						switch (key) {
-							case 'name':
-								context.fillText (('is called ' + critter[key] + ','), 0, ySpace);
-								ySpace += 30;
-							break;
 							case 'arms':
-								context.fillText (('it has ' + critter[key] + ' arms'), 0, ySpace);
-								ySpace += 30;
+								var arms = new Bitmap('../images/critter_assets/arms/'+ critter[key] + '.png');
 							break;
 							case 'eye_colour':
-								var text = 'and ' + critter[key] + ' eyes';
-								context.fillText (text, 0, ySpace);
-								textWidth = context.measureText('sans-serif', 20, text);
-								ySpace += 30;
+								var eyes = new Container,
+									socket = new Bitmap('../images/critter_assets/eyes/base_eyes.png'),
+									pupils = new Bitmap('../images/critter_assets/eyes/'+ critter[key] + '.png');
+								eyes.addChild(socket, pupils);
 							break;
 							case 'eye_shape':
-								context.fillText ((' which are ' + critter[key] + ','), textWidth.width+50, 99);
 							break;
 							case 'neck':
-								context.fillText (('a ' + critter[key] + ' neck,'), 0, ySpace);
-								ySpace += 30;
 							break;
 							case 'legs':
-								context.fillText ((critter[key] + ' legs,'), 0, ySpace);
-								ySpace += 30;
+								var legs = new Bitmap('../images/critter_assets/legs/'+ critter[key] + '.png');
 							break;
 							case 'face':
-								critter[key] === 'horns' || critter[key] === 'glasses' || critter[key] === 'freckles' ? context.fillText (('a face with ' + critter[key] + ','), 0, ySpace) : context.fillText (('a face with a ' + critter[key] + ','), 0, ySpace);
-								ySpace += 30;
+								var face = new Bitmap('../images/critter_assets/face/'+ critter[key] + '.png');
 							break;
 							case 'hands':
-								critter[key] === 'simple' ? context.fillText (('hands which are ' + critter[key] + ','), 0, ySpace) : context.fillText (('hands with ' + critter[key] + ','), 0, ySpace);
-								ySpace += 30;
+								var hands = new Bitmap('../images/critter_assets/hands/'+ critter[key] + '.png');
 							break;
 							case 'hair_colour':
-								context.fillText ((critter[key] + ' hair'), 0, ySpace);
-								ySpace += 30;
+								var hair_colour = new Bitmap('../images/critter_assets/hair_colour/'+ critter[key] + '.png');
 							break;
 							case 'hair_length':
-								context.fillText (('which is ' + critter[key] + ','), 100, 249);
+								var hair_length = new Bitmap('../images/critter_assets/hair_length/'+ critter[key] + '.png');
 							break;
 							case 'body_colour':
-								context.fillText (('a ' + critter[key] + ' body'), 0, ySpace);
-								ySpace += 30;
+								var body = new Bitmap('../images/critter_assets/bodies/simple.png');
+								var colour = critter[key];
+								$(body.image).load(function() {
+									setColour(colour, body)
+								});
+								//body.image.onload = setColour(critter[key], body);
+								//body.image.id = 'body';
+								//body.onload = loadHandler();
 							break;
 							case 'body_weight':
-								context.fillText (('which is ' + critter[key]), 120, 279);
 							break;
 							case 'body_tail':
 								if (critter[key] != 'none') {
-									context.fillText (('with a ' + critter[key]), 0, ySpace);
-									ySpace += 30;
+									var body_tail = new Bitmap('../images/critter_assets/body_tail/'+ critter[key] + '.png');
 								}
 							break;
 							case 'accessory':
 								if (critter[key] != 'none') {
-									critter[key] == 'shell' ? context.fillText (('and a ' + critter[key] + '.'), 0, ySpace) : context.fillText (('which is ' + critter[key] + '.'), 0, ySpace);
-									ySpace += 30;
+									var accessory = new Bitmap('../images/critter_assets/accessory/'+ critter[key] + '.png');
 								}
 							break;
-							
 						}
 					}
 				}
+								
+				function setColour(colour, body) {
+					if (colour === 'green') {
+						var filter = new ColorFilter(.58,.79,.16,1); //divide rgb value by 255 to get these values
+					} else if (colour === 'blue') {
+						var filter = new ColorFilter(.18,.62,.84,1);
+					} else if (colour === 'black') {
+						var filter = new ColorFilter(.1,.1,.13,1);
+					} else if (colour === 'white') {
+						var filter = new ColorFilter(1,1,1,1);
+					} else if (colour === 'red') {
+						var filter = new ColorFilter(.65,.04,.04,1);
+					} else if (colour === 'pink') {
+						var filter = new ColorFilter(.79,.09,.44,1);
+					} else if (colour === 'yellow') {
+						var filter = new ColorFilter(.9,.72,.26,1);
+					} else {
+						var filter = new ColorFilter(1,1,1,1);
+					}
+					body.filters = [filter];
+					body.cache(0, 0, body.image.width, body.image.height);
+					
+					position();
+				}
+					
+				function position() {
+					//position elements
+					eyes.x = body.image.width/2 -35;
+					eyes.y = 60;
+					eyes.children[1].regY = 5;
+					if(critter_container.children.length > 0) {
+						//first container is populated so must have to fill second
+						critter_container2.addChild(body, eyes);
+						critter_container2.x = critter_container2.children.length*200;
+					} else critter_container.addChild(body, eyes);
+					
+					
+					if (stage.children.length === 0) {
+						stage.addChild(critter_container);
+						stage.update();
+					} else {
+						//their critter
+						friend_stage.addChild(critter_container2);
+						friend_stage.update();
+					}
+					
+					Ticker.addListener(window);
+					Ticker.setFPS(20);	
+				}
 			}
-			function getAttributes() {				
-				crit.get('uid') === undefined ? _.delay(getAttributes, 100) : display();
+			function getAttributes() {
+				crit.get('uid') === undefined ? _.delay(getAttributes, 100) : process();
 			}
 			getAttributes();
 		}

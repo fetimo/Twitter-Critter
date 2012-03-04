@@ -1,9 +1,21 @@
 $(document).ready(function() {
 	$('.friend').draggable({
-		revert: true
+		revert: true,
+		helper: 'clone',
+		containment: 'document',
+		zIndex:10000,
+        appendTo: "body"
 	});
-	$('#content').droppable({
+	$('#your-critter').droppable({
 		drop: function (event, ui) {
+			try {
+				//critter_container2 === undefined isn't working in Safari so resorted to try/catch
+				if (critter_container2) {
+					critter_container2.removeAllChildren();
+				}
+			} catch(e) {
+				critter_container2 = new Container();
+			}
 			var username = ui.draggable.context.id,
 				friend = new Critter(username);
 			build(friend);

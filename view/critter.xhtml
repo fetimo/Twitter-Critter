@@ -1,12 +1,7 @@
 <div id="content">
 <?r unless @critter.nil? ?>
-	<canvas id="your-critter" width="400" height="360">Critter requires canvas, upgrade to a nice browser.</canvas>
+	<canvas id="your-critter" class="critter_container" width="800" height="360">Critter requires canvas, upgrade to a nice browser.</canvas>
 </div>
-	<?r unless session[:access_token] ?>
-<form method="post" action="/evolve">
-	<button>Adopt &amp; Evolve</button>
-</form>
-	<?r end ?>
 	<?r if session[:access_token] and @username == session[:access_token].params[:screen_name] ?>
 <section class="friends">	
 		<?r if session[:friends].count > 4 ?>
@@ -26,27 +21,42 @@
 	<div id='right_scroll'><img src="../images/next.png" alt="Forwards"></div>
 		<?r end ?>
 </section>
-
-<form action="/logout" method="post"><button>Logout</button></form>
 	<?r end ?>
 <!-- load libraries -->
 <!--#{js('easel/lib/easel')}-->
 #{js('jquery')}
+#{js('easel/src/easeljs/utils/UID')}
+#{js('easel/src/easeljs/geom/Matrix2D')}
+#{js('easel/src/easeljs/geom/Rectangle')}
+#{js('easel/src/easeljs/events/MouseEvent')}
+#{js('easel/src/easeljs/utils/SpriteSheetUtils')}
+#{js('easel/src/easeljs/display/DisplayObject')}
+#{js('easel/src/easeljs/display/Container')}
+#{js('easel/src/easeljs/display/Stage')}
+#{js('easel/src/easeljs/display/Bitmap')}
+#{js('easel/src/easeljs/utils/Ticker')}
+#{js('easel/src/easeljs/filters/Filter')}
+#{js('easel/src/easeljs/filters/ColorFilter')}
 #{js('jquery-ui')}
 #{js('underscore')}
 #{js('backbone')}
 #{js('carousel')}
+#{js('animation')}
 #{js('your-critter')}
 <script>
 /*
 	Setup Critter model, url defaults to the username requested
 */
 var Critter = Backbone.Model.extend({
-	initialize: function (u) {
-		this.fetch({url:'../critters/'+u});
+	initialize: function (username) {
+		this.fetch({url:'../critters/'+username});
 	}
 });
-var your_critter = new Critter('#{@username}');
+var	your_critter = new Critter('#{@username}'),
+	elem = document.getElementById('your-critter'),
+	stage = new Stage(elem),
+	friend_stage = new Stage(elem);
+friend_stage.autoClear = false;
 build(your_critter);
 </script>
 #{js('friends')}
