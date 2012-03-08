@@ -91,6 +91,7 @@ class MainController < Controller
 	end
 	
 	def critter(username)
+		session.flush # experimental, remove asap
 		@username = username
 		DB.fetch('SELECT critter FROM critters WHERE name = ? LIMIT 1', @username) do |row|
 			@critter = row[:critter]

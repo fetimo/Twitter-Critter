@@ -2,7 +2,7 @@ function animateEyes(critter) {
 	var eyeAnimations = [0,1], //array of available functions
 		waitTime = Math.round(2000+(Math.random()*(8000-2000))),
 		pupils = critter.children[2].children[1];
-
+	
 	/* actual animations */
 	function leftToRight() {
 		if (pupils.x < 3) {
@@ -42,5 +42,5 @@ function tick() {
 	} catch(e) {
 	}
 	stage.update();
-	friend_stage.update();
+	try { friend_stage.update(); } catch(e) {}
 }

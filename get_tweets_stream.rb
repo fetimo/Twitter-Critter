@@ -19,10 +19,10 @@ require 'logger'
 DB = Sequel.connect('mysql2://fetimocom1:iBMbSSIz@mysql.fetimo.com/twittercritter')
 
 TweetStream.configure do |config|
-	config.consumer_key = 'DQicogvXxpbW7oleCfV3Q'
-	config.consumer_secret = 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6oM'
-	config.oauth_token = '158797209-ovcnbKy1Zxl0uP0nWqqWVyUUYwbFWz963pz2r8'
-	config.oauth_token_secret = 'VvgzYzcarPl1H6gtwX4L1Qu7kLewYcT2cqp75hK7s'
+	config.consumer_key = 'DQicogvXxpbW7oleCfV3QA'
+	config.consumer_secret = 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
+	config.oauth_token = '158797209-QC14At3SN9o2WzY8nrN99kwF1rD9cfe0SGHFyqpl'
+	config.oauth_token_secret = 'Ayeo4IHXTjGSc9o2dI9a4MJepIR1hd8gzVWOzqvQo'
 	config.auth_method = :oauth
 	config.parser = :yajl
 end
@@ -260,14 +260,10 @@ class Critter
 	end
 end
 
-puts 'begin'
+begin
 	TweetStream::Client.new.track('#critter') do |result|
-		p result
 		Critter.new(result)
 	end
-
-=begin
-	
 rescue Errno::ENOENT
 	$LOG.info "ENOENT error - attempting to retry"
 	sleep(5)
@@ -288,4 +284,4 @@ rescue Exception
 	$LOG.fatal "Really bad exception #{$!.class} #{$!} happened - I'm giving up"
 	sleep(5)
 	raise
-=end
+end

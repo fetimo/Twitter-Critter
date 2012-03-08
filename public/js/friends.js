@@ -12,6 +12,7 @@ $(document).ready(function() {
 				//critter_container2 === undefined isn't working in Safari so resorted to try/catch
 				if (critter_container2) {
 					critter_container2.removeAllChildren();
+					stage.update();
 				}
 			} catch(e) {
 				critter_container2 = new Container();

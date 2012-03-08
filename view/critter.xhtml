@@ -1,6 +1,6 @@
 <div id="content">
 <?r unless @critter.nil? ?>
-	<canvas id="your-critter" class="critter_container" width="800" height="360">Critter requires canvas, upgrade to a nice browser.</canvas>
+	<canvas id="your-critter" class="critter_container" width="1000" height="400">Critter requires canvas, upgrade to a nice browser.</canvas>
 </div>
 	<?r if session[:access_token] and @username == session[:access_token].params[:screen_name] ?>
 <section class="friends">	

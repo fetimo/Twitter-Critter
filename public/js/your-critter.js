@@ -43,6 +43,9 @@ function build(crit) {
 							break;
 							case 'legs':
 								var legs = new Bitmap('../images/critter_assets/legs/'+ critter[key] + '.png');
+								$(legs.image).load(function() {
+									//wait for image to load before continuing
+								});
 							break;
 							case 'face':
 								var face = new Bitmap('../images/critter_assets/face/'+ critter[key] + '.png');
@@ -96,13 +99,13 @@ function build(crit) {
 					} else if (colour === 'blue') {
 						filter = new ColorFilter(.18,.62,.84,1);
 					} else if (colour === 'black') {
-						filter = new ColorFilter(.1,.1,.13,1);
+						filter = new ColorFilter(.9,.619,.156,1);
 					} else if (colour === 'white') {
 						filter = new ColorFilter(.9,.9,.9,1);
 					} else if (colour === 'red') {
 						filter = new ColorFilter(.65,.04,.04,1);
 					} else if (colour === 'pink') {
-						filter = new ColorFilter(.79,.09,.44,1);
+						filter = new ColorFilter(.83,.556,.839,1);
 					} else if (colour === 'yellow') {
 						filter = new ColorFilter(.9,.72,.26,1);
 					} else {
@@ -161,6 +164,7 @@ function build(crit) {
 						}
 						critter_container2.x = 400;
 					} else {
+						critter_container.x = 30;
 						critter_container.addChild(legs, body, eyes, arms);
 						if (nose) {
 							critter_container.addChild(nose);
