@@ -1,6 +1,6 @@
 <div id="content">
 <?r unless @critter.nil? ?>
-	<canvas id="your-critter" class="critter_container" width="1000" height="400">Critter requires canvas, upgrade to a nice browser.</canvas>
+	<canvas id="your-critter" class="critter_container" width="1000" height="430">Critter requires canvas, upgrade to a nice browser.</canvas>
 </div>
 	<?r if session[:access_token] and @username == session[:access_token].params[:screen_name] ?>
 <section class="friends">	
@@ -23,18 +23,8 @@
 </section>
 	<?r end ?>
 <!-- load libraries -->
-<!--#{js('easel/lib/easel')}-->
 #{js('jquery')}
-#{js('easel/src/easeljs/utils/UID')}
-#{js('easel/src/easeljs/geom/Matrix2D')}
-#{js('easel/src/easeljs/geom/Rectangle')}
-#{js('easel/src/easeljs/events/MouseEvent')}
-#{js('easel/src/easeljs/utils/SpriteSheetUtils')}
-#{js('easel/src/easeljs/display/DisplayObject')}
-#{js('easel/src/easeljs/display/Container')}
-#{js('easel/src/easeljs/display/Stage')}
-#{js('easel/src/easeljs/display/Bitmap')}
-#{js('easel/src/easeljs/utils/Ticker')}
+#{js('easel/lib/easel')}
 #{js('easel/src/easeljs/filters/Filter')}
 #{js('easel/src/easeljs/filters/ColorFilter')}
 #{js('jquery-ui')}
@@ -49,7 +39,7 @@
 */
 var Critter = Backbone.Model.extend({
 	initialize: function (username) {
-		this.fetch({url:'../critters/'+username});
+		this.fetch({url:'../api/critters/'+username});
 	}
 });
 var	your_critter = new Critter('#{@username}'),

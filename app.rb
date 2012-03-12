@@ -4,7 +4,7 @@ require 'mysql2'
 
 DB = Sequel.connect('mysql2://fetimocom1:iBMbSSIz@mysql.fetimo.com/twittercritter')
 
-Ramaze.options.mode = :live
+Ramaze.options.mode = :dev
 Ramaze.options.app.name = 'crittr.me'
 Ramaze.options.session.key = 'crittr.me.sid'
 Ramaze.options.session.expires = (Time.now + 60 * 60) #1 hour

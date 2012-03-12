@@ -63,24 +63,23 @@ class MainController < Controller
 			#default values
 			:location => 0,
 			:name => 'Steve',
-			:arms => 'medium',
-			:eye_colour => 'purple',
-			:eye_shape => 'normal',
-			:neck => 'medium',
-			:legs => 'medium',
-			:face => 'blank',
-			:hands => 'simple',
-			:hair_colour => 'brown',
-			:hair_length => 'medium',
-			:body_colour => 'black',
-			:body_weight => 'medium',
-			:body_tail => 'none',
+			:arms => 'short',
+			:eye_colour => 'blue',
+			:nose => 'none',
+			:legs => 'short',
+			:ears => 'none',
+			:face => 'none',
+			:hands => 'none',
+			:body => 'plain',
+			:body_colour => 'orange',
+			:body_type => 'simple',
+			:mouth => 'plain',
 			:accessory => 'none',
 			:critter => '',
-			:uid => @uid
+			:uid => 0
 		}
 		
-		generate = Critter.new(@data, @user[:username], @default_critter)
+		generate = Critter.new(@data, @user[:username], @default_critter, @uid)
 		@critter = generate.critter
 								
 		redirect MainController.r(:critter, @user[:username])
@@ -91,7 +90,7 @@ class MainController < Controller
 	end
 	
 	def critter(username)
-		session.flush # experimental, remove asap
+		#session.flush # experimental, remove asap
 		@username = username
 		DB.fetch('SELECT critter FROM critters WHERE name = ? LIMIT 1', @username) do |row|
 			@critter = row[:critter]
@@ -143,26 +142,6 @@ class MainController < Controller
 		redirect MainController.r(:index)
 	end
 	
-	def critters(username)
-		response['Content-Type'] = 'application/json'
-		
-		username.delete!('@')
-		
-		if request.get? 
-			DB.fetch('SELECT critter FROM critters WHERE name = ? LIMIT 1', username) do |row|
-				@critter = row[:critter]
-			end
-		end
-		
-	#	if request.get? 
-     #  json = { 'data' => 'Service Two Data' }.to_json 
-     #elsif request.put? 
-     #  json = { 'result' => 'Service Two result' }.to_json 
-     #elsif request.delete?
-		
-		@critter
-	end
-		
 	def evolve
 		
 		client = TwitterOAuth::Client.new(

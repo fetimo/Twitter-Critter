@@ -63,8 +63,8 @@ RULES = {
 		'f' => 'short'
 	},
 	:face => {
-		'q' => 'big',
-		'r' => 'button'
+		'q' => 'big nose',
+		'r' => 'button nose'
 	},
 	:mouth => {
 		'g' => 'fangs',
@@ -139,6 +139,7 @@ class Critter
 	
 	def fetch_tweet(result)
 		tweet = {:username => String, :tweet => String, :geocode => Float, :id => 0, :uid => 0}
+		
 		tweet[:username] = result.user.screen_name
 		#remove hashtag
 		tweet[:tweet] = result.text.sub(/#critter/, '')
@@ -168,7 +169,6 @@ class Critter
 				end
 			end
 		end
-		p results
 		results
 	end
 	
@@ -236,9 +236,8 @@ class Critter
 		#Thread.new do
 			critters.insert(@@default_critter)
 		#end
-		
 		Thread.new do
-			if RUBY_PLATFORM === 'x86_64-darwin11.3.0' #checks if we're in dev (mac os x) or production
+			if RUBY_PLATFORM == 'x86_64-darwin11.3.0' #checks if we're in dev (mac os x) or production
 				latest = 'public/js/latest_critter.json'
 				File.open(latest, 'w') do |f|
 					f.write(critter)

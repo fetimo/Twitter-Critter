@@ -2,9 +2,6 @@
 
 =begin
 
-# TODO
-1. group letters of similar frequencies (e.g. vowels)
-
 - So we have characters that match the rules ok, but we need to break these up into body parts and the corresponding characters so :arms => 'a', 'b', 'c' and then count which is higher, a, b, or c and apply the highest one to the CRITTER hash. Need to only separate clashing values (e.g. colours) and one 'accessory' (e.g. horn)
 
 =end
@@ -14,13 +11,17 @@ require 'sequel'
 require 'mysql2'
 require 'yajl'
 
-DB = Sequel.connect('mysql2://fetimocom1:iBMbSSIz@mysql.fetimo.com/twittercritter')
-
 RULES = {
 	:arms => {
 		'd' => 'short',
-		'b' => 'long',
-		'c' => 'hairy'
+		'b' => 'long'
+	},
+	:ears => {
+		'c' => 'mouse',
+		's' => 'floppy'
+	},
+	:nose => {
+		'j' => 'button'
 	},
 	:eye_colour => {
 		'a' => 'green',
@@ -34,43 +35,22 @@ RULES = {
 		'O' => 'pink',
 		'U' => 'black'
 	},
-	:eye_shape => {
-		'g' => 'wide',
-		'h' => 'narrow'
-	},
-	:neck => {
-		'j' => 'long',
-		'k' => 'thin',
-		'l' => 'thick',
-		'm' => 'short'
-	},
 	:legs => {
 		'n' => 'long',
-		'f' => 'short',
-		'p' => 'four'
+		'f' => 'short'
 	},
 	:face => {
-		'q' => 'big nose',
-		'r' => 'button nose',
-		's' => 'glasses',
-		't' => 'horns',
-		'Q' => 'freckly'
+		'q' => 'big',
+		'r' => 'button'
+	},
+	:mouth => {
+		'g' => 'fangs',
+		'p' => 'plain'
 	},
 	:hands => {
 		'v' => 'paws',
 		'w' => 'claws'
 	},
-	:hair_colour => {
-		'y' => 'black',
-		'R' => 'pink',
-		'B' => 'red',
-		'D' => 'blond'
-	},
-	:hair_length => {
-		'z' => 'long',
-		'C' => 'short'
-	},
-	'x' => 'bow',
 	:body_colour => {
 		'S' => 'blue',
 		'F' => 'yellow',
@@ -79,17 +59,18 @@ RULES = {
 		'T' => 'white',
 		'J' => 'green'
 	},
-	:body_weight => {
-		'K' => 'fat',
-		'L' => 'thin'
+	:body_type => {
+		'L' => 'simple',
+		'y' => 'furry'
 	},
-	:body_tail => {
-		'M' => 'thick tail',
-		'N' => 'thin tail',
+	:body => {
+		'm' => 'plain',
+		'h' => 'spotty',
+		'k' => 'stripy'
 	},
 	:accessory => {
-		'V' => 'shell',
-		'P' => 'spiky'
+		'V' => 'horns',
+		'P' => 'tail'
 	}
 }
 
@@ -97,10 +78,10 @@ class Critter
 	
 	attr_accessor :critter
 	
-	def initialize(data, username, default_critter)
+	def initialize(data, username, default_critter, uid)
 		@default_critter = default_critter
 		@default_critter[:name] = username
-		#@default_critter[:uid] = 
+		@default_critter[:uid] = uid
 		letterFreq = get_letter_frequency(data, RULES)
 		highestValues = determine_highest_value(letterFreq)
 		attributes = determine_attributes(highestValues, RULES)
@@ -160,9 +141,9 @@ class Critter
 	end
 	
 	def match_attributes(attributes, hash, results = {})
-	#this method matches attributes, e.g. {"c"=>"hairy"} to the body part {:arms=>"hairy"}.
-	#It does this by iterating through RULES to see if any of the :Symbols include one of the
-	#keys present in attributes. If it does, it adds it to the hash called results.
+		#this method matches attributes, e.g. {"c"=>"hairy"} to the body part {:arms=>"hairy"}.
+		#It does this by iterating through RULES to see if any of the :Symbols include one of the
+		#keys present in attributes. If it does, it adds it to the hash called results.
 		hash.each do |key, value|
 			if key.is_a? Symbol #gets all Symbols in hash
 				attributes.each do |attr_key, attr_value| #goes through each item in attributes
@@ -181,7 +162,9 @@ class Critter
 	
 	def make_critter(matched, hash)
 		critter = hash.merge!(matched)
-		critters = DB[:critters]
+				
+		db = Sequel.connect('mysql2://fetimocom1:iBMbSSIz@mysql.fetimo.com/twittercritter')
+		critters = db[:critters]
 		
 		critter = Yajl::Encoder.encode(critter)
 		@default_critter[:critter] = critter
