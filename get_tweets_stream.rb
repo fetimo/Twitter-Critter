@@ -114,11 +114,11 @@ class Critter
 			:ears => 'none',
 			:face => 'none',
 			:hands => 'none',
+			:mouth => 'plain',
+			:accessory => 'none',
 			:body => 'plain',
 			:body_colour => 'orange',
 			:body_type => 'simple',
-			:mouth => 'plain',
-			:accessory => 'none',
 			:critter => '',
 			:uid => 0
 		}
@@ -255,7 +255,6 @@ end
 
 begin
 	TweetStream::Client.new.track('#awesome') do |result|
-		p result
 		Critter.new(result)
 	end
 rescue Errno::ENOENT

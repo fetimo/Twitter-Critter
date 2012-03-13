@@ -2,8 +2,14 @@
 <?r unless @critter.nil? ?>
 	<canvas id="your-critter" class="critter_container" width="1000" height="430">Critter requires canvas, upgrade to a nice browser.</canvas>
 </div>
-	<?r if session[:access_token] and @username == session[:access_token].params[:screen_name] ?>
-<section class="friends">	
+	<?r if session[:access_token] and @username === session[:access_token].params[:screen_name] ?>
+<div class="friends_tab">
+	<ul>
+		<li><a href="#">Fisticuffs</a></li>
+		<li><a href="#">Hug</a></li>
+	</ul>
+</div>
+<section class="friends">
 		<?r if session[:friends].count > 4 ?>
 	<div id="left_scroll"><img src="../images/back.png" alt="Backwards"></div>
 		<?r end ?>

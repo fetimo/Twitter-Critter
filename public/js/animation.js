@@ -2,7 +2,12 @@ function animateEyes(critter) {
 	var eyeAnimations = [0,1,3], //array of available functions
 		waitTime = Math.round(2000+(Math.random()*(8000-2000))),
 		pupils = critter.children[2].children[1];
-		
+	
+	/*
+	//this makes the small black eyes move, but it doesn't look very good
+	if (pupils.parent.name === 'small_black') {
+		pupils = pupils.parent;
+	}*/
 	/* actual animations */
 	function leftToRight() {
 		if (pupils.x < 3) {

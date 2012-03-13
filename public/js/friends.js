@@ -20,6 +20,12 @@ $(document).ready(function() {
 			var username = ui.draggable.context.id,
 				friend = new Critter(username);
 			build(friend);
+			
+			if($('.friends_tab').css('display') === 'none') { 
+				$('.friends_tab').slideDown('quick', function (){
+					$('.friends_tab').css('display','block');
+				});
+			}
 		}
 	});
 });

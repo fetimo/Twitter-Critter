@@ -17,22 +17,15 @@ require File.join(File.dirname(__FILE__), 'critter_algorithm')
 class MainController < Controller
 	# the index action is called automatically when no other action is specified
 	
-	provide(:js, :type => 'application/javascript') do |action, value|
-		value
-	end
-	provide(:css, :type => 'text/css') do |action, value|
-		value
-	end
-		
-	layout do |path|
-		if path === 'critters'
-			:api
-		else
-			:default
-		end
-	end
-	
-	set_layout 'index' => [:index]
+#	provide(:js, :type => 'application/javascript') do |action, value|
+#		value
+#	end
+#	provide(:css, :type => 'text/css') do |action, value|
+#		value
+#	end
+#	
+#	
+#	set_layout 'index' => [:index]
 	
 	def index
 	end
@@ -70,11 +63,11 @@ class MainController < Controller
 			:ears => 'none',
 			:face => 'none',
 			:hands => 'none',
+			:mouth => 'plain',
+			:accessory => 'none',
 			:body => 'plain',
 			:body_colour => 'orange',
 			:body_type => 'simple',
-			:mouth => 'plain',
-			:accessory => 'none',
 			:critter => '',
 			:uid => 0
 		}
@@ -97,6 +90,7 @@ class MainController < Controller
 		end
 		
 		if session[:access_token] and username == session[:access_token].params[:screen_name]
+			session.resid!
 			# only do this if you're on your own critter page due to limitations with the twitter api and friends
 			#TODO: Expire friends session after x time
 						
@@ -132,7 +126,7 @@ class MainController < Controller
 					'name' => friend[:name],
 					'username' => friend[:screen_name]
 				}
-			end			
+			end
 		end
 	end
 	
