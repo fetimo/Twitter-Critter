@@ -12,7 +12,7 @@ function build(crit) {
 				var critter = crit.attributes,
 					totalImages = 0,
 					loaded = 0;
-					
+				$('.loader').css('display', 'block');
 				function preload() {					
 					var args = arguments;
 					totalImages += args.length;
@@ -26,6 +26,7 @@ function build(crit) {
 					}
 					if (loaded < totalImages) {
 						_.delay(preload, 500);
+						
 					} else if (loaded === totalImages && colour !== undefined && body_shape !== undefined) {
 						setColour(colour, body_shape);
 					}
@@ -307,15 +308,15 @@ function build(crit) {
 					
 					if (stage.children.length === 0) {
 						stage.addChild(critter_container);
-						//stage.update();
 					} else {
 						//their critter
 						friend_stage.addChild(critter_container2);
-						//friend_stage.update();
 					}
-					
 					Ticker.addListener(window);
-					Ticker.setFPS(20);	
+					Ticker.setFPS(20);
+					$('.loader').fadeOut(100, function() {
+						$('.loader').css('display', 'none');
+					});
 				}
 			}
 			function getAttributes() {

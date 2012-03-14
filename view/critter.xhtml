@@ -1,5 +1,6 @@
 <div id="content">
 <?r unless @critter.nil? ?>
+	<img class="loader" src="../images/spinner.gif">
 	<canvas id="your-critter" class="critter_container" width="1000" height="430">Critter requires canvas, upgrade to a nice browser.</canvas>
 </div>
 	<?r if session[:access_token] and @username === session[:access_token].params[:screen_name] ?>

@@ -25,7 +25,11 @@ class MainController < Controller
 #	end
 #	
 #	
-#	set_layout 'index' => [:index]
+	layout do |path|
+		:default
+	end
+	
+	set_layout 'index' => [:index]
 	
 	def index
 	end
