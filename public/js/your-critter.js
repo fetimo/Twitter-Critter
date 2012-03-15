@@ -12,7 +12,17 @@ function build(crit) {
 				var critter = crit.attributes,
 					totalImages = 0,
 					loaded = 0;
+				
 				$('.loader').css('display', 'block');
+				
+				/*
+					This function takes an unlimited amount of arguments
+					and for each image it receives, adds it to the totalImages
+					variable and then adds an onload function.
+					
+					We then check if the loaded images is equal to the
+					number of images and continue processing the Critter.
+				*/
 				function preload() {					
 					var args = arguments;
 					totalImages += args.length;
@@ -256,6 +266,10 @@ function build(crit) {
 					} else if (accessory) {
 						accessory.x = 120; //-96
 						accessory.y = 60; //-100
+					}
+					if (ears) {
+						ears.x = -95;
+						ears.y = -102;
 					}
 					if (body.children[0].name === 'furry') {
 						// special positions for furry critters

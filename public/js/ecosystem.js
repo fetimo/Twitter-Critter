@@ -7,6 +7,7 @@ function build(crit) {
 		
 		if (context) {
 			function process() {
+				$('.loader').css('display', 'block');
 				var critter = crit.attributes,
 					totalImages = 0,
 					loaded = 0;
@@ -237,7 +238,9 @@ function build(crit) {
 					arms.x = -95;
 					arms.y = -100;
 					mouth.x = eyes.x - 10;
-					mouth.y = 220;
+					mouth.y = 230;
+					critter_name.x = 400;
+					critter_name.y = 100;
 					if (eyes.name === 'small_black') {
 						mouth.x += -30;
 						mouth.y += -20;
@@ -256,6 +259,10 @@ function build(crit) {
 						face.x = -eyes.x;
 						face.y = -80;
 						if (eyes.name === 'small_black') face.y = -130;
+					}
+					if (ears) {
+						ears.x = -95;
+						ears.y = -102;
 					}
 					if (accessory && accessory.name === 'horns') {
 						accessory.x = -100; //-96
@@ -297,6 +304,7 @@ function build(crit) {
 					critter_container.addChild(legs, body, eyes, arms);
 					if (face) critter_container.addChild(face);
 					if (nose) critter_container.addChild(nose);
+					if (mouth) critter_container.addChild(mouth);
 					if (ears) critter_container.addChild(ears);
 					if (accessory) critter_container.addChild(accessory);
 					
@@ -304,7 +312,10 @@ function build(crit) {
 					stage.update();
 					
 					Ticker.addListener(window);
-					Ticker.setFPS(20);	
+					Ticker.setFPS(20);
+					$('.loader').fadeOut(100, function() {
+						$('.loader').css('display', 'none');
+					});
 				}
 			}
 			function getAttributes() {

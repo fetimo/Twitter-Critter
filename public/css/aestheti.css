@@ -183,6 +183,10 @@ canvas {
 	margin: 0 auto;
 }
 
+.preloader_container {
+	height: 16px;
+}
+
 /*#ecosystem {
 	width: 400px;
 	background-color: #fff;
@@ -285,4 +289,10 @@ footer p.copyright {
 }
 .friends_tab li:first-child {
 	//border-right: 1px solid #333;
+}
+
+.loader {
+	display: block;
+	width: 16px;
+	margin: 0 auto;
 }
