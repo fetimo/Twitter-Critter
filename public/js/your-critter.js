@@ -12,9 +12,7 @@ function build(crit) {
 				var critter = crit.attributes,
 					totalImages = 0,
 					loaded = 0;
-				
-				$('.loader').css('display', 'block');
-				
+								
 				/*
 					This function takes an unlimited amount of arguments
 					and for each image it receives, adds it to the totalImages
@@ -80,6 +78,7 @@ function build(crit) {
 							break;
 							case 'legs':
 								var legs = new Bitmap('../images/critter_assets/legs/'+ critter[key] + '.png');
+								legs.name = critter[key];
 								preload(legs.image);
 							break;
 							case 'ears':
@@ -98,6 +97,7 @@ function build(crit) {
 							case 'mouth':
 								if (critter[key] === 'fangs') {
 									var mouth = new Bitmap('../images/critter_assets/mouths/'+ critter[key] + '.png');
+									mouth.name = critter[key];
 									preload(mouth.image);
 								} else {
 									var mouthG = new Graphics();
@@ -225,9 +225,8 @@ function build(crit) {
 					
 				function position() {				
 					//position elements
-					critter_container.y = 30;
 					if (eyes.name !== 'small_black') {
-						eyes.x = Math.round(body.children[0].image.width/4);
+						eyes.x = Math.round(body.children[0].image.width/5);
 						eyes.y = 60;
 						eyes.children[1].regY = 5;
 					} else {
@@ -239,16 +238,19 @@ function build(crit) {
 					legs.y = 230;
 					arms.x = -95;
 					arms.y = -100;
-					mouth.x = eyes.x - 10;
-					mouth.y = 220;
-					if (eyes.name === 'small_black') {
-						mouth.x += -30;
-						mouth.y += -20;
-					}
 					if (nose) {
 						nose.y = -70;
 						nose.x = -50;
 						if (eyes.name === 'small_black') nose.y = -10; 
+					}
+					mouth.x = Math.round(eyes.children[0].image.width/2) - 15;
+					mouth.y = 220;
+					if (mouth.name === 'fangs') {
+						mouth.y += 10;
+					}
+					if (eyes.name === 'small_black') {
+						mouth.x += -30;
+						mouth.y += -20;
 					}
 					if (pattern) {
 						pattern.x = -96;
@@ -256,16 +258,16 @@ function build(crit) {
 						body.addChild(pattern);
 					}
 					if (face) {
-						face.x = -eyes.x;
+						face.x = -Math.round(eyes.children[0].image.width/2);
 						face.y = -80;
 						if (eyes.name === 'small_black') face.y = -130;
 					}
 					if (accessory && accessory.name === 'horns') {
-						accessory.x = -100; //-96
-						accessory.y = -100; //-100
+						accessory.x = -100;
+						accessory.y = -100;
 					} else if (accessory) {
-						accessory.x = 120; //-96
-						accessory.y = 60; //-100
+						accessory.x = 120;
+						accessory.y = 60;
 					}
 					if (ears) {
 						ears.x = -95;
@@ -279,8 +281,9 @@ function build(crit) {
 							pattern.x = 0;
 							pattern.y = 0;
 						}
+						mouth.x = Math.round(eyes.children[0].image.width/2) + 20;
 						eyes.y = 80;
-						eyes.x -= 20;
+						//eyes.x -= 20;
 						legs.x += 30;
 						if (arms.image.name === 'long') {
 							arms.x += 50;
@@ -297,12 +300,19 @@ function build(crit) {
 							ears.y = -48;
 						}
 						if (face) {
-							face.x += eyes.x/2 + 18;
+							face.x = Math.round(-eyes.children[0].image.width/3);
+							face.y = -eyes.children[0].image.height + 25;
+						}
+						if (nose) {
+							nose.x = Math.round(-eyes.children[0].image.width/3);
+							nose.y = -eyes.children[0].image.height + 25;
+							if (eyes.name === 'small_black') nose.y = -10;
 						}
 					}
 					if (critter_container.children.length) {
 						//first container is populated so must have to fill second
 						critter_container2.y = 30;
+						if (legs.name === 'short') critter_container2.y = 90;
 						critter_container2.addChild(legs, body, eyes, arms);
 						if (face) critter_container2.addChild(face);
 						if (nose) critter_container2.addChild(nose);
@@ -311,7 +321,8 @@ function build(crit) {
 						if (accessory) critter_container2.addChild(accessory);
 						critter_container2.x = 400;
 					} else {
-						critter_container.x = 30;
+						critter_container.y = 30;
+						if (legs.name === 'short') critter_container2.y = 90;
 						critter_container.addChild(legs, body, eyes, arms);
 						if (face) critter_container.addChild(face);
 						if (nose) critter_container.addChild(nose);

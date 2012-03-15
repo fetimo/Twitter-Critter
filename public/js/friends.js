@@ -10,7 +10,7 @@ $(document).ready(function() {
 		drop: function (event, ui) {
 			try {
 				//critter_container2 === undefined isn't working in Safari so resorted to try/catch
-				if (critter_container2) {
+				if (critter_container2 !== undefined || critter_container2 !== null) {
 					critter_container2.removeAllChildren();
 					stage.update();
 				}
@@ -19,6 +19,7 @@ $(document).ready(function() {
 			}
 			var username = ui.draggable.context.id,
 				friend = new Critter(username);
+			$('.loader').css('display', 'block');
 			build(friend);
 			
 			if($('.friends_tab').css('display') === 'none') { 
