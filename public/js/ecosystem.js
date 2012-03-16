@@ -284,6 +284,7 @@ function build(crit) {
 						eyes.y = 80;
 						eyes.x -= 20;
 						legs.x += 30;
+						if (legs.name === 'short') legs.y += 60;
 						if (arms.image.name === 'long') {
 							arms.x += 50;
 							arms.y = -60;

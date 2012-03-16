@@ -1,5 +1,6 @@
 // Get a reference to the element.
 var	critter_container = new Container();
+var critter_container2 = undefined;
 
 function build(crit) {
 	// Always check for properties and methods, to make sure your code doesn't break in other browsers.
@@ -288,6 +289,7 @@ function build(crit) {
 						eyes.y = 80;
 						//eyes.x -= 20;
 						legs.x += 30;
+						if (legs.name === 'short') legs.y += 60;
 						if (arms.image.name === 'long') {
 							arms.x += 50;
 							arms.y = -60;
@@ -312,10 +314,20 @@ function build(crit) {
 							if (eyes.name === 'small_black') nose.y = -10;
 						}
 					}
-					if (critter_container.children.length) {
+					if (critter_container2 === undefined) {
+						critter_container.y = 30;
+						critter_container.x = 30;
+						if (legs.name === 'short') critter_container.y = 30;
+						critter_container.addChild(legs, body, eyes, arms);
+						if (face) critter_container.addChild(face);
+						if (nose) critter_container.addChild(nose);
+						if (mouth) critter_container.addChild(mouth);
+						if (ears) critter_container.addChild(ears);
+						if (accessory) critter_container.addChild(accessory);
+					} else {
 						//first container is populated so must have to fill second
 						critter_container2.y = 30;
-						if (legs.name === 'short') critter_container2.y = 90;
+						if (legs.name === 'short') critter_container2.y = 30;
 						critter_container2.addChild(legs, body, eyes, arms);
 						if (face) critter_container2.addChild(face);
 						if (nose) critter_container2.addChild(nose);
@@ -323,16 +335,6 @@ function build(crit) {
 						if (ears) critter_container2.addChild(ears);
 						if (accessory) critter_container2.addChild(accessory);
 						critter_container2.x = critter_container.x + 400;
-					} else {
-						critter_container.y = 30;
-						critter_container.x = 30;
-						if (legs.name === 'short') critter_container2.y = 90;
-						critter_container.addChild(legs, body, eyes, arms);
-						if (face) critter_container.addChild(face);
-						if (nose) critter_container.addChild(nose);
-						if (mouth) critter_container.addChild(mouth);
-						if (ears) critter_container.addChild(ears);
-						if (accessory) critter_container.addChild(accessory);
 					}
 					
 					if (stage.children.length === 0) {
