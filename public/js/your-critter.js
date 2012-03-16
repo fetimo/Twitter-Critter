@@ -163,7 +163,8 @@ function build(crit) {
 							filter = new ColorFilter(.9,.9,.9,1);
 						break;
 						case 'red':
-							filter = new ColorFilter(.65,.04,.04,1);
+							//filter = new ColorFilter(.65,.04,.04,1);
+							filter = new ColorFilter(.85,.33,.3,1);
 						break;
 						case 'pink':
 							filter = new ColorFilter(.83,.556,.839,1);
@@ -266,8 +267,10 @@ function build(crit) {
 						accessory.x = -100;
 						accessory.y = -100;
 					} else if (accessory) {
-						accessory.x = 120;
-						accessory.y = 60;
+						//accessory is tail
+						accessory.x = 46;
+						accessory.y = 180;
+						accessory.rotation = -36.2;
 					}
 					if (ears) {
 						ears.x = -95;
@@ -319,9 +322,10 @@ function build(crit) {
 						if (mouth) critter_container2.addChild(mouth);
 						if (ears) critter_container2.addChild(ears);
 						if (accessory) critter_container2.addChild(accessory);
-						critter_container2.x = 400;
+						critter_container2.x = critter_container.x + 400;
 					} else {
 						critter_container.y = 30;
+						critter_container.x = 30;
 						if (legs.name === 'short') critter_container2.y = 90;
 						critter_container.addChild(legs, body, eyes, arms);
 						if (face) critter_container.addChild(face);

@@ -265,11 +265,13 @@ function build(crit) {
 						ears.y = -102;
 					}
 					if (accessory && accessory.name === 'horns') {
-						accessory.x = -100; //-96
-						accessory.y = -100; //-100
+						accessory.x = -100;
+						accessory.y = -100;
 					} else if (accessory) {
-						accessory.x = 120; //-96
-						accessory.y = 60; //-100
+						//accessory is tail
+						accessory.x = 46;
+						accessory.y = 180;
+						accessory.rotation = -36.2;
 					}
 					if (body.children[0].name === 'furry') {
 						// special positions for furry critters
