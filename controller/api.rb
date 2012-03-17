@@ -26,6 +26,8 @@ class ApiController < Controller
 	end
 	
 	def battle
+		response['Content-Type'] = 'application/json'
+		
 		fight = DB[:battle_system]
 		uid = request.params['uid']
 		
@@ -63,16 +65,11 @@ class ApiController < Controller
 				#already battling, send message to user via flash
 				@response = "Error: You are already in a battle"
 			end
-		elsif request.put?
-			#update fight status
-			status = request.params['status']
-			
-			@response = fight.filter(:uid => uid).update(:status => status, :opponent => opponent, :weapon => weapon)
 		elsif request.delete?
 			#remove fight
 			@response = fight.filter(:uid => uid).delete
 		end
 		
-		Yajl::Encoder.encode(@response)
+		@response = Yajl::Encoder.encode(@response)
 	end
 end
