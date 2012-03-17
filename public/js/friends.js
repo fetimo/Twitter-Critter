@@ -46,6 +46,7 @@ $(document).ready(function() {
 			//success: success,
 			//dataType: dataType
 		});
+		$('.weapon_selection').css('display','none');
 	}
 	
 	$('.weapon_selection img').on('click', clickedWeapon);

@@ -81,10 +81,7 @@ class MainController < Controller
 		DB[:critters].filter(:uid => @uid).each do |row|
 			critter_exist += 1
 		end
-		
-		logger = Ramaze::Logger::RotatingInformer.new('./log')
-		logger.info critter_exist
-		
+				
 		if critter_exist === 0
 			generate = Critter.new(@data, @user[:username], @default_critter, @uid)
 			@critter = generate.critter

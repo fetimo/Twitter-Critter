@@ -380,7 +380,7 @@ function build(crit) {
 						friend_stage.addChild(critter_container2);
 					}
 					Ticker.addListener(window);
-					Ticker.setFPS(34);
+					Ticker.setFPS(20);
 					$('.loader').fadeOut(100, function() {
 						$('.loader').css('display', 'none');
 					});
