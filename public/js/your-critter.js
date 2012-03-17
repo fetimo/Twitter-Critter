@@ -1,6 +1,6 @@
 // Get a reference to the element.
-var	critter_container = new Container();
-var critter_container2 = undefined;
+var	critter_container = new Container(),
+	critter_container2;
 
 function build(crit) {
 	// Always check for properties and methods, to make sure your code doesn't break in other browsers.
@@ -35,7 +35,6 @@ function build(crit) {
 					}
 					if (loaded < totalImages) {
 						_.delay(preload, 500);
-						
 					} else if (loaded === totalImages && colour !== undefined && body_shape !== undefined) {
 						setColour(colour, body_shape);
 					}
@@ -49,8 +48,35 @@ function build(crit) {
 								arms.src = '../images/critter_assets/arms/'+ critter[key] + '.png';
 								
 								var arms = new Bitmap('../images/critter_assets/arms/'+ critter[key] + '.png');
-								arms.image.name = critter[key];
-								preload(arms.image);
+								var armG = new Graphics();
+								if (critter[key] === 'short') {									
+									armG.moveTo(0,0);
+									armG.lineTo(82.801,0);
+									armG.lineTo(82.801,92.375);
+									armG.lineTo(0,92.375);
+									armG.closePath();
+									armG.setStrokeStyle(1, 0, 0, 4);
+									armG.beginFill("#ffffff");
+									armG.moveTo(4.083,53.282);
+									armG.bezierCurveTo(-15.346,75.961,40.222,107.476,52.372,84.193);
+									armG.bezierCurveTo(52.385,84.169,81.1,30.538,81.1,30.538);
+									armG.bezierCurveTo(84.89,24.61,82.127,16.063,74.921,11.453);
+									armG.lineTo(65.382,2.87);
+									armG.bezierCurveTo(58.174,-1.745,49.255,-0.68,45.461,5.246);
+									armG.bezierCurveTo(45.461,5.246,4.198,53.147,4.083,53.282);
+									armG.closePath();
+									var arms = new Container();
+									var armL = new Shape(armG);
+									armL.x = 50;
+									armL.y = 300;
+									var armR = armL.clone();
+									armR.x += 400;
+									armR.rotation = 180;
+									armR.skewX = 180;
+									arms.addChild(armL, armR);
+								}
+								arms.name = critter[key];
+								//preload(arms.image);
 							break;
 							case 'eye_colour':
 								var eyes = new Container,
@@ -107,7 +133,6 @@ function build(crit) {
 									mouthG.lineTo(169,13);
 									mouthG.lineTo(0,13);
 									mouthG.closePath();
-									mouthG.setStrokeStyle(1, 0, 0, 4);
 									mouthG.setStrokeStyle(1, 0, 0, 4);
 									mouthG.beginFill("#000100");
 									mouthG.moveTo(0,0);
@@ -186,7 +211,7 @@ function build(crit) {
 					if (accessory && accessory.name === 'tail') accessory.filters = [filter];
 					if (ears) ears.filters = [filter];
 					body.cache(0, 0, body.image.width, body.image.height);
-					arms.cache(0, 0, arms.image.width, arms.image.height);
+					arms.cache(0, 0, 450, 400);
 					legs.cache(0, 0, legs.image.width, legs.image.height);
 					if (accessory && accessory.name === 'tail') accessory.cache(0, 0, accessory.image.width, accessory.image.height);
 					if (ears) ears.cache(0, 0, ears.image.width, ears.image.height);
@@ -221,7 +246,9 @@ function build(crit) {
 					var el2 = el.clone();
 					eyes.name !== 'small_black' ? el2.x += 105 : el2.x += 56;
 					eyes.addChild(el,el2);
-				
+					
+					var shadow = new Shadow('rgb('+r+','+g+','+b+')', 0 , 4 , 0);
+					arms.shadow = shadow;
 					position();
 				}
 					
@@ -287,13 +314,12 @@ function build(crit) {
 						}
 						mouth.x = Math.round(eyes.children[0].image.width/2) + 20;
 						eyes.y = 80;
-						//eyes.x -= 20;
 						legs.x += 30;
 						if (legs.name === 'short') legs.y += 60;
-						if (arms.image.name === 'long') {
+						if (arms.name === 'long') {
 							arms.x += 50;
 							arms.y = -60;
-						} else if (arms.image.name === 'short') {
+						} else if (arms.name === 'short') {
 							arms.x += 50;
 						}
 						if (accessory) {
@@ -317,7 +343,12 @@ function build(crit) {
 					if (critter_container2 === undefined) {
 						critter_container.y = 30;
 						critter_container.x = 30;
-						if (legs.name === 'short') critter_container.y = 30;
+						if (legs.name === 'short') {
+							critter_container.y = 30;
+							if (body.children[0].name === 'simple') {
+								critter_container.y += 65;
+							}
+						}
 						critter_container.addChild(legs, body, eyes, arms);
 						if (face) critter_container.addChild(face);
 						if (nose) critter_container.addChild(nose);
@@ -327,7 +358,12 @@ function build(crit) {
 					} else {
 						//first container is populated so must have to fill second
 						critter_container2.y = 30;
-						if (legs.name === 'short') critter_container2.y = 30;
+						if (legs.name === 'short') {
+							critter_container.y = 30;
+							if (body.children[0].name === 'simple') {
+								critter_container2.y += 65;
+							}
+						}
 						critter_container2.addChild(legs, body, eyes, arms);
 						if (face) critter_container2.addChild(face);
 						if (nose) critter_container2.addChild(nose);
@@ -337,14 +373,14 @@ function build(crit) {
 						critter_container2.x = critter_container.x + 400;
 					}
 					
-					if (stage.children.length === 0) {
+					if (!stage.children.length) {
 						stage.addChild(critter_container);
-					} else {
+					} else if (critter_container2) {
 						//their critter
 						friend_stage.addChild(critter_container2);
 					}
 					Ticker.addListener(window);
-					Ticker.setFPS(20);
+					Ticker.setFPS(34);
 					$('.loader').fadeOut(100, function() {
 						$('.loader').css('display', 'none');
 					});

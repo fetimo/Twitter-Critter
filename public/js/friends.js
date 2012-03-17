@@ -17,8 +17,8 @@ $(document).ready(function() {
 			} catch(e) {
 				critter_container2 = new Container();
 			}
-			var username = ui.draggable.context.id,
-				friend = new Critter(username);
+			var username = ui.draggable.context.id;
+			friend = new Critter(username);
 			$('.loader').css('display', 'block');
 			build(friend);
 			
@@ -29,4 +29,27 @@ $(document).ready(function() {
 			}
 		}
 	});
+	function notify(a) { 
+		console.log(a); 
+	}
+	
+	function prepFight() {
+		$('.weapon_selection').css('display', 'block');
+	}
+	
+	function clickedWeapon(e) {
+		weapon = e.currentTarget.name;
+		$.ajax({
+			type: 'POST',
+			url: 'http://crittr.me/api/battle?uid='+your_critter.get('uid')+'&opponent='+ friend.get('uid') +'&weapon=' + weapon,
+			//data: data,
+			//success: success,
+			//dataType: dataType
+		});
+	}
+	
+	$('.weapon_selection img').on('click', clickedWeapon);
+	
+	$('#fisticuffs').on('click', prepFight);
+	$('#hug').on('click', notify);
 });

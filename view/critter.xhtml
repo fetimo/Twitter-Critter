@@ -2,14 +2,21 @@
 <?r unless @critter.nil? ?>
 	<div class="preloader_container"><img class="loader" src="../images/spinner.gif"></div>
 	<canvas id="your-critter" class="critter_container" width="1000" height="430">Critter requires canvas, upgrade to a nice browser.</canvas>
+	<section class="weapon_selection">
+		<ul>
+			<li><img name="1" src="../images/weapons/1.png"></li>
+			<li><img name="2" src="../images/weapons/2.png"></li>
+			<li><img name="3" src="../images/weapons/3.png"></li>
+		</ul>
+	</section>
 </div>
 	<?r if session[:access_token] and @username === session[:access_token].params[:screen_name] ?>
-<!--<div class="friends_tab">
+<div class="friends_tab">
 	<ul>
-		<li><a href="#">Fisticuffs</a></li>
-		<li><a href="#">Hug</a></li>
+		<li><a id="fisticuffs" href="#">Fisticuffs</a></li>
+		<li><a id="hug" href="#">Hug</a></li>
 	</ul>
-</div>-->
+</div>
 <section class="friends">
 		<?r if session[:friends].count > 4 ?>
 	<div id="left_scroll"><img src="../images/back.png" alt="Backwards"></div>
@@ -28,15 +35,8 @@
 	<div id='right_scroll'><img src="../images/next.png" alt="Forwards"></div>
 		<?r end ?>
 </section>
-<!--<section class="weapon_selection">
-	<ul>
-		<li><img src="../images/weapons/1.png"></li>
-		<li><img src="../images/weapons/2.png"></li>
-		<li><img src="../images/weapons/3.png"></li>
-	</ul>
-</section>-->
 	<?r end ?>
-<!-- load libraries -->
+<!-- libraries -->
 #{js('jquery')}
 #{js('easel/lib/easel')}
 #{js('easel/src/easeljs/filters/Filter')}

@@ -1,5 +1,5 @@
 function animateEyes(critter) {
-	var eyeAnimations = [0,1,3], //array of available functions
+	var eyeAnimations = [0,1,2], //array of available functions
 		waitTime = Math.round(2000+(Math.random()*(8000-2000))),
 		pupils = critter.children[2].children[1];
 	
@@ -10,9 +10,9 @@ function animateEyes(critter) {
 	}*/
 	/* actual animations */
 	function leftToRight() {
-		if (pupils.x < 3) {
+		if (pupils.x <= 3) {
 			pupils.x += Math.round(Math.random()*3.5);
-		} else { 
+		} else {
 			setTimeout(function() { pupils.x -= 3 }, waitTime);
 		}
 	}
@@ -49,18 +49,25 @@ function animateEyes(critter) {
 	}
 }
 
+/*function animateArms(critter) {
+	arms = critter.children[3];
+	if (arms.children[0].skewX > -50) arms.children[0].skewX -= 2;
+	if (arms.children[0].skewY > -50) arms.children[0].skewY -= 2;
+	//if (arms.children[1].skewX < -40) arms.children[1].skewX -= 1;
+	//if (arms.children[1].skewY < -40) arms.children[1].skewY -= 1;
+
+	arms.cache(0, 0, 450, 400);
+}*/
+
 function tick() {
 	//only animate some of the time
 	if (Math.round(Math.random()*40) === 4) { //http://xkcd.com/221/
 		animateEyes(critter_container);
 	} 
-	try {
-		//critter_container2 === undefined isn't working in Safari so resorted to try/catch
-		if (critter_container2 && Math.round(Math.random()*40) === 4) {
-			animateEyes(critter_container2);
-		}
-	} catch(e) {
+	if (critter_container2 && Math.round(Math.random()*40) === 4) {
+		animateEyes(critter_container2);
 	}
+	//animateArms(critter_container);
 	stage.update();
-	try { friend_stage.update(); } catch(e) {}
+	if (critter_container2) friend_stage.update();
 }
