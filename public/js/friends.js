@@ -47,10 +47,14 @@ $(document).ready(function() {
 		}); 
 	}
 	
-	function prepFight(retaliate) {
+	function prepFight() {
 		$('.weapon_selection').css('display', 'block');
 		$('.weapon_selection img').on('click', clickedWeapon);
-		if (retaliate === 'retaliate') $('.weapon_selection img').on('click', clickedWeaponRetaliate);
+	}
+	
+	function prepFightRetaliate() {
+		$('.weapon_selection').css('display', 'block');
+		$('.weapon_selection img').on('click', clickedWeaponRetaliate);
 	}
 	
 	function success(response) {
@@ -106,6 +110,10 @@ $(document).ready(function() {
 	}
 	
 	$('#fisticuffs').on('click', prepFight);
-	if(_.isEmpty($('#flash_fisticuffs'))) $('#flash_fisticuffs a').on('click', prepFight('retaliate'));
+	
+	if ($('#flash_fisticuffs').length) {
+		$('#flash_fisticuffs a').on('click', prepFightRetaliate);
+	}
+	
 	$('#hug').on('click', stopFighting);
 });
