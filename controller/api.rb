@@ -62,6 +62,10 @@ class ApiController < Controller
 				rescue
 					response = "Error: failed to tweet from user"
 				end
+			elsif request.params['update'].to_i === 1
+				#update 
+				weapon = request.params['weapon']
+				response = fight.filter(:uid => uid).update(:status => 'ready', :weapon => weapon)
 			else
 				#start new fight
 				weapon = request.params['weapon']

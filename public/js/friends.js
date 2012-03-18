@@ -47,8 +47,10 @@ $(document).ready(function() {
 		}); 
 	}
 	
-	function prepFight() {
+	function prepFight(retaliate) {
 		$('.weapon_selection').css('display', 'block');
+		$('.weapon_selection img').on('click', clickedWeapon);
+		if (retaliate === 'retaliate') $('.weapon_selection img').on('click', clickedWeaponRetaliate);
 	}
 	
 	function success(response) {
@@ -88,16 +90,22 @@ $(document).ready(function() {
 		$.ajax({
 			type: 'POST',
 			url: 'http://crittr.me/api/battle?uid='+your_critter.get('uid')+'&opponent='+ friend.get('uid') +'&weapon=' + weapon,
-			//data: data,
-			success: success,
-			//dataType: dataType
+			success: success
 		});
 		$('.weapon_selection').css('display','none');
 	}
 	
-	$('.weapon_selection img').on('click', clickedWeapon);
+	function clickedWeaponRetaliate(e) {
+		weapon = e.currentTarget.name;
+		$.ajax({
+			type: 'POST',
+			url: 'http://crittr.me/api/battle?update=1&uid='+your_critter.get('uid')+'&weapon=' + weapon,
+			//success: success
+		});
+		$('.weapon_selection').css('display','none');
+	}
 	
 	$('#fisticuffs').on('click', prepFight);
-	$('#flash_fisticuffs a').on('click', prepFight);
+	if(_.isEmpty($('#flash_fisticuffs'))) $('#flash_fisticuffs a').on('click', prepFight('retaliate'));
 	$('#hug').on('click', stopFighting);
 });
