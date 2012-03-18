@@ -20,8 +20,10 @@ class ApiController < Controller
 			DB.fetch('SELECT critter FROM critters WHERE name = ? LIMIT 1', username) do |row|
 				@response = row[:critter]
 			end
+		elsif request.delete?
+			DB[:critters].filter(:uid => uid).delete
+			@response = 'Critter has been deleted'
 		end
-				
 		@response
 	end
 	
@@ -33,43 +35,52 @@ class ApiController < Controller
 		
 		if request.get? 
 			#get fight details of requested critter
-			@response = fight.filter(:uid => uid.to_i).first
+			response = fight.filter(:uid => uid.to_i).first
+			
 		elsif request.post?
-			#start new fight
 			opponent = request.params['opponent']
-			weapon = request.params['weapon']						
+			
+			p = session[:access_token].params
+									
+			Twitter.configure do |config|
+				config.consumer_key = 'DQicogvXxpbW7oleCfV3Q'
+				config.consumer_secret = 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
+				config.oauth_token = p[:oauth_token]
+				config.oauth_token_secret = p[:oauth_token_secret]
+			end
+			
 			begin
-				fight.insert(:uid => uid, :status => 'waiting', :opponent => opponent, :weapon => weapon)
-								
-				p = session[:access_token].params
-								
-				Twitter.configure do |config|
-					config.consumer_key = 'DQicogvXxpbW7oleCfV3Q'
-					config.consumer_secret = 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
-					config.oauth_token = p[:oauth_token]
-					config.oauth_token_secret = p[:oauth_token_secret]
-				end
-								
-				begin
-					opponent_name = Twitter.user(opponent.to_i).screen_name
-				rescue
-					@response = "Error: failed to set Twitter opponent name"
-				end
-								
-				begin
-					Twitter.update("@#{opponent_name} I'm battling my Critter against yours, go to http://crittr.me/critter/#{opponent_name} to retaliate!")
-				rescue
-					@response = "Error: failed to update Twitter status"
-				end
+				opponent_name = Twitter.user(opponent.to_i).screen_name
 			rescue
-				#already battling, send message to user via flash
-				@response = "Error: You are already in a battle"
+				response = "Error: failed to set Twitter opponent name"
+			end
+			
+			if request.params['approve_tweet'].to_i === 1
+				response = "@#{opponent_name} I'm battling my Critter against yours, go to http://crittr.me/critter/#{opponent_name} to retaliate!"
+				begin
+					Twitter.update(request.params['message'])
+				rescue
+					response = "Error: failed to tweet from user"
+				end
+			else
+				#start new fight
+				weapon = request.params['weapon']
+				
+				begin
+					fight.insert(:uid => uid, :status => 'waiting', :opponent => opponent, :weapon => weapon)
+													
+					response = "@#{opponent_name} I'm battling my Critter against yours, go to http://crittr.me/critter/#{opponent_name} to retaliate!"
+				rescue
+					#already battling, send message to user via flash
+					response = "Error: You are already in a battle"
+				end
 			end
 		elsif request.delete?
 			#remove fight
-			@response = fight.filter(:uid => uid).delete
+			response = fight.filter(:uid => uid).delete
 		end
 		
-		@response = Yajl::Encoder.encode(@response)
+		message = {"response" => response}
+		@response = Yajl::Encoder.encode(message)
 	end
 end

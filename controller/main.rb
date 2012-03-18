@@ -25,6 +25,8 @@ class MainController < Controller
 #	end
 #	
 #	
+	helper :flash
+	
 	layout do |path|
 		:default
 	end
@@ -81,7 +83,9 @@ class MainController < Controller
 		DB[:critters].filter(:uid => @uid).each do |row|
 			critter_exist += 1
 		end
-				
+		
+		sleep 1 #allow for db to be queried
+		
 		if critter_exist === 0
 			generate = Critter.new(@data, @user[:username], @default_critter, @uid)
 			@critter = generate.critter
@@ -101,7 +105,7 @@ class MainController < Controller
 		DB.fetch('SELECT critter FROM critters WHERE name = ? LIMIT 1', @username) do |row|
 			@critter = row[:critter]
 		end
-		
+
 		if session[:access_token] and username == session[:access_token].params[:screen_name]
 			session.resid!
 			# only do this if you're on your own critter page due to limitations with the twitter api and friends
@@ -115,7 +119,7 @@ class MainController < Controller
 				config.oauth_token = p[:oauth_token]
 				config.oauth_token_secret = p[:oauth_token_secret]
 			end
-						
+			
 			friends = Twitter.friend_ids
 			
 			if session[:friends].nil?			
