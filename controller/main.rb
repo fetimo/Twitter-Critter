@@ -136,6 +136,39 @@ class MainController < Controller
 				friends_w_critter.compact! #removes blank entries leaving us with just the friends
 				session[:friends] = friends_w_critter
 			end
+						
+			fight = DB[:battle_system]
+			you = fight.where(:uid => p[:user_id]).first
+			if !you[:weapon]
+				opponent = Twitter.user(you[:opponent]).screen_name
+				
+				flash['fisticuffs'] = "#{opponent} has started fisticuffs with you! <a>Arm yourself by clicking here.</a>"
+			end
+			if you and you[:status] === 'ready'
+				#if in battle
+				opponent = fight.where(:uid => you[:opponent]).first
+				if opponent[:status] === 'ready'
+					weapon = you[:weapon]
+					opp_weapon = opponent[:weapon]
+					@result = ''
+					
+					if weapon === opp_weapon
+						@result = 'draw'
+					elsif weapon === 1 and opp_weapon === 2
+						@result = 'win'
+					elsif weapon === 2 and opp_weapon === 1
+						@result = 'lose'
+					elsif weapon === 3 and opp_weapon === 1
+						@result = 'win'
+					elsif weapon === 1 and opp_weapon === 3
+						@result = 'lose'
+					elsif weapon === 2 and opp_weapon === 3
+						@result = 'win'
+					elsif weapon === 3 and opp_weapon === 2
+						@result = 'lose'
+					end
+				end
+			end
 			
 			if session[:friends].count < 3
 				friend = Twitter.user(friends.ids.sample)

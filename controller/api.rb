@@ -67,7 +67,8 @@ class ApiController < Controller
 				weapon = request.params['weapon']
 				
 				begin
-					fight.insert(:uid => uid, :status => 'waiting', :opponent => opponent, :weapon => weapon)
+					fight.insert(:uid => uid, :status => 'ready', :opponent => opponent, :weapon => weapon)
+					fight.insert(:uid => opponent, :status => 'waiting', :opponent => uid)
 													
 					response = "@#{opponent_name} I'm battling my Critter against yours, go to http://crittr.me/critter/#{opponent_name} to retaliate!"
 				rescue

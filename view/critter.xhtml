@@ -1,6 +1,7 @@
 <div id="content">
 <?r unless @critter.nil? ?>
 	#{flashbox}
+	<?r if @result ?> #{@result} <?r end ?>
 	<div class="preloader_container"><img class="loader" src="../images/spinner.gif"></div>
 	<canvas id="your-critter" class="critter_container" width="1000" height="430">Critter requires canvas, upgrade to a nice browser.</canvas>
 	<section class="weapon_selection">
@@ -64,7 +65,12 @@ var	your_critter = new Critter('#{@username}'),
 	friend_stage = new Stage(elem);
 friend_stage.autoClear = false;
 build(your_critter);
-
+if (document.getElementById('flash_fisticuffs')) {
+	var str = document.getElementById('flash_fisticuffs').innerHTML;
+	var strings = str.split(' ');
+	var friend = new Critter (strings[0]);
+	//critter_container2 = new Container();
+}
 
 /* ==========================================================
  * bootstrap-alert.js v2.0.2

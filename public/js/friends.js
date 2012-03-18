@@ -29,6 +29,7 @@ $(document).ready(function() {
 			}
 		}
 	});
+	
 	function stopFighting(a) { 
 		$.ajax({
 			type: 'DELETE',
@@ -71,7 +72,7 @@ $(document).ready(function() {
 	}
 	
 	function tweeted() {
-		
+		//confirm tweet sent
 	}
 	
 	function sendTweet() {
@@ -97,5 +98,6 @@ $(document).ready(function() {
 	$('.weapon_selection img').on('click', clickedWeapon);
 	
 	$('#fisticuffs').on('click', prepFight);
+	$('#flash_fisticuffs a').on('click', prepFight);
 	$('#hug').on('click', stopFighting);
 });
