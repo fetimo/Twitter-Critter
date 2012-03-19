@@ -33,6 +33,12 @@ class MainController < Controller
 	
 	set_layout 'index' => [:index]
 	
+	trait :flashbox => "<div class='alert alert-info fade in %key'><a class='close' data-dismiss='alert'>&times;</a><p><strong>%key</strong> %value</p></div>"
+	
+	def show_flashbox
+    	flashbox
+    end
+	
 	def index
 	end
 	
@@ -142,7 +148,7 @@ class MainController < Controller
 			if you
 				if you[:weapon] === nil
 					opponent = Twitter.user(you[:opponent]).screen_name
-					flash['fisticuffs'] = "#{opponent} has started fisticuffs with you! <a>Arm yourself by clicking here.</a>"
+					flash[:Fisticuffs] = "#{opponent} has started fisticuffs with you! <a>Arm yourself by clicking here.</a>"
 				end
 				if you[:status] === 'ready'
 					#if in battle
@@ -151,22 +157,24 @@ class MainController < Controller
 						weapon = you[:weapon]
 						opp_weapon = opponent[:weapon]
 						@result = ''
+						flash[:Fisticuffs] = 'Result is in, you '
 						
 						if weapon === opp_weapon
-							@result = 'draw'
+							flash[:Fisticuffs] << 'draw'
 						elsif weapon === 1 and opp_weapon === 2
-							@result = 'win'
+							flash[:Fisticuffs] << 'win'
 						elsif weapon === 2 and opp_weapon === 1
-							@result = 'lose'
+							flash[:Fisticuffs] << 'lose'
 						elsif weapon === 3 and opp_weapon === 1
-							@result = 'win'
+							flash[:Fisticuffs] << 'win'
 						elsif weapon === 1 and opp_weapon === 3
-							@result = 'lose'
+							flash[:Fisticuffs] << 'lose'
 						elsif weapon === 2 and opp_weapon === 3
-							@result = 'win'
+							flash[:Fisticuffs] << 'win'
 						elsif weapon === 3 and opp_weapon === 2
-							@result = 'lose'
+							flash[:Fisticuffs] << 'lose'
 						end
+						flash[:Fisticuffs] << '! Now Hug to make up, no hard feelings, eh?' 
 					end
 				end
 			end

@@ -30,6 +30,14 @@ $(document).ready(function() {
 		}
 	});
 	
+	function sendTweet() {
+		$.ajax({
+			type: 'POST',
+			url: 'http://crittr.me/api/battle?uid='+your_critter.get('uid')+'&opponent='+ friend.get('uid')+'&approve_tweet=1',
+			//success: tweeted
+		});
+	}
+	
 	function stopFighting(a) { 
 		$.ajax({
 			type: 'DELETE',
@@ -59,11 +67,11 @@ $(document).ready(function() {
 	
 	function success(response) {
 		var alert = document.createElement('div');
-		var root = document.getElementById('content');		
+		var root = document.getElementById('content');	
 		if (response.response.substring(0,5) !== 'Error') {
 			//not an error, can show tweet related things
 			alert.className = 'alert alert-info fade in';
-			alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Is it ok if I tweet them this message to let them know you\'re fighting them? "' + response.response + '"</p><p><a id="tweet" class="btn btn-info" href="#">Tweet</a><a class="btn close_btn" href="#">No, thanks</a></p>';
+			alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Is it ok if I tweet them this message to let them know you\'re fighting them? "' + response.response + '"</p><p><a class="btn btn-info" href="#"><span id="tweet">Tweet</span></a><a class="btn close_btn" href="#">No, thanks</a></p>';
 		} else {
 			//there be errors
 			alert.className = 'alert alert-error';
@@ -71,22 +79,14 @@ $(document).ready(function() {
 		}
 		root.appendChild(alert);
 		$(".alert").alert();
-		$('#tweet').on('click', sendTweet);
 		$('.close_btn').on('click', function() {
 			$(".alert").alert('close');
 		});
+		$('#tweet').on('click', sendTweet);
 	}
 	
 	function tweeted() {
 		//confirm tweet sent
-	}
-	
-	function sendTweet() {
-		$.ajax({
-			type: 'POST',
-			url: 'http://crittr.me/api/battle?uid='+your_critter.get('uid')+'&opponent='+ friend.get('uid')+'&approve_tweet=1',
-			success: tweeted
-		});
 	}
 	
 	function clickedWeapon(e) {
@@ -111,8 +111,10 @@ $(document).ready(function() {
 	
 	$('#fisticuffs').on('click', prepFight);
 	
-	if ($('#flash_fisticuffs').length) {
-		$('#flash_fisticuffs a').on('click', prepFightRetaliate);
+	console.log($('.Fisticuffs').length);
+	
+	if ($('.Fisticuffs').length) {
+		$('.Fisticuffs a').on('click', prepFightRetaliate);
 	}
 	
 	$('#hug').on('click', stopFighting);

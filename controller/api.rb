@@ -58,7 +58,9 @@ class ApiController < Controller
 			if request.params['approve_tweet'].to_i === 1
 				response = "@#{opponent_name} I'm battling my Critter against yours, go to http://crittr.me/critter/#{opponent_name} to retaliate!"
 				begin
-					Twitter.update(request.params['message'])
+					Twitter.update(response)
+				rescue Twitter::Error => e
+					response = e.message
 				rescue
 					response = "Error: failed to tweet from user"
 				end
@@ -71,10 +73,16 @@ class ApiController < Controller
 				weapon = request.params['weapon']
 				
 				begin
-					fight.insert(:uid => uid, :status => 'ready', :opponent => opponent, :weapon => weapon)
-					fight.insert(:uid => opponent, :status => 'waiting', :opponent => uid)
-													
-					response = "@#{opponent_name} I'm battling my Critter against yours, go to http://crittr.me/critter/#{opponent_name} to retaliate!"
+					check_opp = fight.filter(:uid => opponent).first
+					
+					if check_opp === nil
+							
+						fight.insert(:uid => uid, :status => 'ready', :opponent => opponent, :weapon => weapon)
+						fight.insert(:uid => opponent, :status => 'waiting', :opponent => uid)
+														
+						response = "@#{opponent_name} I'm battling my Critter against yours, go to http://crittr.me/critter/#{opponent_name} to retaliate!"
+					else 
+						response = 'Opponent is already in a battle'
 				rescue
 					#already battling, send message to user via flash
 					response = "Error: You are already in a battle"

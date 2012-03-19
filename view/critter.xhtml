@@ -1,7 +1,7 @@
 <div id="content">
 <?r unless @critter.nil? ?>
 	#{flashbox}
-	<?r if @result ?> #{@result} <?r end ?>
+	<?r flash.delete(:Fisticuffs) ?>
 	<div class="preloader_container"><img class="loader" src="../images/spinner.gif"></div>
 	<canvas id="your-critter" class="critter_container" width="1000" height="430">Critter requires canvas, upgrade to a nice browser.</canvas>
 	<section class="weapon_selection">
