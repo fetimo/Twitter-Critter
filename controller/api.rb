@@ -60,7 +60,7 @@ class ApiController < Controller
 				begin
 					Twitter.update(response)
 				rescue Twitter::Error => e
-					response = e.message
+					response = "Error: " << e.message
 				rescue
 					response = "Error: failed to tweet from user"
 				end
@@ -82,7 +82,8 @@ class ApiController < Controller
 														
 						response = "@#{opponent_name} I'm battling my Critter against yours, go to http://crittr.me/critter/#{opponent_name} to retaliate!"
 					else 
-						response = 'Opponent is already in a battle'
+						response = "Error: Opponent is already in a battle"
+					end
 				rescue
 					#already battling, send message to user via flash
 					response = "Error: You are already in a battle"
