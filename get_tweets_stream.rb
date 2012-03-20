@@ -105,7 +105,6 @@ class Critter
 				
 		@@default_critter = {
 			#default values
-			:location => 0,
 			:name => 'Steve',
 			:arms => 'short',
 			:eye_colour => 'blue',
@@ -254,7 +253,7 @@ class Critter
 end
 
 begin
-	TweetStream::Client.new.track('#awesome') do |result|
+	TweetStream::Client.new.track('#meetdraw','#meetdraw13') do |result|
 		Critter.new(result)
 	end
 rescue Errno::ENOENT

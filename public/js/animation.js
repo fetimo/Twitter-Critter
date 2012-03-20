@@ -64,10 +64,12 @@ function tick() {
 	if (Math.round(Math.random()*40) === 4) { //http://xkcd.com/221/
 		animateEyes(critter_container);
 	} 
-	if (critter_container2 && Math.round(Math.random()*40) === 4) {
-		animateEyes(critter_container2);
-	}
+	try {
+		if (critter_container2 && Math.round(Math.random()*40) === 4) {
+			animateEyes(critter_container2);
+		}
+		friend_stage.update();
+	} catch(e) {}
 	//animateArms(critter_container);
 	stage.update();
-	if (critter_container2) friend_stage.update();
 }

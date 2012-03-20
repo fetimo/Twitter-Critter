@@ -66,7 +66,6 @@ class MainController < Controller
 		
 		@default_critter = {
 			#default values
-			:location => 0,
 			:name => 'Steve',
 			:arms => 'short',
 			:eye_colour => 'blue',
@@ -101,8 +100,8 @@ class MainController < Controller
 		end			
 	end
 	
-	def world
-		@title = 'Welcome to the world'
+	def meetdraw
+		#@title = 'Welcome to Meetdraw'
 	end
 	
 	def critter(username)

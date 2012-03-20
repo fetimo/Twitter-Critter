@@ -110,9 +110,7 @@ $(document).ready(function() {
 	}
 	
 	$('#fisticuffs').on('click', prepFight);
-	
-	console.log($('.Fisticuffs').length);
-	
+		
 	if ($('.Fisticuffs').length) {
 		$('.Fisticuffs a').on('click', prepFightRetaliate);
 	}

@@ -98,8 +98,10 @@ class ApiController < Controller
 			begin
 				you = fight.filter(:uid => uid).first
 				opp = you[:opponent]
-				fight.where(:uid => opp).delete
-				response = fight.filter(:uid => uid).delete
+				DB.transaction do
+					fight.where(:uid => opp).delete
+					response = fight.filter(:uid => uid).delete
+				end
 			rescue => e
 				response = "Error: Unable to hug"
 				message = e.message
