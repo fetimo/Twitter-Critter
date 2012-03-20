@@ -153,28 +153,30 @@ class MainController < Controller
 				if you[:status] === 'ready'
 					#if in battle
 					opponent = fight.where(:uid => you[:opponent]).first
-					if opponent[:status] === 'ready'
-						weapon = you[:weapon]
-						opp_weapon = opponent[:weapon]
-						@result = ''
-						flash[:Fisticuffs] = 'Result is in, you '
-						
-						if weapon === opp_weapon
-							flash[:Fisticuffs] << 'draw'
-						elsif weapon === 1 and opp_weapon === 2
-							flash[:Fisticuffs] << 'win'
-						elsif weapon === 2 and opp_weapon === 1
-							flash[:Fisticuffs] << 'lose'
-						elsif weapon === 3 and opp_weapon === 1
-							flash[:Fisticuffs] << 'win'
-						elsif weapon === 1 and opp_weapon === 3
-							flash[:Fisticuffs] << 'lose'
-						elsif weapon === 2 and opp_weapon === 3
-							flash[:Fisticuffs] << 'win'
-						elsif weapon === 3 and opp_weapon === 2
-							flash[:Fisticuffs] << 'lose'
+					if opponent
+						if opponent[:status] === 'ready'
+							weapon = you[:weapon]
+							opp_weapon = opponent[:weapon]
+							@result = ''
+							flash[:Fisticuffs] = 'Result is in, you '
+							
+							if weapon === opp_weapon
+								flash[:Fisticuffs] << 'draw'
+							elsif weapon === 1 and opp_weapon === 2
+								flash[:Fisticuffs] << 'win'
+							elsif weapon === 2 and opp_weapon === 1
+								flash[:Fisticuffs] << 'lose'
+							elsif weapon === 3 and opp_weapon === 1
+								flash[:Fisticuffs] << 'win'
+							elsif weapon === 1 and opp_weapon === 3
+								flash[:Fisticuffs] << 'lose'
+							elsif weapon === 2 and opp_weapon === 3
+								flash[:Fisticuffs] << 'win'
+							elsif weapon === 3 and opp_weapon === 2
+								flash[:Fisticuffs] << 'lose'
+							end
+							flash[:Fisticuffs] << '! Now Hug to make up, no hard feelings, eh?' 
 						end
-						flash[:Fisticuffs] << '! Now Hug to make up, no hard feelings, eh?' 
 					end
 				end
 			end

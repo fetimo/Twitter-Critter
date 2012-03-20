@@ -51,8 +51,9 @@ class ApiController < Controller
 			
 			begin
 				opponent_name = Twitter.user(opponent.to_i).screen_name
-			rescue
-				response = "Error: failed to set Twitter opponent name"
+			rescue => e
+				response = "Error: failed to set Twitter opponent name" 
+				message = e.message
 			end
 			
 			if request.params['approve_tweet'].to_i === 1
@@ -61,8 +62,9 @@ class ApiController < Controller
 					Twitter.update(response)
 				rescue Twitter::Error => e
 					response = "Error: " << e.message
-				rescue
+				rescue => e
 					response = "Error: failed to tweet from user"
+					message = e.message
 				end
 			elsif request.params['update'].to_i === 1
 				#update 
@@ -84,17 +86,27 @@ class ApiController < Controller
 					else 
 						response = "Error: Opponent is already in a battle"
 					end
-				rescue
+				rescue => e
 					#already battling, send message to user via flash
 					response = "Error: You are already in a battle"
+					message = e.message
 				end
 			end
 		elsif request.delete?
 			#remove fight
-			response = fight.filter(:uid => uid).delete
+			#if opponent's opponent is you then delete their fight too to avoid broken fights
+			begin
+				you = fight.filter(:uid => uid).first
+				opp = you[:opponent]
+				fight.where(:uid => opp).delete
+				response = fight.filter(:uid => uid).delete
+			rescue => e
+				response = "Error: Unable to hug"
+				message = e.message
+			end
 		end
 		
-		message = {"response" => response}
+		message = {"response" => response, "detail" => message}
 		@response = Yajl::Encoder.encode(message)
 	end
 end
