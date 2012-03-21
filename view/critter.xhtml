@@ -3,7 +3,7 @@
 <?r unless @critter.nil? ?>
 	<?r #flash.delete(:Fisticuffs) ?>
 	<div class="preloader_container"><img class="loader" src="../images/spinner.gif"></div>
-	<canvas id="your-critter" class="critter_container" width="1000" height="430">Critter requires canvas, upgrade to a nice browser.</canvas>
+	<canvas id="your-critter" class="critter_container" width="1000" height="500">Critter requires canvas, upgrade to a nice browser.</canvas>
 	<section class="weapon_selection">
 		<ul>
 			<li><img name="3" src="../images/weapons/1.png">Rock</li>
@@ -79,110 +79,15 @@ var Critter = Backbone.Model.extend({
 var	your_critter = new Critter('#{@username}'),
 	elem = document.getElementById('your-critter'),
 	stage = new Stage(elem),
-	friend_stage = new Stage(elem);
+	friend_stage = new Stage(elem),
+	critter_container = new Container();
 friend_stage.autoClear = false;
-build(your_critter);
+var critter = build(your_critter, stage, critter_container);
 if (document.getElementById('flash_fisticuffs')) {
-	var str = document.getElementById('flash_fisticuffs').innerHTML;
-	var strings = str.split(' ');
-	var friend = new Critter (strings[0]);
-	//critter_container2 = new Container();
+	var str = document.getElementById('flash_fisticuffs').innerHTML,
+		strings = str.split(' '),
+		friend = new Critter (strings[0]);
 }
-
-/* ==========================================================
- * bootstrap-alert.js v2.0.2
- * http://twitter.github.com/bootstrap/javascript.html#alerts
- * ==========================================================
- * Copyright 2012 Twitter, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ========================================================== */
-
-
-!function( $ ){
-
-  "use strict"
-
- /* ALERT CLASS DEFINITION
-  * ====================== */
-
-  var dismiss = '[data-dismiss="alert"]'
-    , Alert = function ( el ) {
-        $(el).on('click', dismiss, this.close)
-      }
-
-  Alert.prototype = {
-
-    constructor: Alert
-
-  , close: function ( e ) {
-      var $this = $(this)
-        , selector = $this.attr('data-target')
-        , $parent
-
-      if (!selector) {
-        selector = $this.attr('href')
-        selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7
-      }
-
-      $parent = $(selector)
-      $parent.trigger('close')
-
-      e && e.preventDefault()
-
-      $parent.length || ($parent = $this.hasClass('alert') ? $this : $this.parent())
-
-      $parent
-        .trigger('close')
-        .removeClass('in')
-
-      function removeElement() {
-        $parent
-          .trigger('closed')
-          .remove()
-      }
-
-      $.support.transition && $parent.hasClass('fade') ?
-        $parent.on($.support.transition.end, removeElement) :
-        removeElement()
-    }
-
-  }
-
-
- /* ALERT PLUGIN DEFINITION
-  * ======================= */
-
-  $.fn.alert = function ( option ) {
-    return this.each(function () {
-      var $this = $(this)
-        , data = $this.data('alert')
-      if (!data) $this.data('alert', (data = new Alert(this)))
-      if (typeof option == 'string') data[option].call($this)
-    })
-  }
-
-  $.fn.alert.Constructor = Alert
-
-
- /* ALERT DATA-API
-  * ============== */
-
-  $(function () {
-    $('body').on('click.alert.data-api', dismiss, Alert.prototype.close)
-  })
-
-}( window.jQuery );
 </script>
 #{js('friends')}
 <?r else ?>

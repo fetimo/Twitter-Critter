@@ -1,8 +1,4 @@
-// Get a reference to the element.
-var	critter_container = new Container(),
-	critter_container2;
-
-function build(crit) {
+function build(crit, destination, container) {
 	// Always check for properties and methods, to make sure your code doesn't break in other browsers.
 	if (elem && elem.getContext) {
 		// Remember: you can only initialize one context per element.	
@@ -44,12 +40,10 @@ function build(crit) {
 					if (critter.hasOwnProperty(key)) {					
 						switch (key) {
 							case 'arms':
-								var arms = new Image();
-								arms.src = '../images/critter_assets/arms/'+ critter[key] + '.png';
-								
-								var arms = new Bitmap('../images/critter_assets/arms/'+ critter[key] + '.png');
-								var armG = new Graphics();
-								if (critter[key] === 'short') {									
+								//var arms = new Image();
+								//arms.src = '../images/critter_assets/arms/'+ critter[key] + '.png';
+								if (critter[key] === 'short') {
+									var armG = new Graphics();								
 									armG.moveTo(0,0);
 									armG.lineTo(82.801,0);
 									armG.lineTo(82.801,92.375);
@@ -74,14 +68,16 @@ function build(crit) {
 									armR.rotation = 180;
 									armR.skewX = 180;
 									arms.addChild(armL, armR);
+								} else {
+									var arms = new Bitmap('../images/critter_assets/arms/'+ critter[key] + '.png');
 								}
 								arms.name = critter[key];
-								//preload(arms.image);
+								if (arms.image) preload(arms.image);
 							break;
 							case 'eye_colour':
 								var eyes = new Container,
 									pupils = new Bitmap('../images/critter_assets/eyes/'+ critter[key] + '.png');
-								eyes.name = critter[key];
+								eyes.name = 'eyes ' + critter[key];
 								if(critter[key] !== 'small_black') {
 									var socket = new Bitmap('../images/critter_assets/eyes/base_eyes.png');
 									eyes.addChild(socket, pupils);
@@ -94,12 +90,14 @@ function build(crit) {
 							case 'body':
 								if (critter[key] !== 'plain') {
 									var pattern = new Bitmap('../images/critter_assets/body_patterns/'+ critter[key] + '.png');
+									pattern.name = critter[key];
 									preload(pattern.image);
 								}
 							break;
 							case 'nose':
 								if (critter[key] !== 'none') {
 									var nose = new Bitmap('../images/critter_assets/noses/'+ critter[key] + '.png');
+									nose.name = critter[key];
 									preload(nose.image);
 								}
 							break;
@@ -109,16 +107,17 @@ function build(crit) {
 								preload(legs.image);
 							break;
 							case 'ears':
-								//if (critter[key] !== 'none' || critter[key] !== 'floppy') {
-								if (critter[key] === 'mouse') {
+								if (critter[key] !== 'none') {
 									var ears = new Bitmap('../images/critter_assets/ears/'+ critter[key] + '.png');
+									ears.name = critter[key];
 									preload(ears.image);
 								}
 							break;
 							case 'face':
 								if (critter[key] !== 'none' && !nose) {
-									var face = new Bitmap('../images/critter_assets/face/'+ critter[key] + '.png');
-									preload(face.image);
+									//var face = new Bitmap('../images/critter_assets/face/'+ critter[key] + '.png');
+									var face = true;
+									//preload(face.image);
 								}
 							break;
 							case 'mouth':
@@ -169,7 +168,7 @@ function build(crit) {
 									preload(accessory.image);
 								}
 							break;
-						}								
+						}
 					}
 				}
 												
@@ -189,7 +188,6 @@ function build(crit) {
 							filter = new ColorFilter(.9,.9,.9,1);
 						break;
 						case 'red':
-							//filter = new ColorFilter(.65,.04,.04,1);
 							filter = new ColorFilter(.85,.33,.3,1);
 						break;
 						case 'pink':
@@ -249,6 +247,45 @@ function build(crit) {
 					
 					var shadow = new Shadow('rgb('+r+','+g+','+b+')', 0 , 4 , 0);
 					arms.shadow = shadow;
+					if (face) {
+						//have to put this here so it can inherit filter values
+						face = new Container();
+						var noseO = new Graphics();
+						noseO.moveTo(0,0);
+						noseO.lineTo(81.466,0);
+						noseO.lineTo(81.466,52.711);
+						noseO.lineTo(0,52.711);
+						noseO.closePath();
+						noseO.setStrokeStyle(1, 0, 0, 4);
+						var	r = Math.round(filter.redMultiplier * 255)-90,
+							g = Math.round(filter.greenMultiplier * 255)-90,
+							b = Math.round(filter.blueMultiplier * 255)-90;
+						noseO.beginFill(Graphics.getRGB(r,g,b));
+						noseO.moveTo(81.466,31.149);
+						noseO.bezierCurveTo(81.466,48.353,57.937,52.711,40.7339,52.711);
+						noseO.bezierCurveTo(23.53,52.711,0,48.353,0,31.149);
+						noseO.bezierCurveTo(0,13.946,23.53,0,40.734,0);
+						noseO.bezierCurveTo(57.937,0,81.466,13.946,81.466,31.149);
+						noseO.closePath();
+						noseI = new Graphics();
+						noseI.moveTo(0,0);
+						noseI.lineTo(81.466,0);
+						noseI.lineTo(81.466,52.711);
+						noseI.lineTo(0,52.711);
+						noseI.closePath();
+						noseI.setStrokeStyle(1, 0, 0, 4);
+						noseI.beginFill("#ffffff");
+						noseI.moveTo(62.494,18.011);
+						noseI.bezierCurveTo(62.494,22.462,56.4,23.591,51.953,23.591);
+						noseI.bezierCurveTo(47.5,23.591,41.411,22.462,41.411,18.01);
+						noseI.bezierCurveTo(41.411,13.558,47.501,9.949,51.953,9.949);
+						noseI.bezierCurveTo(56.404,9.949,62.494,13.558,62.494,18.011);
+						noseI.closePath();
+						var noseIS = new Shape(noseI);
+						var noseOS = new Shape(noseO);
+						face.addChild(noseOS, noseIS);
+					}
+					
 					position();
 				}
 					
@@ -287,8 +324,8 @@ function build(crit) {
 						body.addChild(pattern);
 					}
 					if (face) {
-						face.x = -Math.round(eyes.children[0].image.width/2);
-						face.y = -80;
+						face.x = Math.round(eyes.children[0].image.width/2 + 20);
+						face.y = eyes.children[0].image.height + 60;
 						if (eyes.name === 'small_black') face.y = -130;
 					}
 					if (accessory && accessory.name === 'horns') {
@@ -303,6 +340,11 @@ function build(crit) {
 					if (ears) {
 						ears.x = -95;
 						ears.y = -102;
+						if (ears.name === 'floppy') {
+							ears.x = -70;
+							ears.y = -67;
+							ears.rotation = 0;
+						}
 					}
 					if (body.children[0].name === 'furry') {
 						// special positions for furry critters
@@ -329,56 +371,58 @@ function build(crit) {
 						if (ears) {
 							ears.x = -45;
 							ears.y = -48;
+							if (ears.name === 'floppy') {
+								ears.x -= -25;
+								ears.y -= -28;
+							}
 						}
 						if (face) {
-							face.x = Math.round(-eyes.children[0].image.width/3);
-							face.y = -eyes.children[0].image.height + 25;
+							//face.x = Math.round(-eyes.children[0].image.width/3);
+							//face.y = eyes.children[0].image.height + 25;
+							face.y += 10;
+							face.x += 35;
 						}
 						if (nose) {
-							nose.x = Math.round(-eyes.children[0].image.width/3);
-							nose.y = -eyes.children[0].image.height + 25;
+							//nose.x = Math.round(-eyes.children[0].image.width/3);
+							//nose.y = eyes.children[0].image.height + 25;
 							if (eyes.name === 'small_black') nose.y = -10;
 						}
 					}
-					if (critter_container2 === undefined) {
-						critter_container.y = 30;
-						critter_container.x = 30;
-						if (legs.name === 'short') {
-							critter_container.y = 30;
-							if (body.children[0].name === 'simple') {
-								critter_container.y += 65;
-							}
+					container.y = 70;
+					container.x = 70;
+					if (legs.name === 'short') {
+						container.y = 30;
+						if (body.children[0].name === 'simple') {
+							container.y += 65;
 						}
-						critter_container.addChild(legs, body, eyes, arms);
-						if (face) critter_container.addChild(face);
-						if (nose) critter_container.addChild(nose);
-						if (mouth) critter_container.addChild(mouth);
-						if (ears) critter_container.addChild(ears);
-						if (accessory) critter_container.addChild(accessory);
-					} else {
-						//first container is populated so must have to fill second
+					}
+					container.addChild(legs, body, eyes, arms);
+					if (face) container.addChild(face);
+					if (nose) container.addChild(nose);
+					if (mouth) container.addChild(mouth);
+					if (ears) container.addChild(ears);
+					if (accessory) container.addChild(accessory);
+
+					//first container is populated so must have to fill second
+					/*
+					critter_container2.y = 30;
+					if (legs.name === 'short') {
 						critter_container2.y = 30;
-						if (legs.name === 'short') {
-							critter_container.y = 30;
-							if (body.children[0].name === 'simple') {
-								critter_container2.y += 65;
-							}
+						if (body.children[0].name === 'simple') {
+							critter_container2.y += 65;
 						}
-						critter_container2.addChild(legs, body, eyes, arms);
-						if (face) critter_container2.addChild(face);
-						if (nose) critter_container2.addChild(nose);
-						if (mouth) critter_container2.addChild(mouth);
-						if (ears) critter_container2.addChild(ears);
-						if (accessory) critter_container2.addChild(accessory);
-						critter_container2.x = critter_container.x + 400;
 					}
+					critter_container2.addChild(legs, body, eyes, arms);
+					if (face) critter_container2.addChild(face);
+					if (nose) critter_container2.addChild(nose);
+					if (mouth) critter_container2.addChild(mouth);
+					if (ears) critter_container2.addChild(ears);
+					if (accessory) critter_container2.addChild(accessory);
+					critter_container2.x = critter_container.x + 400;
+				}*/
+									
+					destination.addChild(container);
 					
-					if (!stage.children.length) {
-						stage.addChild(critter_container);
-					} else if (critter_container2) {
-						//their critter
-						friend_stage.addChild(critter_container2);
-					}
 					Ticker.addListener(window);
 					Ticker.setFPS(20);
 					$('.loader').fadeOut(100, function() {
@@ -392,5 +436,16 @@ function build(crit) {
 			getAttributes();
 		}
 	}
+	
+	function getContainer() {
+		return container;
+	}
+	function getStage() {
+		return destination;
+	}
 	//your_critter.save(); sends POST request to crittr.me/critters/username
+	return {
+		getContainer: getContainer,
+		getStage: getStage
+	};
 }

@@ -167,7 +167,6 @@ class Critter
 				end
 			end
 		end
-		p results
 		results
 	end
 	
@@ -231,7 +230,9 @@ class Critter
 		critter = Yajl::Encoder.encode(critter)
 				
 		@@default_critter[:critter] = critter
-
+		
+		p critter
+		
 		#Thread.new do
 			critters.insert(@@default_critter)
 		#end
@@ -253,7 +254,7 @@ class Critter
 end
 
 begin
-	TweetStream::Client.new.track('#meetdraw','#meetdraw13') do |result|
+	TweetStream::Client.new.track('meetdraw') do |result|
 		Critter.new(result)
 	end
 rescue Errno::ENOENT

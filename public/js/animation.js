@@ -1,7 +1,17 @@
 function animateEyes(critter) {
+		
 	var eyeAnimations = [0,1,2], //array of available functions
-		waitTime = Math.round(2000+(Math.random()*(8000-2000))),
-		pupils = critter.children[2].children[1];
+		waitTime = Math.round(2000+(Math.random()*(8000-2000)));
+		//pupils = critter.children[2].children[1];
+	
+	//need to change this so we're not using a for loop _every_ frame	
+	for (var i=0; i < critter.children.length; i+=1) { 
+		if (critter.children[i].name && critter.children[i].name.substr(0,4) === 'eyes') {
+			var eyes = critter.children[i];
+			var pupils = eyes.children[1];
+			break;
+		}
+	}
 	
 	/*
 	//this makes the small black eyes move, but it doesn't look very good
@@ -26,8 +36,8 @@ function animateEyes(critter) {
 	}
 	
 	function blink() {
-		var el = critter.children[2].children[2],
-			el2 = critter.children[2].children[3];
+		var el = eyes.children[2],
+			el2 = eyes.children[3];
 		el.alpha = 1;
 		el2.alpha = 1;
 		function clearBlink(el,el2) {
@@ -59,17 +69,17 @@ function animateEyes(critter) {
 	arms.cache(0, 0, 450, 400);
 }*/
 
+var theirs;
 function tick() {
 	//only animate some of the time
 	if (Math.round(Math.random()*40) === 4) { //http://xkcd.com/221/
-		animateEyes(critter_container);
-	} 
-	try {
-		if (critter_container2 && Math.round(Math.random()*40) === 4) {
-			animateEyes(critter_container2);
-		}
-		friend_stage.update();
-	} catch(e) {}
+		animateEyes(critter.getContainer());
+	}
+	if (theirs && theirs.getStage() && Math.round(Math.random()*40) === 4) {
+		animateEyes(theirs.getContainer());
+	}
+	friend_stage.x = 470;
 	//animateArms(critter_container);
 	stage.update();
+	friend_stage.update();
 }

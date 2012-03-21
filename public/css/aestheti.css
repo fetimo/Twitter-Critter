@@ -181,6 +181,7 @@ canvas {
 	position: relative;
 	display: block;
 	margin: 0 auto;
+	margin-top: -100px;
 }
 
 .preloader_container {
