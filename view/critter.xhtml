@@ -3,6 +3,13 @@
 	<div class="preloader_container"><img class="loader" src="../images/spinner.gif"></div>
 	<canvas id="your-critter" class="critter_container" width="1000" height="500">Critter requires canvas, upgrade to a nice browser.</canvas>
 	<?r if session[:access_token] and @username === session[:access_token].params[:screen_name] ?>
+	<section class="weapon_selection">
+		<ul>
+			<li><img name="3" src="../images/weapons/1.png">Rock</li>
+			<li><img name="2" src="../images/weapons/2.png">Paper</li>
+			<li><img name="1" src="../images/weapons/3.png">Scissors</li>
+		</ul>
+	</section>
 	#{flashbox}
 	<?r if flash[:Fisticuffs] and flash[:Fisticuffs].include? 'win' 
 			uid = session[:access_token].params[:user_id]
@@ -22,33 +29,23 @@
 	<?r	end 
 	flash.delete(:Fisticuffs)
 	?>
-	<section class="weapon_selection">
-		<ul>
-			<li><img name="3" src="../images/weapons/1.png">Rock</li>
-			<li><img name="2" src="../images/weapons/2.png">Paper</li>
-			<li><img name="1" src="../images/weapons/3.png">Scissors</li>
-		</ul>
-	</section>
 </div>
 	<script>
-	if (document.getElementById('attributes')) {
-		function rebuild() {
-			alert('success');
-			var your_critter = new Critter('#{@username}');
-			var critter = build(your_critter, stage, critter_container);
-		}
-		
+	if (document.getElementById('attributes')) {		
 		$('#attributes').children().on('click', function() {
 			$.ajax({
 				type: 'POST',
 				url: 'http://crittr.me/api/battle?uid=' + your_critter.get('uid') + '&attribute=' + this.id + '&hash='+#{@timestamp},
-				complete: function() {
+				success: function() {
+					$('#attributes').remove();
 					$.ajax({
 						type: 'DELETE',
 						url: 'http://crittr.me/api/battle?uid='+your_critter.get('uid'),
 						success: function() {
-							your_critter = new Critter('#{@username}');
-							critter = build(your_critter, stage, critter_container);
+							stage.removeAllChildren();
+							your_critter.fetch(); 
+							critter = build(your_critter, stage, critter_container); 
+							stage.update();
 						}
 					});
 				}
@@ -99,9 +96,11 @@
 /*
 	Setup Critter model, url defaults to the username requested
 */
+var username = '#{@username}';
 var Critter = Backbone.Model.extend({
+	url: '../api/critters/' + username,
 	initialize: function (username) {
-		this.fetch({url:'../api/critters/'+username});
+		this.fetch({url: '../api/critters/' + username});
 	}
 });
 var	your_critter = new Critter('#{@username}'),
