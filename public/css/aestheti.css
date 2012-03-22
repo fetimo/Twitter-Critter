@@ -880,4 +880,5 @@ input[type="submit"].btn.btn-mini {
 	top: 60px;
 	left: 500px;
 	max-width: 40%;
+	z-index: 1000;
 }

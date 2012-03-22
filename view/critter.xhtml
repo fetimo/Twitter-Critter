@@ -18,6 +18,7 @@
 			begin
 				you = DB[:battle_system].filter(:uid => uid).first
 				@opp_attribs = DB[:critters].filter(:uid => you[:opponent]).select(:arms, :eye_colour, :ears, :mouth, :legs, :face, :hands, :nose, :body_colour, :body, :body_type, :accessory).first #=> returns hash of attributes
+				@timestamp = you[:start]
 				?> <ul id="attributes"> <?r
 				@opp_attribs.each do |r| ?>
 				
@@ -26,9 +27,29 @@
 				end
 			rescue => e
 				message = e.message
-				?> <h1>#{message}</h1> <?r
-			end
-		end ?>
+				?> <p>#{message}</p>
+	<?r	end ?>
+<script>
+	if (document.getElementById('attributes')) {
+		function rebuild() {
+			alert('success');
+			var your_critter = new Critter('#{@username}');
+			var critter = build(your_critter, stage, critter_container);
+		}
+		
+		$('#attributes').children().on('click', function() {
+			$.ajax({
+				type: 'POST',
+				url: 'http://crittr.me/api/battle?uid=' + your_critter.get('uid') + '&attribute=' + this.id + '&hash='+#{@timestamp},
+				complete: function() {
+					var your_critter = new Critter('#{@username}');
+					var critter = build(your_critter, stage, critter_container);
+				}
+			});
+		});
+	}
+</script>
+<?r	end ?>
 				</ul>
 <div class="friends_tab">
 	<ul>
@@ -56,7 +77,6 @@
 </section>
 	<?r end ?>
 <!-- libraries -->
-#{js('jquery')}
 #{js('easel/lib/easel')}
 #{js('easel/src/easeljs/filters/Filter')}
 #{js('easel/src/easeljs/filters/ColorFilter')}
@@ -85,9 +105,12 @@ var	your_critter = new Critter('#{@username}'),
 friend_stage.autoClear = false;
 var critter = build(your_critter, stage, critter_container);
 if (document.getElementById('flash_fisticuffs')) {
+	//initial new fight
 	var str = document.getElementById('flash_fisticuffs').innerHTML,
 		strings = str.split(' '),
-		friend = new Critter (strings[0]);
+		friend = new Critter (strings[0]),
+		critter_container2 = new Container();
+	theirs = build(friend, friend_stage, critter_container2);
 }
 </script>
 #{js('friends')}

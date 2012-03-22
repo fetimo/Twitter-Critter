@@ -302,6 +302,9 @@ function build(crit, destination, container) {
 					}
 					legs.x = 70;
 					legs.y = 230;
+					if (legs.name === 'long') {
+						legs.y = 280;
+					}
 					arms.x = -95;
 					arms.y = -100;
 					if (nose) {
@@ -391,9 +394,9 @@ function build(crit, destination, container) {
 					container.y = 70;
 					container.x = 70;
 					if (legs.name === 'short') {
-						container.y = 30;
+						container.y = 123;
 						if (body.children[0].name === 'simple') {
-							container.y += 65;
+							container.y += 57;
 						}
 					}
 					container.addChild(legs, body, eyes, arms);
@@ -402,24 +405,6 @@ function build(crit, destination, container) {
 					if (mouth) container.addChild(mouth);
 					if (ears) container.addChild(ears);
 					if (accessory) container.addChild(accessory);
-
-					//first container is populated so must have to fill second
-					/*
-					critter_container2.y = 30;
-					if (legs.name === 'short') {
-						critter_container2.y = 30;
-						if (body.children[0].name === 'simple') {
-							critter_container2.y += 65;
-						}
-					}
-					critter_container2.addChild(legs, body, eyes, arms);
-					if (face) critter_container2.addChild(face);
-					if (nose) critter_container2.addChild(nose);
-					if (mouth) critter_container2.addChild(mouth);
-					if (ears) critter_container2.addChild(ears);
-					if (accessory) critter_container2.addChild(accessory);
-					critter_container2.x = critter_container.x + 400;
-				}*/
 									
 					destination.addChild(container);
 					

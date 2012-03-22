@@ -70,6 +70,34 @@ class ApiController < Controller
 				#update 
 				weapon = request.params['weapon']
 				response = fight.filter(:uid => uid).update(:status => 'ready', :weapon => weapon)
+			
+			elsif request.params['attribute'] and request.params['hash']
+				
+				you = fight.filter(:uid => uid).first
+					
+				if request.params['hash'].to_i === you[:start]
+					
+					attribute = request.params['attribute']
+					opponent = you[:opponent]
+					attrib = {}
+					type = ''
+					DB.fetch("SELECT #{attribute} FROM critters WHERE uid = ?", opponent) { |row| attrib = row }
+					attrib.each { |key, value| type = value.to_s };
+					
+					#insert value into own critter						
+					DB[:critters].filter(:uid => uid).update(attribute => type)
+					you.update(:start => 0)
+					critter = DB[:critters].filter(:uid => uid).select(:name, :arms, :eye_colour, :ears, :mouth, :legs, :face, :hands, :nose, :body_colour, :body, :body_type, :accessory, :uid).first
+					
+					require 'yajl'
+					critter = Yajl::Encoder.encode(critter)
+					DB[:critters].filter(:uid => uid).update(:critter => critter)
+					response = critter
+					
+				else
+					abort("Error: hash does not match")
+				end
+			
 			else
 				#start new fight
 				weapon = request.params['weapon']
@@ -78,9 +106,11 @@ class ApiController < Controller
 					check_opp = fight.filter(:uid => opponent).first
 					
 					if check_opp === nil
-							
-						fight.insert(:uid => uid, :status => 'ready', :opponent => opponent, :weapon => weapon)
-						fight.insert(:uid => opponent, :status => 'waiting', :opponent => uid)
+						
+						time = Time.now.to_i
+						
+						fight.insert(:uid => uid, :status => 'ready', :opponent => opponent, :weapon => weapon, :start => time)
+						fight.insert(:uid => opponent, :status => 'waiting', :opponent => uid, :start => time)
 														
 						response = "@#{opponent_name} I'm battling my Critter against yours, go to http://crittr.me/critter/#{opponent_name} to retaliate!"
 					else 
