@@ -14,7 +14,7 @@ require 'yajl'
 require 'logger'
 
 DB = Sequel.connect('mysql2://fetimocom1:iBMbSSIz@mysql.fetimo.com/twittercritter')
-
+=begin
 TweetStream.configure do |config|
 	config.consumer_key = 'UOlPwJ8N5TZLeJQvimZdPA'
 	config.consumer_secret = 'x4IaIe3WfEic8gb2uyjJ8Lgg2yWx6T0JfjI7xnnfQ'
@@ -23,17 +23,17 @@ TweetStream.configure do |config|
 	config.auth_method = :oauth
 	config.parser = :yajl
 end
+=end
 
-=begin
 TweetStream.configure do |config|
-	config.consumer_key = 'DQicogvXxpbW7oleCfV3QA'
+	config.consumer_key = 'DQicogvXxpbW7oleCfV3Q'
 	config.consumer_secret = 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
-	config.oauth_token = '158797209-QC14At3SN9o2WzY8nrN99kwF1rD9cfe0SGHFyqpl'
-	config.oauth_token_secret = 'Ayeo4IHXTjGSc9o2dI9a4MJepIR1hd8gzVWOzqvQo'
+	config.oauth_token = '158797209-Q8KWyJzVqasNobwCmCDUo73CrVQtO2BMt7BvGJJa'
+	config.oauth_token_secret = 'vcP0fGWBkrYkg5b6D3rvV5DLD8qQavuvffjqVxE'
 	config.auth_method = :oauth
 	config.parser = :yajl
 end
-=end
+
 RULES = {
 	:arms => {
 		'd' => 'short',
@@ -137,13 +137,18 @@ class Critter
 	end
 	
 	def fetch_tweet(result)
-		tweet = {:username => String, :tweet => String, :geocode => Float, :id => 0, :uid => 0}
+		tweet = {:username => String, :tweet => String, :id => 0, :uid => 0}
+		
+		puts tweet
+		
 		tweet[:username] = result.user.screen_name
 		#remove hashtag
 		tweet[:tweet] = result.text.sub(/#critter/, '')
-		tweet[:geocode] = result.geo
+		#tweet[:geocode] = result.geo
 		tweet[:id] = result.id.to_int
 		tweet[:uid] = result.user.id.to_int
+		
+		puts tweet
 		
 		@@default_critter[:name] = tweet[:username]
 		@@default_critter[:location] = tweet[:geocode]
@@ -254,7 +259,7 @@ class Critter
 end
 
 begin
-	TweetStream::Client.new.track('meetdraw') do |result|
+	TweetStream::Client.new.track('amazing') do |result|
 		Critter.new(result)
 	end
 rescue Errno::ENOENT

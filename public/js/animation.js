@@ -78,8 +78,8 @@ function tick() {
 	if (theirs && theirs.getStage() && Math.round(Math.random()*40) === 4) {
 		animateEyes(theirs.getContainer());
 	}
-	friend_stage.x = 470;
+	try { friend_stage.x = 470; } catch(e) {}
 	//animateArms(critter_container);
 	stage.update();
-	friend_stage.update();
+	try { friend_stage.update(); } catch(e) {}
 }

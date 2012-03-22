@@ -8,7 +8,6 @@ $(document).ready(function() {
 	});
 	$('#your-critter').droppable({
 		drop: function (event, ui) {
-
 			if (theirs) {
 				theirs.getContainer().removeAllChildren();
 				stage.update();
@@ -16,8 +15,8 @@ $(document).ready(function() {
 				var their_critter;
 			}			
 			var username = ui.draggable.context.id,
-				friend = new Critter(username),
 				critter_container2 = new Container();
+			friend = new Critter(username);
 			$('.loader').css('display', 'block');
 			theirs = build(friend, friend_stage, critter_container2);
 			their_critter = theirs;
@@ -92,7 +91,7 @@ $(document).ready(function() {
 		weapon = e.currentTarget.name;
 		$.ajax({
 			type: 'POST',
-			url: 'http://crittr.me/api/battle?uid='+your_critter.get('uid')+'&opponent='+ friend.get('uid') +'&weapon=' + weapon,
+			url: 'http://crittr.me/api/battle?uid=' + your_critter.get('uid') + '&opponent=' + friend.get('uid') + '&weapon=' + weapon,
 			success: success
 		});
 		$('.weapon_selection').css('display','none');
