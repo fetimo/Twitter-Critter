@@ -113,7 +113,7 @@ $(document).ready(function() {
 	$('.friend').on('click', loadFriend);
 		
 	if ($('.Fisticuffs').length) {
-		$('.Fisticuffs a').on('click', prepFightRetaliate);
+		$('.Fisticuffs p a').on('click', prepFightRetaliate);
 	}
 	
 	$('#hug').on('click', stopFighting);

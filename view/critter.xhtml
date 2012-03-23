@@ -11,23 +11,23 @@
 		</ul>
 	</section>
 	#{flashbox}
-	<?r if flash[:Fisticuffs] and flash[:Fisticuffs].include? 'win' 
-			uid = session[:access_token].params[:user_id]
-			begin
-				you = DB[:battle_system].filter(:uid => uid).first
-				@opp_attribs = DB[:critters].filter(:uid => you[:opponent]).select(:arms, :eye_colour, :ears, :mouth, :legs, :face, :hands, :nose, :body_colour, :body, :body_type, :accessory).first #=> returns hash of attributes
-				@timestamp = you[:start]
-				?> <ul id="attributes"> <?r
-				@opp_attribs.each do |r| ?>
-				
-					#{ render_partial :attribute, { :attribute=>r[0].to_s, :value=>r[1] } }
-				<?r
-				end
-			rescue => e
-				message = e.message
-				?> <p>#{message}</p>
-	<?r	end 
-	flash.delete(:Fisticuffs)
+	<?r 
+	if flash[:Fisticuffs] and flash[:Fisticuffs].include? 'win'
+		uid = session[:access_token].params[:user_id]
+		begin
+			you = DB[:battle_system].filter(:uid => uid).first
+			@opp_attribs = DB[:critters].filter(:uid => you[:opponent]).select(:arms, :eye_colour, :ears, :mouth, :legs, :face, :hands, :nose, :body_colour, :body, :body_type, :accessory).first #=> returns hash of attributes
+			@timestamp = you[:start]
+			?> <ul id="attributes"> <?r
+			@opp_attribs.each do |r| ?>
+			
+				#{ render_partial :attribute, { :attribute=>r[0].to_s, :value=>r[1] } }
+			<?r
+			end
+		rescue => e
+			message = e.message
+			?> <p>#{message}</p> <?r	
+		end
 	?>
 </div>
 	<script>
@@ -53,8 +53,20 @@
 		});
 	}
 </script>
-<?r	end ?>
-				</ul>
+<?r 
+	elsif flash[:Fisticuffs] and flash[:Fisticuffs].include? 'draw'
+		uid = session[:access_token].params[:user_id]
+		begin
+			require 'net/http'
+			http = Net::HTTP.new("crittr.me")
+			request = Net::HTTP::Delete.new("/api/battle?uid=#{uid}")
+			message = http.request(request)
+		rescue => e
+			message = e.message
+		end
+	end 
+	flash.delete(:Fisticuffs)
+	?>
 <div class="friends_tab">
 	<ul>
 		<li><a id="fisticuffs" href="#">Fisticuffs</a></li>

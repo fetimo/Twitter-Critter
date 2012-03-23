@@ -92,14 +92,13 @@ class ApiController < Controller
 					critter = Yajl::Encoder.encode(critter)
 					DB[:critters].filter(:uid => uid).update(:critter => critter)
 					response = critter
-				elsif request.params['friend']
-					#send message to frind telling them that they've been hugged!
-					response = 'Nothing happened because this part is under construction'
-					
 				else
-					abort("Error: hash does not match")
+					response = abort("Error: hashes do not match")
 				end
-			
+			elsif request.params['friend']
+				#send message to frind telling them that they've been hugged!
+				response = 'Nothing happened because this part is under construction'
+				
 			else
 				#start new fight
 				weapon = request.params['weapon']

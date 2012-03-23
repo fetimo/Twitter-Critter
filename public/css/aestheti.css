@@ -921,6 +921,7 @@ input[type="submit"].btn.btn-mini {
 	z-index: 1000;
 }
 
-.alert a:not(.caret) {
+.alert p a:not(.btn) {
 	text-decoration: underline;
+	cursor: pointer;
 }
