@@ -7,26 +7,29 @@ $(document).ready(function() {
         appendTo: "body"
 	});
 	$('#your-critter').droppable({
-		drop: function (event, ui) {
-			if (theirs) {
-				theirs.getContainer().removeAllChildren();
-				stage.update();
-			} else {
-				var their_critter;
-			}			
-			var username = ui.draggable.context.id,
-				critter_container2 = new Container();
-			friend = new Critter(username);
-			$('.loader').css('display', 'block');
-			theirs = build(friend, friend_stage, critter_container2);
-			their_critter = theirs;
-			if ($('.friends_tab').css('display') === 'none') { 
-				$('.friends_tab').slideDown('quick', function (){
-					$('.friends_tab').css('display','block');
-				});
-			}
-		}
+		drop: function(event, ui) { loadFriend(event, ui) }
 	});
+	
+	function loadFriend (event, ui) {
+		ui === undefined ? ui = event.currentTarget.id : ui =  ui.draggable.context.id;
+		if (theirs) {
+			theirs.getContainer().removeAllChildren();
+			stage.update();
+		} else {
+			var their_critter;
+		}			
+		var username = ui,
+			critter_container2 = new Container();
+		friend = new Critter(username);
+		$('.loader').css('display', 'block');
+		theirs = build(friend, friend_stage, critter_container2);
+		their_critter = theirs;
+		if ($('.friends_tab').css('display') === 'none') { 
+			$('.friends_tab').slideDown('quick', function (){
+				$('.friends_tab').css('display','block');
+			});
+		}
+	}
 	
 	function sendTweet() {
 		$.ajax({
@@ -36,11 +39,10 @@ $(document).ready(function() {
 		});
 	}
 	
-	function stopFighting(a) { 
+	function stopFighting() { 
 		$.ajax({
 			type: 'POST',
 			url: 'http://crittr.me/api/battle?uid=' + your_critter.get('uid') + '&friend=' + friend.get('name'),
-			//data: data,
 			success: function(){
 				var alert = document.createElement('div');
 				var root = document.getElementById('content');		
@@ -108,6 +110,7 @@ $(document).ready(function() {
 	}
 	
 	$('#fisticuffs').on('click', prepFight);
+	$('.friend').on('click', loadFriend);
 		
 	if ($('.Fisticuffs').length) {
 		$('.Fisticuffs a').on('click', prepFightRetaliate);

@@ -104,6 +104,10 @@ class MainController < Controller
 		#@title = 'Welcome to Meetdraw'
 	end
 	
+	def about
+	
+	end
+	
 	def critter(username)
 		#session.flush # experimental, remove asap
 		@username = username
