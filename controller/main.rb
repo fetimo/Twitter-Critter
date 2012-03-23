@@ -174,7 +174,7 @@ class MainController < Controller
 							elsif weapon === 3 and opp_weapon === 2
 								flash[:Fisticuffs] << 'lose'
 							end
-							flash[:Fisticuffs] << '! Now Hug to make up, no hard feelings, eh?' 
+							flash[:Fisticuffs] << '! Now hug to make up, no hard feelings, eh?' 
 						end
 					end
 				end

@@ -181,7 +181,7 @@ canvas {
 	position: relative;
 	display: block;
 	margin: 0 auto;
-	margin-top: -100px;
+	margin-top: -70px;
 }
 
 .preloader_container {
@@ -273,7 +273,6 @@ footer p.copyright {
 .friends_tab {
 	width: 139px;
 	margin: 0 auto;
-	margin-top: -2.5em;
 	-webkit-border-top-left-radius: 4px;
 	-webkit-border-top-right-radius: 4px;
 	-moz-border-radius-topleft: 4px;
@@ -281,7 +280,8 @@ footer p.copyright {
 	border-top-left-radius: 4px;
 	border-top-right-radius: 4px;
 	background: #fff;
-	height: 3em;
+	height: 50px;
+	z-index: 1000;
 	display: none;
 }
 .friends_tab li {

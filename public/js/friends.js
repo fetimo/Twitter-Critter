@@ -38,15 +38,15 @@ $(document).ready(function() {
 	
 	function stopFighting(a) { 
 		$.ajax({
-			type: 'DELETE',
-			url: 'http://crittr.me/api/battle?uid='+your_critter.get('uid'),
+			type: 'POST',
+			url: 'http://crittr.me/api/battle?uid=' + your_critter.get('uid') + '&friend=' + friend.get('name'),
 			//data: data,
 			success: function(){
 				var alert = document.createElement('div');
 				var root = document.getElementById('content');		
 					//not an error, can show tweet related things
 				alert.className = 'alert alert-success fade in';
-				alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>You\'ve hugged and made up with ' + friend.get('name') + ' :)</p>';
+				alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>You\'ve hugged ' + friend.get('name') + ' :)</p>';
 				root.appendChild(alert);
 				$(".alert").alert();
 			}

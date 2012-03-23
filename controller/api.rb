@@ -87,12 +87,14 @@ class ApiController < Controller
 					#insert value into own critter						
 					DB[:critters].filter(:uid => uid).update(attribute => type)
 					you.update(:start => 0)
-					critter = DB[:critters].filter(:uid => uid).select(:name, :arms, :eye_colour, :ears, :mouth, :legs, :face, :hands, :nose, :body_colour, :body, :body_type, :accessory, :uid).first
-					
+					critter = DB[:critters].filter(:uid => uid).select(:name, :arms, :eye_colour, :ears, :mouth, :legs, :face, :hands, :nose, :body_colour, :body, :body_type, :accessory, :uid).first					
 					require 'yajl'
 					critter = Yajl::Encoder.encode(critter)
 					DB[:critters].filter(:uid => uid).update(:critter => critter)
 					response = critter
+				elsif request.params['friend']
+					#send message to frind telling them that they've been hugged!
+					
 					
 				else
 					abort("Error: hash does not match")
