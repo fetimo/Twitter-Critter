@@ -40,25 +40,23 @@ function build(crit, destination, container) {
 					if (critter.hasOwnProperty(key)) {					
 						switch (key) {
 							case 'arms':
-								//var arms = new Image();
-								//arms.src = '../images/critter_assets/arms/'+ critter[key] + '.png';
 								var armG = new Graphics(),
 									arms = new Container();					
 								if (critter[key] === 'short') {
 									armG.moveTo(0,0);
-									armG.lineTo(82.801,0);
-									armG.lineTo(82.801,92.375);
-									armG.lineTo(0,92.375);
+									armG.lineTo(83,0);
+									armG.lineTo(83,92);
+									armG.lineTo(0,92);
 									armG.closePath();
 									armG.setStrokeStyle(1, 0, 0, 4);
 									armG.beginFill("#ffffff");
-									armG.moveTo(4.083,53.282);
-									armG.bezierCurveTo(-15.346,75.961,40.222,107.476,52.372,84.193);
-									armG.bezierCurveTo(52.385,84.169,81.1,30.538,81.1,30.538);
-									armG.bezierCurveTo(84.89,24.61,82.127,16.063,74.921,11.453);
-									armG.lineTo(65.382,2.87);
-									armG.bezierCurveTo(58.174,-1.745,49.255,-0.68,45.461,5.246);
-									armG.bezierCurveTo(45.461,5.246,4.198,53.147,4.083,53.282);
+									armG.moveTo(4,53);
+									armG.bezierCurveTo(-15,76,40,107,52,84);
+									armG.bezierCurveTo(52,84,81,31,81,31);
+									armG.bezierCurveTo(85,25,82,16,75,11);
+									armG.lineTo(65,3);
+									armG.bezierCurveTo(58,-2,49,-0.7,45,5);
+									armG.bezierCurveTo(45,5,4,53,4,53);
 									armG.closePath();
 									var armL = new Shape(armG);
 									armL.x = 50;
@@ -76,13 +74,13 @@ function build(crit, destination, container) {
 									armG.closePath();
 									armG.setStrokeStyle(1, 0, 0, 4);
 									armG.beginFill("#ffffff");
-									armG.moveTo(52.51,335.542);
-									armG.bezierCurveTo(37.077,361.107,88.658,380.983,96.816,356.018);
-									armG.bezierCurveTo(96.825,355.993,141.274,242.911,141.274,242.911);
-									armG.bezierCurveTo(144.045,236.442,139.908,228.468,132.044,225.103);
-									armG.lineTo(121.22,218.206);
-									armG.bezierCurveTo(113.354,214.84,104.733,217.357,101.962,223.826);
-									armG.bezierCurveTo(101.963,223.825,52.603,335.392,52.51,335.542);
+									armG.moveTo(53,336);
+									armG.bezierCurveTo(37,361,89,381,97,356);
+									armG.bezierCurveTo(97,356,141,243,141,243);
+									armG.bezierCurveTo(144,236,140,228,132,225);
+									armG.lineTo(121,218);
+									armG.bezierCurveTo(113,215,105,217,102,224);
+									armG.bezierCurveTo(102,224,53,335,53,336);
 									armG.closePath();
 									var armL = new Shape(armG);
 									var armR = armL.clone();
@@ -154,14 +152,14 @@ function build(crit, destination, container) {
 									mouthG.setStrokeStyle(1, 0, 0, 4);
 									mouthG.beginFill("#000100");
 									mouthG.moveTo(0,0);
-									mouthG.bezierCurveTo(0,0,16.077,3.867,37.974,4.199);
-									mouthG.bezierCurveTo(50.398,4.388,64.697,3.439,78.995,0);
-									mouthG.bezierCurveTo(78.995,0,43.495,13.75,0,0);
+									mouthG.bezierCurveTo(0,0,16,4,38,4);
+									mouthG.bezierCurveTo(50,4,65,3,79,0);
+									mouthG.bezierCurveTo(79,0,43,14,0,0);
 									mouthG.closePath();
 									var mouth = new Shape(mouthG);
 									mouth.alpha = 0.5;
-									mouth.scaleX = 2.127311405661921;
-									mouth.scaleY = 2.127311405661921;
+									mouth.scaleX = 2.12731;
+									mouth.scaleY = 2.12731;
 								}
 							break;
 							case 'hands':

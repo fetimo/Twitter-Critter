@@ -94,7 +94,7 @@ class ApiController < Controller
 					response = critter
 				elsif request.params['friend']
 					#send message to frind telling them that they've been hugged!
-					
+					response = 'Nothing happened because this part is under construction'
 					
 				else
 					abort("Error: hash does not match")

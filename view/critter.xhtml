@@ -108,6 +108,8 @@ var	your_critter = new Critter('#{@username}'),
 	stage = new Stage(elem),
 	friend_stage = new Stage(elem),
 	critter_container = new Container();
+stage.snapToPixelEnabled = true;
+friend_stage.snapToPixelEnabled = true;
 friend_stage.autoClear = false;
 var critter = build(your_critter, stage, critter_container);
 if (document.getElementById('flash_fisticuffs')) {

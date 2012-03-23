@@ -136,12 +136,12 @@ button {
 	display: block;
 }
 
-#topBar form {
+#topBar form, #topBar .button {
 	float: right;
 	margin-top: -32px;
 }
 
-#topBar form button {
+#topBar button {
 	background-image: -o-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
 	background-image: -moz-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
 	background-image: -webkit-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
