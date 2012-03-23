@@ -42,8 +42,9 @@ function build(crit, destination, container) {
 							case 'arms':
 								//var arms = new Image();
 								//arms.src = '../images/critter_assets/arms/'+ critter[key] + '.png';
+								var armG = new Graphics(),
+									arms = new Container();					
 								if (critter[key] === 'short') {
-									var armG = new Graphics();								
 									armG.moveTo(0,0);
 									armG.lineTo(82.801,0);
 									armG.lineTo(82.801,92.375);
@@ -59,7 +60,6 @@ function build(crit, destination, container) {
 									armG.bezierCurveTo(58.174,-1.745,49.255,-0.68,45.461,5.246);
 									armG.bezierCurveTo(45.461,5.246,4.198,53.147,4.083,53.282);
 									armG.closePath();
-									var arms = new Container();
 									var armL = new Shape(armG);
 									armL.x = 50;
 									armL.y = 300;
@@ -68,11 +68,30 @@ function build(crit, destination, container) {
 									armR.rotation = 180;
 									armR.skewX = 180;
 									arms.addChild(armL, armR);
-								} else {
-									var arms = new Bitmap('../images/critter_assets/arms/'+ critter[key] + '.png');
+								} else if (critter[key] === 'long'){
+									armG.moveTo(0,0);
+									armG.lineTo(500,0);
+									armG.lineTo(500,500);
+									armG.lineTo(0,500);
+									armG.closePath();
+									armG.setStrokeStyle(1, 0, 0, 4);
+									armG.beginFill("#ffffff");
+									armG.moveTo(52.51,335.542);
+									armG.bezierCurveTo(37.077,361.107,88.658,380.983,96.816,356.018);
+									armG.bezierCurveTo(96.825,355.993,141.274,242.911,141.274,242.911);
+									armG.bezierCurveTo(144.045,236.442,139.908,228.468,132.044,225.103);
+									armG.lineTo(121.22,218.206);
+									armG.bezierCurveTo(113.354,214.84,104.733,217.357,101.962,223.826);
+									armG.bezierCurveTo(101.963,223.825,52.603,335.392,52.51,335.542);
+									armG.closePath();
+									var armL = new Shape(armG);
+									var armR = armL.clone();
+									armR.x = 500;
+									armR.rotation = 180;
+									armR.skewX = 180;
+									arms.addChild(armL, armR);
 								}
 								arms.name = critter[key];
-								if (arms.image) preload(arms.image);
 							break;
 							case 'eye_colour':
 								var eyes = new Container,
@@ -209,7 +228,7 @@ function build(crit, destination, container) {
 					if (accessory && accessory.name === 'tail') accessory.filters = [filter];
 					if (ears) ears.filters = [filter];
 					body.cache(0, 0, body.image.width, body.image.height);
-					arms.cache(0, 0, 450, 400);
+					arms.cache(0, 0, 460, 400);
 					legs.cache(0, 0, legs.image.width, legs.image.height);
 					if (accessory && accessory.name === 'tail') accessory.cache(0, 0, accessory.image.width, accessory.image.height);
 					if (ears) ears.cache(0, 0, ears.image.width, ears.image.height);
@@ -399,12 +418,13 @@ function build(crit, destination, container) {
 							container.y += 57;
 						}
 					}
+					if (accessory) if (accessory.name === 'tail') container.addChild(accessory);
 					container.addChild(legs, body, eyes, arms);
 					if (face) container.addChild(face);
 					if (nose) container.addChild(nose);
 					if (mouth) container.addChild(mouth);
 					if (ears) container.addChild(ears);
-					if (accessory) container.addChild(accessory);
+					if (accessory) if (accessory.name !== 'tail') container.addChild(accessory);
 									
 					destination.addChild(container);
 					
