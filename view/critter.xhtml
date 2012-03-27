@@ -35,18 +35,12 @@
 			$.ajax({
 				type: 'POST',
 				url: 'http://crittr.me/api/battle?uid=' + your_critter.get('uid') + '&attribute=' + this.id + '&hash='+#{@timestamp},
-				success: function() {
+				complete: function() {
 					$('#attributes').remove();
-					$.ajax({
-						type: 'DELETE',
-						url: 'http://crittr.me/api/battle?uid='+your_critter.get('uid'),
-						success: function() {
-							stage.removeAllChildren();
-							your_critter.fetch(); 
-							critter = build(your_critter, stage, critter_container); 
-							stage.update();
-						}
-					});
+					stage.removeAllChildren();
+					your_critter.fetch(); 
+					critter = build(your_critter, stage, critter_container); 
+					stage.update();
 				}
 			});
 		});

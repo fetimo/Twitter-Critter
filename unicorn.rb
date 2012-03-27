@@ -1,4 +1,4 @@
-worker_processes 3
+worker_processes 2
 working_directory "/home/timofe_/crittr.me"
 
 # This loads the application in the master process before forking
