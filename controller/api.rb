@@ -75,7 +75,7 @@ class ApiController < Controller
 				
 				you = fight.filter(:uid => uid).first
 					
-				if request.params['hash'].to_i === you[:start]
+				if request.params['hash'].to_i === you[:start] && request.params['attribute']
 					
 					attribute = request.params['attribute']
 					opponent = you[:opponent]
@@ -91,6 +91,7 @@ class ApiController < Controller
 					require 'yajl'
 					critter = Yajl::Encoder.encode(critter)
 					DB[:critters].filter(:uid => uid).update(:critter => critter)
+					fight.where(:uid => uid).update(:status => nil, :opponent => nil, :weapon => nil, :start => nil)
 					response = critter
 				else
 					response = abort("Error: hashes do not match")
@@ -111,6 +112,7 @@ class ApiController < Controller
 						fight.insert(:uid => friend)
 					end
 					
+					# this is really, really bad
 					DB.run "UPDATE interactions SET hugged_by = CONCAT(COALESCE(hugged_by, ''), '#{username},') WHERE uid = #{friend}"
 					
 				rescue => e
@@ -124,12 +126,27 @@ class ApiController < Controller
 					check_opp = fight.filter(:uid => opponent).first
 					
 					if check_opp === nil
+						fight.insert(:uid => opponent)
+						check_opp = fight.filter(:uid => opponent).first
+					end
+					if check_opp[:opponent] === nil
 						
 						time = Time.now.to_i
 						
-						fight.insert(:uid => uid, :status => 'ready', :opponent => opponent, :weapon => weapon, :start => time)
-						fight.insert(:uid => opponent, :status => 'waiting', :opponent => uid, :start => time)
-														
+						critter_exist = 0
+						
+						fight.filter(:uid => uid).each do |row|
+							critter_exist += 1
+						end
+						
+						if critter_exist === 0
+							fight.insert(:uid => uid, :status => 'ready', :opponent => opponent, :weapon => weapon, :start => time)
+						else
+							fight.where(:uid => uid).update(:status => 'ready', :opponent => opponent, :weapon => weapon, :start => time)
+						end
+						
+						fight.where(:uid => opponent).update(:status => 'waiting', :opponent => uid, :start => time)
+							
 						response = "@#{opponent_name} I'm battling my Critter against yours, go to http://crittr.me/critter/#{opponent_name} to retaliate!"
 					else 
 						response = "Error: Opponent is already in a battle"

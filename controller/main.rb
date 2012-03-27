@@ -180,21 +180,47 @@ class MainController < Controller
 							
 							if weapon === opp_weapon
 								flash[:Fisticuffs] << 'draw'
+								opp_status = 'draw'
 							elsif weapon === 1 and opp_weapon === 2
 								flash[:Fisticuffs] << 'win'
+								opp_status = 'lose'
 							elsif weapon === 2 and opp_weapon === 1
 								flash[:Fisticuffs] << 'lose'
+								opp_status = 'win'
 							elsif weapon === 3 and opp_weapon === 1
 								flash[:Fisticuffs] << 'win'
+								opp_status = 'lose'
 							elsif weapon === 1 and opp_weapon === 3
 								flash[:Fisticuffs] << 'lose'
+								opp_status = 'win'
 							elsif weapon === 2 and opp_weapon === 3
 								flash[:Fisticuffs] << 'win'
+								opp_status = 'lose'
 							elsif weapon === 3 and opp_weapon === 2
 								flash[:Fisticuffs] << 'lose'
+								opp_status = 'win'
 							end
-							flash[:Fisticuffs] << '! Now hug to make up, no hard feelings, eh?' 
+							flash[:Fisticuffs] << '! Now hug to make up, no hard feelings, eh?'
+							
+							# deletes all battle data for a fresh start
+							begin
+								unless flash[:Fisticuffs].include? 'win'
+									opp = you[:opponent]
+									DB.transaction do
+										fight.where(:uid => you[:uid]).update(:status => nil, :opponent => nil, :weapon => nil, :start => nil)
+										fight.where(:uid => opp).update(:status => opp_status)
+									end
+								end
+							rescue => e
+								message = e.message
+							end
 						end
+					end
+				elsif you[:status] === 'win' || you[:status] === 'draw' || you[:status] === 'lose'
+					#you have won, lost, or drawn but you weren't the first to know about it
+					flash[:Fisticuffs] = "Result is in, you #{you[:status]}! Now hug to make up, no hard feelings, eh?"
+					unless flash[:Fisticuffs].include? 'win'
+						fight.where(:uid => you[:uid]).update(:status => nil, :opponent => nil, :weapon => nil, :start => nil)
 					end
 				end
 			end

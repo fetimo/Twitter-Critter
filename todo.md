@@ -2,8 +2,7 @@ TODO
 ====
 
 * Tutorial for first time users
-* Send message to users when you hug them
-* Animate further
+* Animate arms
 * Walk cycles
 * Animate tail
 * Add delete feature
@@ -13,4 +12,5 @@ TODO
 * Rock/Paper/Scissors images
 * Change background
 * Tweak alert UI
-* Send win/lose message
+* Response when you retaliate, auto check win/draw/lose and tweet about it
+* look at undefined method bug when you're in a fight and have a result
