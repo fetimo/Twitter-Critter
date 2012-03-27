@@ -58,41 +58,42 @@ class MainController < Controller
 		begin
 			@data = Twitter.user_timeline(@user[:username]).first.text
 			user_info = Twitter.users(@user[:username])
-			@uid = user_info[0].id
+			uid = user_info[0].id
 		rescue
 			#useful for if user 404s or Twitter offline
 			redirect MainController.r(:critter, @user[:username])
 		end
-		
-		@default_critter = {
-			#default values
-			:name => 'Steve',
-			:arms => 'short',
-			:eye_colour => 'blue',
-			:nose => 'none',
-			:legs => 'short',
-			:ears => 'none',
-			:face => 'none',
-			:hands => 'none',
-			:mouth => 'plain',
-			:accessory => 'none',
-			:body => 'plain',
-			:body_colour => 'orange',
-			:body_type => 'simple',
-			:critter => '',
-			:uid => 0
-		}
 
 		critter_exist = 0
 		
-		DB[:critters].filter(:uid => @uid).each do |row|
+		DB[:critters].filter(:uid => uid).each do |row|
 			critter_exist += 1
 		end
 		
-		sleep 1 #allow for db to be queried
+		sleep 1.5 #allow for db to be queried
 		
 		if critter_exist === 0
-			generate = Critter.new(@data, @user[:username], @default_critter, @uid)
+		
+			@default_critter = {
+				#default values
+				:name => 'Steve',
+				:arms => 'short',
+				:eye_colour => 'blue',
+				:nose => 'none',
+				:legs => 'short',
+				:ears => 'none',
+				:face => 'none',
+				:hands => 'none',
+				:mouth => 'plain',
+				:accessory => 'none',
+				:body => 'plain',
+				:body_colour => 'orange',
+				:body_type => 'simple',
+				:critter => '',
+				:uid => 0
+			}
+		
+			generate = Critter.new(@data, @user[:username], @default_critter, uid)
 			@critter = generate.critter
 			redirect MainController.r(:critter, @user[:username])
 		else
@@ -146,12 +147,26 @@ class MainController < Controller
 				session[:friends] = friends_w_critter
 			end
 						
-			fight = DB[:battle_system]
+			fight = DB[:interactions]
 			you = fight.where(:uid => p[:user_id]).first
 			if you
-				if you[:weapon] === nil
+				if you[:weapon] === nil && you[:opponent]
 					opponent = Twitter.user(you[:opponent]).screen_name
 					flash[:Fisticuffs] = "#{opponent} has started fisticuffs with you! <a>Arm yourself by clicking here.</a>"
+				end
+				if you[:hugged_by]
+					flash[:Hugs] = "You've been hugged by "
+					hugs = you[:hugged_by].split(',')
+					hugs.uniq!
+					hugs.each_with_index do |hug, index|
+						if index > 0
+							flash[:Hugs] << " and "
+						end
+						flash[:Hugs] << hug
+					end
+					flash[:Hugs] << " :)"
+					
+					fight.where(:uid => p[:user_id]).update(:hugged_by => nil)
 				end
 				if you[:status] === 'ready'
 					#if in battle

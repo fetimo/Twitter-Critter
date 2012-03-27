@@ -30,7 +30,7 @@ class ApiController < Controller
 	def battle
 		response['Content-Type'] = 'application/json'
 		
-		fight = DB[:battle_system]
+		fight = DB[:interactions]
 		uid = request.params['uid']
 		
 		if request.get? 
@@ -97,8 +97,25 @@ class ApiController < Controller
 				end
 			elsif request.params['friend']
 				#send message to frind telling them that they've been hugged!
-				response = 'Nothing happened because this part is under construction'
-				
+				begin
+					username = Twitter.user(uid.to_i).screen_name
+					friend = Twitter.user(request.params['friend']).id
+					
+					critter_exist = 0
+		
+					fight.filter(:uid => friend).each do |row|
+						critter_exist += 1
+					end
+					
+					if critter_exist === 0
+						fight.insert(:uid => friend)
+					end
+					
+					DB.run "UPDATE interactions SET hugged_by = CONCAT(COALESCE(hugged_by, ''), '#{username},') WHERE uid = #{friend}"
+					
+				rescue => e
+					response = e.message
+				end
 			else
 				#start new fight
 				weapon = request.params['weapon']
@@ -131,12 +148,13 @@ class ApiController < Controller
 				opp = you[:opponent]
 				DB.transaction do
 					fight.where(:uid => opp).delete
-					response = fight.filter(:uid => uid).delete
+					response = fight.where(:uid => uid).delete
 				end
 			rescue => e
 				response = "Error: Unable to hug"
 				message = e.message
 			end
+			
 		end
 		
 		message = {"response" => response, "detail" => message}

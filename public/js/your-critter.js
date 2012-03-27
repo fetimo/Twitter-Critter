@@ -423,7 +423,8 @@ function build(crit, destination, container) {
 					if (mouth) container.addChild(mouth);
 					if (ears) container.addChild(ears);
 					if (accessory) if (accessory.name !== 'tail') container.addChild(accessory);
-									
+					
+					destination.removeAllChildren();		
 					destination.addChild(container);
 					
 					Ticker.addListener(window);
