@@ -20,32 +20,38 @@ function animateEyes(critter) {
 	}*/
 	/* actual animations */
 	function leftToRight() {
-		if (pupils.x <= 3) {
-			pupils.x += Math.round(Math.random()*3.5);
-		} else {
-			setTimeout(function() { pupils.x -= 3 }, waitTime);
-		}
+		try {
+			if (pupils.x <= 3) {
+				pupils.x += Math.round(Math.random()*3.5);
+			} else {
+				setTimeout(function() { pupils.x -= 3 }, waitTime);
+			}
+		} catch(e) {}
 	}
 	
 	function upDown() {
-		if (pupils.y < 3) {
-			pupils.y += Math.round(Math.random()*4);
-		} else { 
-			setTimeout(function() { pupils.y -= 3 }, waitTime);
-		}
+		try {
+			if (pupils.y < 3) {
+				pupils.y += Math.round(Math.random()*4);
+			} else { 
+				setTimeout(function() { pupils.y -= 3 }, waitTime);
+			}
+		} catch(e) {}
 	}
 	
 	function blink() {
-		var el = eyes.children[2],
-			el2 = eyes.children[3];
-		el.alpha = 1;
-		el2.alpha = 1;
-		function clearBlink(el,el2) {
-			el.alpha = 0;
-			el2.alpha = 0;
-		}
-		var blinkTime = Math.round(99+(Math.random()*(100))); //blinking lasts between 200 to 300ms
-		_.delay(clearBlink, blinkTime, el, el2);
+		try {
+			var el = eyes.children[2],
+				el2 = eyes.children[3];
+			el.alpha = 1;
+			el2.alpha = 1;
+			function clearBlink(el,el2) {
+				el.alpha = 0;
+				el2.alpha = 0;
+			}
+			var blinkTime = Math.round(99+(Math.random()*(100))); //blinking lasts between 200 to 300ms
+			_.delay(clearBlink, blinkTime, el, el2);
+		} catch(e) {}
 	}
 	
 	var animate = Math.round(Math.random()*eyeAnimations.length); //grab a random animation
