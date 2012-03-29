@@ -7,8 +7,8 @@ function animateEyes(critter) {
 	//need to change this so we're not using a for loop _every_ frame	
 	for (var i=0; i < critter.children.length; i+=1) { 
 		if (critter.children[i].name && critter.children[i].name.substr(0,4) === 'eyes') {
-			var eyes = critter.children[i];
-			var pupils = eyes.children[1];
+			var eyes = critter.children[i],
+				pupils = eyes.children[1];
 			break;
 		}
 	}
@@ -65,17 +65,27 @@ function animateEyes(critter) {
 	}
 }
 
-/*function animateArms(critter) {
-	arms = critter.children[3];
-	if (arms.children[0].skewX > -50) arms.children[0].skewX -= 2;
-	if (arms.children[0].skewY > -50) arms.children[0].skewY -= 2;
-	//if (arms.children[1].skewX < -40) arms.children[1].skewX -= 1;
-	//if (arms.children[1].skewY < -40) arms.children[1].skewY -= 1;
-
+function animateArms(critter) {
+	arms = critter.getArms();
+	if (wave <= 2) {
+		if (arms.children[0].scaleY > -1) arms.children[0].scaleY -= .2;
+		if (oscillate) {
+			arms.children[0].rotation += 5;
+			if (arms.children[0].rotation > 60) { oscillate = false; wave += 1}
+		} else if (!oscillate){
+			arms.children[0].rotation -= 5;
+			if (arms.children[0].rotation <= 0) { oscillate = true; }
+		}
+	} else {
+		if (arms.children[0].scaleY < 1) arms.children[0].scaleY += .5;
+		if (arms.children[0].rotation > 0) arms.children[0].rotation -= 5;
+	}
 	arms.cache(0, 0, 450, 400);
-}*/
+}
 
-var theirs;
+var theirs,
+	wave = 0,
+	oscillate = true;
 function tick() {
 	//only animate some of the time
 	if (Math.round(Math.random()*40) === 4) { //http://xkcd.com/221/
@@ -85,7 +95,7 @@ function tick() {
 		animateEyes(theirs.getContainer());
 	}
 	try { friend_stage.x = 470; } catch(e) {}
-	//animateArms(critter_container);
+	animateArms(critter);
 	stage.update();
 	try { friend_stage.update(); } catch(e) {}
 }
