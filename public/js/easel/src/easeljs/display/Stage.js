@@ -53,6 +53,7 @@ var p = Stage.prototype = new Container();
 	/**
 	 * @property _snapToPixelEnabled
 	 * @protected
+	 * @static
 	 * @type Boolean
 	 * @default false
 	 **/
@@ -192,12 +193,12 @@ var p = Stage.prototype = new Container();
 	/**
 	 * Initialization method.
 	 * @method initialize
-	 * param {HTMLCanvasElement} canvas
+	 * param {HTMLCanvasElement} canvas A canvas object, or the string id of a canvas object in the current document.
 	 * @protected
 	 **/
 	p.initialize = function(canvas) {
 		this.Container_initialize();
-		this.canvas = canvas;
+		this.canvas = (canvas instanceof HTMLCanvasElement) ? canvas : document.getElementById(canvas);
 		this._enableMouseEvents(true);
 	}
 
@@ -217,7 +218,11 @@ var p = Stage.prototype = new Container();
 		if (!this.canvas) { return; }
 		if (this.autoClear) { this.clear(); }
 		Stage._snapToPixelEnabled = this.snapToPixelEnabled;
-		if (this.tickOnUpdate) { this._tick(); }
+		if (this.tickOnUpdate) {
+			if (this.tick == this.update) { var t=1; this.tick = null; }
+			this._tick(true);
+			if (t) { this.tick = this.update; }
+		}
 		this.draw(this.canvas.getContext("2d"), false, this.getConcatenatedMatrix(this._matrix));
 	}
 
@@ -299,17 +304,18 @@ var p = Stage.prototype = new Container();
 	/**
 	 * Enables or disables (by passing a frequency of 0) mouse over handlers (onMouseOver and onMouseOut) for this stage's display
 	 * list. These events can be expensive to generate, so they are disabled by default, and the frequency of the events
-	 * can be controlled independently of mouse move events via the frequency parameter.
+	 * can be controlled independently of mouse move events via the optional frequency parameter.
 	 * @method enableMouseOver
-	 * @param {Number} frequency The maximum number of times per second to broadcast mouse over/out events. Set to 0 to disable mouse
-	 * over events completely. Maximum is 50. A lower frequency is less responsive, but uses less CPU.
+	 * @param {Number} frequency Optional param specifying the maximum number of times per second to broadcast mouse over/out events. Set to 0 to disable mouse
+	 * over events completely. Maximum is 50. A lower frequency is less responsive, but uses less CPU. Default is 20.
 	 **/
 	p.enableMouseOver = function(frequency) {
 		if (this._mouseOverIntervalID) {
 			clearInterval(this._mouseOverIntervalID);
 			this._mouseOverIntervalID = null;
 		}
-		if (frequency <= 0) { return; }
+		if (frequency == null) { frequency = 20; }
+		else if (frequency <= 0) { return; }
 		var o = this;
 		this._mouseOverIntervalID = setInterval(function(){ o._testMouseOver(); }, 1000/Math.min(50,frequency));
 		this._mouseOverX = NaN;

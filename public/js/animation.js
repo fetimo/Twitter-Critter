@@ -1,8 +1,11 @@
+var theirs,
+	wave = 0,
+	oscillate = true;
+
 function animateEyes(critter) {
 		
 	var eyeAnimations = [0,1,2], //array of available functions
 		waitTime = Math.round(2000+(Math.random()*(8000-2000)));
-		//pupils = critter.children[2].children[1];
 	
 	//need to change this so we're not using a for loop _every_ frame	
 	for (var i=0; i < critter.children.length; i+=1) { 
@@ -66,9 +69,34 @@ function animateEyes(critter) {
 }
 
 function animateArms(critter) {
-	arms = critter.getArms();
+	//var arms = critter.getArms();
+	//arms.children[0].rotation += 1;
+//	if (arms.children[0].scaleY > -1) arms.children[0].scaleY -= .1;
+//	if (wave <= 2) {
+//		var arms = critter.getArms();
+//		if (arms.children[0].scaleY > -1) arms.children[0].scaleY -= .4;
+//		if (oscillate) {
+//			arms.children[0].rotation += 5;
+//			if(arms.name === 'arms long') arms.children[0].rotation += 10;
+//			if (arms.children[0].rotation > 60) {
+//				oscillate = false; 
+//				wave += 1;
+//			} 
+//		} else if (!oscillate){
+//			arms.children[0].rotation -= 5;
+//			if (arms.name === 'arms long') arms.children[0].rotation -= 10;
+//			if (arms.children[0].rotation <= 0) oscillate = true;
+//		}
+//	} else {
+//		var arms = critter.getArms();
+//		if (arms.children[0].scaleY < 1) arms.children[0].scaleY += .5;
+//		if (arms.children[0].rotation > 0) arms.children[0].rotation -= 5;
+//	}
+	
+	var arms = critter.getArms();
+	
 	if (wave <= 2) {
-		if (arms.children[0].scaleY > -1) arms.children[0].scaleY -= .2;
+		if (arms.children[0].scaleY > -1) arms.children[0].scaleY -= .4;
 		if (oscillate) {
 			arms.children[0].rotation += 5;
 			if (arms.children[0].rotation > 60) { oscillate = false; wave += 1}
@@ -83,19 +111,17 @@ function animateArms(critter) {
 	arms.cache(0, 0, 450, 400);
 }
 
-var theirs,
-	wave = 0,
-	oscillate = true;
 function tick() {
 	//only animate some of the time
 	if (Math.round(Math.random()*40) === 4) { //http://xkcd.com/221/
-		animateEyes(critter.getContainer());
+		animateEyes(critterApp.yours().getContainer());
 	}
 	if (theirs && theirs.getStage() && Math.round(Math.random()*40) === 4) {
 		animateEyes(theirs.getContainer());
 	}
-	try { friend_stage.x = 470; } catch(e) {}
-	animateArms(critter);
-	stage.update();
-	try { friend_stage.update(); } catch(e) {}
+	animateArms(critterApp.yours());
+	critterApp.yourStage().update();
+	//try { 
+	if (critterApp.theirStage()) critterApp.theirStage().update(); 
+	//} catch(e) {}
 }

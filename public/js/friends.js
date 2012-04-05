@@ -1,27 +1,31 @@
 $(document).ready(function() {
-	$('.friend').draggable({
-		revert: true,
-		helper: 'clone',
-		containment: 'document',
-		zIndex:10000,
-        appendTo: "body"
-	});
-	$('#your-critter').droppable({
-		drop: function(event, ui) { loadFriend(event, ui) }
-	});
+//	$('.friend').draggable({
+//		revert: true,
+//		helper: 'clone',
+//		containment: 'document',
+//		zIndex: 10000,
+//        appendTo: "body"
+//	});
+//	$('#your-critter').droppable({
+//		drop: function(event, ui) { loadFriend(event, ui) }
+//	});
 	
 	function loadFriend (event, ui) {
 		ui === undefined ? ui = event.currentTarget.id : ui =  ui.draggable.context.id;
 		if (theirs) {
 			theirs.getContainer().removeAllChildren();
-			stage.update();
+			critterApp.yourStage().update();
 		} else {
 			var their_critter;
-		}			
+		}		
 		var username = ui,
 			critter_container2 = new Container();
+		var Critter = critterApp.model();
 		friend = new Critter(username);
-		$('.loader').css('display', 'block');
+		$('.loader').fadeIn(400, function() {
+			$('.loader').css('visibility', 'visible');
+		});
+		var friend_stage = critterApp.theirStage();
 		theirs = build(friend, friend_stage, critter_container2);
 		their_critter = theirs;
 		if ($('.friends_tab').css('display') === 'none') { 

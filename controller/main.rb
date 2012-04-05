@@ -101,7 +101,7 @@ class MainController < Controller
 		end			
 	end
 	
-	def meetdraw
+	def world
 		#@title = 'Welcome to Meetdraw'
 	end
 	

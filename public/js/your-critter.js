@@ -1,5 +1,6 @@
 function build(crit, destination, container) {
 	// Always check for properties and methods, to make sure your code doesn't break in other browsers.
+	var elem = document.getElementById('your-critter');
 	if (elem && elem.getContext) {
 		// Remember: you can only initialize one context per element.	
 		var context = elem.getContext('2d');
@@ -20,23 +21,20 @@ function build(crit, destination, container) {
 				*/
 				function preload() {
 					var args = arguments;
-					console.log(args);
-					//if (args.length) {
-						totalImages += args.length;
-						if (typeof args === 'object') {
-							for (var i=0; i < args.length; i+=1) {
-								var image = args[i];
-								image.onload = function() {
-									loaded += 1;
-								}
+					totalImages += args.length;
+					if (typeof args === 'object') {
+						for (var i=0; i < args.length; i+=1) {
+							var image = args[i];
+							image.onload = function() {
+								loaded += 1;
 							}
 						}
-						if (loaded < totalImages) {
-							_.delay(preload, 500);
-						} else if (loaded === totalImages && colour !== undefined && body_shape !== undefined) {
-							setColour(colour, body_shape);
-						}
-				//	}
+					}
+					if (loaded < totalImages) {
+						_.delay(preload, 500);
+					} else if (loaded === totalImages && colour !== undefined && body_shape !== undefined) {
+						setColour(colour, body_shape);
+					}
 				}
 				
 				for (var key in critter) {
@@ -46,18 +44,12 @@ function build(crit, destination, container) {
 								var armG = new Graphics(),
 									arms = new Container();					
 								if (critter[key] === 'short') {
-									armG.moveTo(0,0);
-									armG.lineTo(83,0);
-									armG.lineTo(83,92);
-									armG.lineTo(0,92);
-									armG.closePath();
 									armG.setStrokeStyle(1, 0, 0, 4);
 									armG.beginFill("#ffffff");
 									armG.moveTo(4,53);
 									armG.bezierCurveTo(-15,76,40,107,52,84);
 									armG.bezierCurveTo(52,84,81,31,81,31);
 									armG.bezierCurveTo(85,25,82,16,75,11);
-									armG.lineTo(65,3);
 									armG.bezierCurveTo(58,-2,49,-0.7,45,5);
 									armG.bezierCurveTo(45,5,4,53,4,53);
 									armG.closePath();
@@ -65,29 +57,23 @@ function build(crit, destination, container) {
 									armL.x = 50;
 									armL.y = 300;
 									var armR = armL.clone();
-									armR.x += 360;
+									armR.x += 310;
 									armR.rotation = 180;
 									armR.skewX = 180;
 									arms.addChild(armL, armR);
 								} else if (critter[key] === 'long'){
-									armG.moveTo(0,0);
-									armG.lineTo(500,0);
-									armG.lineTo(500,500);
-									armG.lineTo(0,500);
-									armG.closePath();
 									armG.setStrokeStyle(1, 0, 0, 4);
 									armG.beginFill("#ffffff");
 									armG.moveTo(53,336);
 									armG.bezierCurveTo(37,361,89,381,97,356);
 									armG.bezierCurveTo(97,356,141,243,141,243);
 									armG.bezierCurveTo(144,236,140,228,132,225);
-									armG.lineTo(121,218);
 									armG.bezierCurveTo(113,215,105,217,102,224);
 									armG.bezierCurveTo(102,224,53,335,53,336);
 									armG.closePath();
 									var armL = new Shape(armG);
 									var armR = armL.clone();
-									armR.x = 500;
+									armR.x = 400;
 									armR.rotation = 180;
 									armR.skewX = 180;
 									arms.addChild(armL, armR);
@@ -145,11 +131,6 @@ function build(crit, destination, container) {
 									preload(mouth.image);
 								} else {
 									var mouthG = new Graphics();
-									mouthG.moveTo(0,0);
-									mouthG.lineTo(169,0);
-									mouthG.lineTo(169,13);
-									mouthG.lineTo(0,13);
-									mouthG.closePath();
 									mouthG.setStrokeStyle(1, 0, 0, 4);
 									mouthG.beginFill("#000100");
 									mouthG.moveTo(0,0);
@@ -191,7 +172,6 @@ function build(crit, destination, container) {
 				}
 												
 				function setColour(colour, body) {
-					console.log('called');
 					var filter;
 					switch(colour) {
 						case 'green':
@@ -238,11 +218,6 @@ function build(crit, destination, container) {
 						g = Math.round(filter.greenMultiplier * 255)-20,
 						b = Math.round(filter.blueMultiplier * 255)-20,
 						eyelid = new Graphics();
-					eyelid.moveTo(0,0);
-					eyelid.lineTo(52.343,0);
-					eyelid.lineTo(52.343,71.038);
-					eyelid.lineTo(0,71.038);
-					eyelid.closePath();
 					eyelid.setStrokeStyle(1, 0, 0, 4);
 					eyelid.beginFill(Graphics.getRGB(r,g,b));
 					eyelid.moveTo(52.343,35.519);
@@ -270,11 +245,6 @@ function build(crit, destination, container) {
 						//have to put this here so it can inherit filter values
 						face = new Container();
 						var noseO = new Graphics();
-						noseO.moveTo(0,0);
-						noseO.lineTo(81,0);
-						noseO.lineTo(81,53);
-						noseO.lineTo(0,53);
-						noseO.closePath();
 						noseO.setStrokeStyle(1, 0, 0, 4);
 						var	r = Math.round(filter.redMultiplier * 255)-90,
 							g = Math.round(filter.greenMultiplier * 255)-90,
@@ -287,11 +257,6 @@ function build(crit, destination, container) {
 						noseO.bezierCurveTo(58,0,81,14,81,31);
 						noseO.closePath();
 						noseI = new Graphics();
-						noseI.moveTo(0,0);
-						noseI.lineTo(81,0);
-						noseI.lineTo(81,53);
-						noseI.lineTo(0,53);
-						noseI.closePath();
 						noseI.setStrokeStyle(1, 0, 0, 4);
 						noseI.beginFill("#ffffff");
 						noseI.moveTo(62,18);
@@ -324,10 +289,19 @@ function build(crit, destination, container) {
 					if (legs.name === 'long') {
 						legs.y = 280;
 					}
-					arms.x = 0;
-					arms.y = -100;
+					arms.x = -40;
+					arms.y = -90;
 					arms.children[0].regX = 50;
 					arms.children[0].regY = 40;
+					arms.children[1].regX = 50;
+					arms.children[1].regY = 40;
+					if (arms.name === 'arms long') { 
+						arms.y += 150;
+						arms.children[0].regX = -10;
+						arms.children[0].regY = 550;
+						arms.children[1].regX = -10;
+						arms.children[1].regY = -10;
+					}
 					if (nose) {
 						nose.y = -70;
 						nose.x = -50;
@@ -344,7 +318,7 @@ function build(crit, destination, container) {
 					}
 					if (pattern) {
 						pattern.x = -96;
-						pattern.y = -102;
+						pattern.y = -103;
 						body.addChild(pattern);
 					}
 					if (face) {
@@ -382,11 +356,11 @@ function build(crit, destination, container) {
 						eyes.y = 80;
 						legs.x += 30;
 						if (legs.name === 'short') legs.y += 60;
-						if (arms.name === 'long') {
+						if (arms.name === 'arms long') {
 							arms.x += 50;
 							arms.y = -60;
-						} else if (arms.name === 'short') {
-							arms.x += 50;
+						} else if (arms.name === 'arms short') {
+							arms.x += 38;
 						}
 						if (accessory) {
 							accessory.y += 50;
@@ -431,11 +405,11 @@ function build(crit, destination, container) {
 					destination.removeAllChildren();		
 					destination.addChild(container);
 					
-					Ticker.useRAF = true;
+					//Ticker.useRAF = true;
 					Ticker.addListener(window);
 					Ticker.setFPS(40);
-					$('.loader').fadeOut(1000, function() {
-						$('.loader').css('display', 'none');
+					$('.loader').fadeOut(750, function() {
+						$('.loader').css('visibility', 'hidden');
 					});
 				}
 			}
@@ -452,7 +426,7 @@ function build(crit, destination, container) {
 	function getStage() {
 		return destination;
 	}
-	function getArms() {
+	function getArms() {		
 		for (var i=0; i < container.children.length; i+=1) { 
 			if (container.children[i].name && container.children[i].name.substr(0,4) === 'arms') {
 				var arms = container.children[i];
@@ -461,6 +435,7 @@ function build(crit, destination, container) {
 		}
 		return arms;
 	}
+
 	//your_critter.save(); sends POST request to crittr.me/critters/username
 	return {
 		getContainer: getContainer,
