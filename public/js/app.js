@@ -11,9 +11,10 @@ var critterApp = (function() {
 		}
 	});
 	
+	var	your_critter = new Critter(username);
+	
 	function init() {
-		var	your_critter = new Critter(username),
-			elem = document.getElementById('your-critter'),
+		var	elem = document.getElementById('your-critter'),
 			critter_container = new Container();
 		
 		stage = new Stage(elem);
@@ -45,6 +46,10 @@ var critterApp = (function() {
 	function getYours() {
 		return critter;
 	}
+	
+	function getYourCritterModel() {
+		return your_critter;
+	}
 		
 	function getStage() {
 		return stage;
@@ -63,7 +68,8 @@ var critterApp = (function() {
 		yours: getYours,
 		yourStage: getStage,
 		theirStage: getTheirStage,
-		model: getCritterModel
+		model: getCritterModel,
+		yourModel: getYourCritterModel
 	}
 }());
 

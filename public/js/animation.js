@@ -1,6 +1,12 @@
 var theirs,
 	wave = 0,
-	oscillate = true;
+	oscillate = true,
+	arms;
+
+function getAttributes() {
+	critterApp.yours().getArms() === undefined ? _.delay(getAttributes, 300) : arms = critterApp.yours().getArms();
+}
+getAttributes();
 
 function animateEyes(critter) {
 		
@@ -93,22 +99,22 @@ function animateArms(critter) {
 //		if (arms.children[0].rotation > 0) arms.children[0].rotation -= 5;
 //	}
 	
-	var arms = critter.getArms();
-	
-	if (wave <= 2) {
-		if (arms.children[0].scaleY > -1) arms.children[0].scaleY -= .4;
-		if (oscillate) {
-			arms.children[0].rotation += 5;
-			if (arms.children[0].rotation > 60) { oscillate = false; wave += 1}
-		} else if (!oscillate){
-			arms.children[0].rotation -= 5;
-			if (arms.children[0].rotation <= 0) { oscillate = true; }
+	if (arms) {
+		if (wave <= 2) {
+			if (arms.children[0].scaleY > -1) arms.children[0].scaleY -= .4;
+			if (oscillate) {
+				arms.children[0].rotation += 5;
+				if (arms.children[0].rotation > 60) { oscillate = false; wave += 1}
+			} else if (!oscillate){
+				arms.children[0].rotation -= 5;
+				if (arms.children[0].rotation <= 0) { oscillate = true; }
+			}
+		} else {
+			if (arms.children[0].scaleY < 1) arms.children[0].scaleY += .5;
+			if (arms.children[0].rotation > 0) arms.children[0].rotation -= 5;
 		}
-	} else {
-		if (arms.children[0].scaleY < 1) arms.children[0].scaleY += .5;
-		if (arms.children[0].rotation > 0) arms.children[0].rotation -= 5;
+		arms.cache(0, 0, 450, 400);
 	}
-	arms.cache(0, 0, 450, 400);
 }
 
 function tick() {

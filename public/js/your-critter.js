@@ -405,7 +405,10 @@ function build(crit, destination, container) {
 					destination.removeAllChildren();		
 					destination.addChild(container);
 					
-					//Ticker.useRAF = true;
+					if (window.requestAnimationFrame || window.mozRequestAnimationFrame) {
+				    	Ticker.useRAF = true;
+				    }
+				    
 					Ticker.addListener(window);
 					Ticker.setFPS(40);
 					$('.loader').fadeOut(750, function() {
@@ -426,7 +429,7 @@ function build(crit, destination, container) {
 	function getStage() {
 		return destination;
 	}
-	function getArms() {		
+	function getArms() {				
 		for (var i=0; i < container.children.length; i+=1) { 
 			if (container.children[i].name && container.children[i].name.substr(0,4) === 'arms') {
 				var arms = container.children[i];

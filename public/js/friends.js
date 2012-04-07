@@ -38,7 +38,7 @@ $(document).ready(function() {
 	function sendTweet() {
 		$.ajax({
 			type: 'POST',
-			url: 'http://crittr.me/api/battle?uid='+your_critter.get('uid')+'&opponent='+ friend.get('uid')+'&approve_tweet=1',
+			url: 'http://crittr.me/api/battle?uid='+ critterApp.yourModel().get('uid')+'&opponent='+ friend.get('uid')+'&approve_tweet=1',
 			//success: tweeted
 		});
 	}
@@ -46,7 +46,7 @@ $(document).ready(function() {
 	function stopFighting() { 
 		$.ajax({
 			type: 'POST',
-			url: 'http://crittr.me/api/battle?uid=' + your_critter.get('uid') + '&friend=' + friend.get('name'),
+			url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&friend=' + friend.get('name'),
 			success: function(){
 				var alert = document.createElement('div');
 				var root = document.getElementById('content');		
@@ -71,10 +71,11 @@ $(document).ready(function() {
 	
 	function success(response) {
 		var alert = document.createElement('div');
-		var root = document.getElementById('content');	
+		var root = document.getElementById('content');
+		alert.style.display = 'block';
 		if (response.response.substring(0,5) !== 'Error') {
 			//not an error, can show tweet related things
-			alert.className = 'alert alert-info fade in';
+			alert.className = 'alert alert-info';
 			alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Is it ok if I tweet them this message to let them know you\'re fighting them? "' + response.response + '"</p><p><a class="btn btn-info" href="#"><span id="tweet">Tweet</span></a><a class="btn close_btn" href="#">No, thanks</a></p>';
 		} else {
 			//there be errors
@@ -82,7 +83,6 @@ $(document).ready(function() {
 			alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p><strong>Error!</strong> "' + response.response.substring(7) + '"</p>';
 		}
 		root.appendChild(alert);
-		$(".alert").alert();
 		$('.close_btn').on('click', function() {
 			$(".alert").alert('close');
 		});
@@ -97,7 +97,7 @@ $(document).ready(function() {
 		weapon = e.currentTarget.name;
 		$.ajax({
 			type: 'POST',
-			url: 'http://crittr.me/api/battle?uid=' + your_critter.get('uid') + '&opponent=' + friend.get('uid') + '&weapon=' + weapon,
+			url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&opponent=' + friend.get('uid') + '&weapon=' + weapon,
 			success: success
 		});
 		$('.weapon_selection').css('display','none');
@@ -107,18 +107,25 @@ $(document).ready(function() {
 		weapon = e.currentTarget.name;
 		$.ajax({
 			type: 'POST',
-			url: 'http://crittr.me/api/battle?update=1&uid='+your_critter.get('uid')+'&weapon=' + weapon,
+			url: 'http://crittr.me/api/battle?update=1&uid='+ critterApp.yourModel().get('uid')+'&weapon=' + weapon,
 			//success: success
 		});
 		$('.weapon_selection').css('display','none');
 	}
-	
+	// click handlers	
 	$('#fisticuffs').on('click', prepFight);
 	$('.friend').on('click', loadFriend);
-		
+	$('#hug').on('click', stopFighting);
+	
+	console.log($('.close'));
+	
+	// close weapon selection dialogue
+	$('.close').on('click', function(e) { 
+		console.log(e);
+		e.currentTarget.parentElement.style.display = 'none'; 
+	});
+	
 	if ($('.Fisticuffs').length) {
 		$('.Fisticuffs p a').on('click', prepFightRetaliate);
 	}
-	
-	$('#hug').on('click', stopFighting);
 });
