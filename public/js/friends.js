@@ -116,9 +116,7 @@ $(document).ready(function() {
 	$('#fisticuffs').on('click', prepFight);
 	$('.friend').on('click', loadFriend);
 	$('#hug').on('click', stopFighting);
-	
-	console.log($('.close'));
-	
+		
 	// close weapon selection dialogue
 	$('.close').on('click', function(e) { 
 		console.log(e);
