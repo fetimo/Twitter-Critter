@@ -116,12 +116,6 @@ $(document).ready(function() {
 	$('#fisticuffs').on('click', prepFight);
 	$('.friend').on('click', loadFriend);
 	$('#hug').on('click', stopFighting);
-		
-	// close weapon selection dialogue
-	$('.close').on('click', function(e) { 
-		console.log(e);
-		e.currentTarget.parentElement.style.display = 'none'; 
-	});
 	
 	if ($('.Fisticuffs').length) {
 		$('.Fisticuffs p a').on('click', prepFightRetaliate);
