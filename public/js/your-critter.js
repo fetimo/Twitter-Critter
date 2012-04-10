@@ -19,6 +19,7 @@ function build(crit, destination, container) {
 					We then check if the loaded images is equal to the
 					number of images and continue processing the Critter.
 				*/
+				var once = false;
 				function preload() {
 					var args = arguments;
 					totalImages += args.length;
@@ -32,7 +33,8 @@ function build(crit, destination, container) {
 					}
 					if (loaded < totalImages) {
 						_.delay(preload, 500);
-					} else if (loaded === totalImages && colour !== undefined && body_shape !== undefined) {
+					} else if (loaded === totalImages && !once) {
+						once = true;
 						setColour(colour, body_shape);
 					}
 				}
@@ -73,7 +75,7 @@ function build(crit, destination, container) {
 									armG.closePath();
 									var armL = new Shape(armG);
 									var armR = armL.clone();
-									armR.x = 400;
+									armR.x = 280;
 									armR.rotation = 180;
 									armR.skewX = 180;
 									arms.addChild(armL, armR);
@@ -212,7 +214,7 @@ function build(crit, destination, container) {
 					legs.cache(0, 0, legs.image.width, legs.image.height);
 					if (accessory && accessory.name === 'tail') accessory.cache(0, 0, accessory.image.width, accessory.image.height);
 					if (ears) ears.cache(0, 0, ears.image.width, ears.image.height);
-					
+									
 					//eyelids
 					var	r = Math.round(filter.redMultiplier * 255)-20,
 						g = Math.round(filter.greenMultiplier * 255)-20,
@@ -271,6 +273,7 @@ function build(crit, destination, container) {
 					}
 					
 					position();
+					return this;
 				}
 					
 				function position() {				
@@ -289,18 +292,19 @@ function build(crit, destination, container) {
 					if (legs.name === 'long') {
 						legs.y = 280;
 					}
-					arms.x = -40;
+					arms.x = -20;
 					arms.y = -90;
 					arms.children[0].regX = 50;
 					arms.children[0].regY = 40;
 					arms.children[1].regX = 50;
 					arms.children[1].regY = 40;
 					if (arms.name === 'arms long') { 
-						arms.y += 150;
-						arms.children[0].regX = -10;
-						arms.children[0].regY = 550;
-						arms.children[1].regX = -10;
-						arms.children[1].regY = -10;
+						arms.y = 150;
+						arms.x += 40;
+						arms.children[0].regX = 125;
+						arms.children[0].regY = 230;
+						arms.children[1].regX = 125;
+						arms.children[1].regY = 230;
 					}
 					if (nose) {
 						nose.y = -70;
@@ -360,7 +364,7 @@ function build(crit, destination, container) {
 							arms.x += 50;
 							arms.y = -60;
 						} else if (arms.name === 'arms short') {
-							arms.x += 38;
+							arms.x += 20;
 						}
 						if (accessory) {
 							accessory.y += 50;

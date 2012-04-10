@@ -75,30 +75,6 @@ function animateEyes(critter) {
 }
 
 function animateArms(critter) {
-	//var arms = critter.getArms();
-	//arms.children[0].rotation += 1;
-//	if (arms.children[0].scaleY > -1) arms.children[0].scaleY -= .1;
-//	if (wave <= 2) {
-//		var arms = critter.getArms();
-//		if (arms.children[0].scaleY > -1) arms.children[0].scaleY -= .4;
-//		if (oscillate) {
-//			arms.children[0].rotation += 5;
-//			if(arms.name === 'arms long') arms.children[0].rotation += 10;
-//			if (arms.children[0].rotation > 60) {
-//				oscillate = false; 
-//				wave += 1;
-//			} 
-//		} else if (!oscillate){
-//			arms.children[0].rotation -= 5;
-//			if (arms.name === 'arms long') arms.children[0].rotation -= 10;
-//			if (arms.children[0].rotation <= 0) oscillate = true;
-//		}
-//	} else {
-//		var arms = critter.getArms();
-//		if (arms.children[0].scaleY < 1) arms.children[0].scaleY += .5;
-//		if (arms.children[0].rotation > 0) arms.children[0].rotation -= 5;
-//	}
-	
 	if (arms) {
 		if (wave <= 2) {
 			if (arms.children[0].scaleY > -1) arms.children[0].scaleY -= .4;
@@ -113,7 +89,11 @@ function animateArms(critter) {
 			if (arms.children[0].scaleY < 1) arms.children[0].scaleY += .5;
 			if (arms.children[0].rotation > 0) arms.children[0].rotation -= 5;
 		}
-		arms.cache(0, 0, 450, 400);
+		if (arms.name === 'arms short') {
+			arms.cache(0, 0, 450, 400);
+		} else {
+			arms.cache(-300, -400, 750, 538);
+		}
 	}
 }
 
