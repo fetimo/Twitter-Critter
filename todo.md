@@ -13,4 +13,3 @@ TODO
 * Change background
 * Tweak alert UI
 * Response when you retaliate, auto check win/draw/lose and tweet about it
-* fix alert close button

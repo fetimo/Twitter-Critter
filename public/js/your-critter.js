@@ -39,6 +39,50 @@ function build(crit, destination, container) {
 					}
 				}
 				
+				//get base colour of critter
+				for (var key in critter) {
+					if (critter.hasOwnProperty(key)) {					
+						switch (key) {
+							case 'body_colour':
+								var body = new Container(),
+									colour = critter[key];
+							break;
+						}
+					}
+				}
+				
+				var fillColour;
+				
+				switch (colour) {
+					case 'green':
+						fillColour = Graphics.getRGB(148, 201, 41);
+					break;
+					case 'blue':
+						fillColour = Graphics.getRGB(46, 158, 214);
+					break;
+					case 'black':
+						fillColour = Graphics.getRGB(230, 158, 40);
+					break;
+					case 'white':
+						fillColour = Graphics.getRGB(230, 230, 230);
+					break;
+					case 'red':
+						fillColour = Graphics.getRGB(217, 84, 77);
+					break;
+					case 'pink':
+						fillColour = Graphics.getRGB(212, 142, 214);
+					break;
+					case 'yellow':
+						fillColour = Graphics.getRGB(225, 196, 88);
+					break;
+					case 'orange':
+						fillColour = Graphics.getRGB(232, 158, 40);
+					break;
+					default:
+						fillColour = Graphics.getRGB(255, 255, 255);
+					break;
+				}
+								
 				for (var key in critter) {
 					if (critter.hasOwnProperty(key)) {					
 						switch (key) {
@@ -47,7 +91,7 @@ function build(crit, destination, container) {
 									arms = new Container();					
 								if (critter[key] === 'short') {
 									armG.setStrokeStyle(1, 0, 0, 4);
-									armG.beginFill("#ffffff");
+									armG.beginFill(fillColour);
 									armG.moveTo(4,53);
 									armG.bezierCurveTo(-15,76,40,107,52,84);
 									armG.bezierCurveTo(52,84,81,31,81,31);
@@ -65,7 +109,7 @@ function build(crit, destination, container) {
 									arms.addChild(armL, armR);
 								} else if (critter[key] === 'long'){
 									armG.setStrokeStyle(1, 0, 0, 4);
-									armG.beginFill("#ffffff");
+									armG.beginFill(fillColour);
 									armG.moveTo(53,336);
 									armG.bezierCurveTo(37,361,89,381,97,356);
 									armG.bezierCurveTo(97,356,141,243,141,243);
@@ -152,10 +196,6 @@ function build(crit, destination, container) {
 									preload(hands.image);
 								}*/
 							//break;
-							case 'body_colour':
-								var body = new Container(),
-									colour = critter[key];
-							break;
 							case 'body_type':
 								var body_shape = new Bitmap('../images/critter_assets/bodies/'+ critter[key] + '.png');
 								body_shape.name = critter[key];
@@ -204,13 +244,12 @@ function build(crit, destination, container) {
 							filter = new ColorFilter(1,1,1,1);
 						break;
 					}
+										
 					body.filters = [filter];
-					arms.filters = [filter];
 					legs.filters = [filter];
 					if (accessory && accessory.name === 'tail') accessory.filters = [filter];
 					if (ears) ears.filters = [filter];
 					body.cache(0, 0, body.image.width, body.image.height);
-					arms.cache(0, 0, 460, 400);
 					legs.cache(0, 0, legs.image.width, legs.image.height);
 					if (accessory && accessory.name === 'tail') accessory.cache(0, 0, accessory.image.width, accessory.image.height);
 					if (ears) ears.cache(0, 0, ears.image.width, ears.image.height);

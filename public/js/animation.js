@@ -4,8 +4,21 @@ var theirs,
 	arms;
 
 function getAttributes() {
-	critterApp.yours().getArms() === undefined ? _.delay(getAttributes, 300) : arms = critterApp.yours().getArms();
+	if (critterApp.yours().getArms() === undefined) {
+		_.delay(getAttributes, 300)
+	} else {
+		arms = critterApp.yours().getArms();
+		if (arms.name === 'arms short') {
+			arms.cache(0, 0, 450, 400);
+		} else {
+			//long arms require caching a larger portion of the canvas
+			arms.cache(-300, -400, 750, 538);
+		}
+		
+		console.log(arms);
+	}
 }
+
 getAttributes();
 
 function animateEyes(critter) {
@@ -89,11 +102,7 @@ function animateArms(critter) {
 			if (arms.children[0].scaleY < 1) arms.children[0].scaleY += .5;
 			if (arms.children[0].rotation > 0) arms.children[0].rotation -= 5;
 		}
-		if (arms.name === 'arms short') {
-			arms.cache(0, 0, 450, 400);
-		} else {
-			arms.cache(-300, -400, 750, 538);
-		}
+		arms.uncache();
 	}
 }
 
@@ -106,6 +115,7 @@ function tick() {
 		animateEyes(theirs.getContainer());
 	}
 	animateArms(critterApp.yours());
+	
 	critterApp.yourStage().update();
 	//try { 
 	if (critterApp.theirStage()) critterApp.theirStage().update(); 
