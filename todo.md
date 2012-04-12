@@ -8,7 +8,6 @@ TODO
 * Add delete feature
 * Animate interactions
 * Animate arms
-* Close button for 'weapon' selection
 * Rock/Paper/Scissors images
 * Change background
 * Tweak alert UI

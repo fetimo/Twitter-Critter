@@ -38,6 +38,11 @@ var critterApp = (function() {
 		}
 		
 		if ($('.alert')) {
+			var height = $('.alert').innerHeight(); 
+				if ($('.alert').length > 1) {
+					$('.alert')[1].style.top = height + 'px';
+					$('.alert')[1].style.marginTop = '2em';
+				}
 			$('.alert').slideToggle(750);
 		}
 	}

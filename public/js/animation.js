@@ -14,8 +14,6 @@ function getAttributes() {
 			//long arms require caching a larger portion of the canvas
 			arms.cache(-300, -400, 750, 538);
 		}
-		
-		console.log(arms);
 	}
 }
 
