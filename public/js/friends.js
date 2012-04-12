@@ -39,7 +39,18 @@ $(document).ready(function() {
 		$.ajax({
 			type: 'POST',
 			url: 'http://crittr.me/api/battle?uid='+ critterApp.yourModel().get('uid')+'&opponent='+ friend.get('uid')+'&approve_tweet=1',
-			//success: tweeted
+			success: function() {
+				$('.alert').remove();
+				
+				var alert = document.createElement('div');
+				var root = document.getElementById('content');		
+					//not an error, can show tweet related things
+				alert.className = 'alert alert-success fade in';
+				alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Cool, that\'s been tweeted for you!</p>';
+				alert.style.display = 'block';
+				root.appendChild(alert);
+				$(".alert").alert();
+			}
 		});
 	}
 	
@@ -87,10 +98,6 @@ $(document).ready(function() {
 			$(".alert").alert('close');
 		});
 		$('#tweet').on('click', sendTweet);
-	}
-	
-	function tweeted() {
-		//confirm tweet sent
 	}
 	
 	function clickedWeapon(e) {

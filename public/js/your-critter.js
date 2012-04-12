@@ -297,7 +297,7 @@ function build(crit, destination, container) {
 						noseO.bezierCurveTo(0,14,24,0,41,0);
 						noseO.bezierCurveTo(58,0,81,14,81,31);
 						noseO.closePath();
-						noseI = new Graphics();
+						var noseI = new Graphics();
 						noseI.setStrokeStyle(1, 0, 0, 4);
 						noseI.beginFill("#ffffff");
 						noseI.moveTo(62,18);
