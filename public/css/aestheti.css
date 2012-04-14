@@ -194,6 +194,7 @@ canvas {
 	height: 50px;
 	padding: 20px;
 	margin: auto;
+	margin-top: 2em;
 }
 
 .friend {
@@ -257,18 +258,24 @@ footer a {
 	cursor: hand;  
 }
 
-#left_scroll, #right_scroll {  
+.scroll_arrows {  
 	float: left;  
 }
 
-#left_scroll img, #right_scroll img {  
-	cursor: pointer;  
-	cursor: hand;  
+.scroll_arrows img {  
+	cursor: pointer;
+	cursor: hand;
+}
+
+.scroll_arrows img:active {  
+	position: relative;
+	top: 1px;
 }
 
 .friends_tab {
 	width: 139px;
 	margin: 0 auto;
+	margin-bottom: -2em;
 	-webkit-border-top-left-radius: 4px;
 	-webkit-border-top-right-radius: 4px;
 	-moz-border-radius-topleft: 4px;
@@ -282,28 +289,6 @@ footer a {
 .friends_tab li {
 	float: left;
 	padding: 1em;
-}
-
-.weapon_selection {
-	display: none;
-	left: 500px;
-	top:  200px;
-	position: absolute;
-	width: 200px;
-	padding: 1em;
-	background-color: #fff;
-	box-shadow: 0px 3px 3px rgba(0,0,0,0.3);
-}
-
-.weapon_selection img {
-	cursor: pointer;
-	-moz-transition: ;
-}
-
-.weapon_selection img:hover {
-	-moz-box-shadow: 3px 3px 1em #b3bae9;
-	-webkit-box-shadow: 3px 3px 1em #b3bae9;
-	box-shadow: 3px 3px 1em #b3bae9;
 }
 
 #attributes {
@@ -477,6 +462,19 @@ footer a {
 	outline: 5px auto -webkit-focus-ring-color;
 	outline-offset: -2px;
 }
+.btn-danger {
+    background-color: #DA4F49;
+    background-image: -moz-linear-gradient(center top , #EE5F5B, #BD362F);
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    color: #FFFFFF;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+.btn-danger:hover, .btn-danger:active, .btn-danger.active, .btn-danger.disabled, .btn-danger[disabled] {
+    background-color: #BD362F;
+    color: #FFFFFF;
+}
+
 .btn.active,
 .btn:active {
 	background-image: none;
@@ -529,4 +527,20 @@ footer a {
 .alert p a:not(.btn) {
 	text-decoration: underline;
 	cursor: pointer;
+}
+
+.weapon_selection {
+	display: none;
+	width: 330px;
+}
+
+.weapon_selection img {
+	cursor: pointer;
+	-moz-transition: ;
+}
+
+.weapon_selection img:hover {
+	-moz-box-shadow: 3px 3px 1em #b3bae9;
+	-webkit-box-shadow: 3px 3px 1em #b3bae9;
+	box-shadow: 3px 3px 1em #b3bae9;
 }

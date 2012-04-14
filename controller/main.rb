@@ -33,7 +33,7 @@ class MainController < Controller
 	
 	set_layout 'index' => [:index]
 	
-	trait :flashbox => "<div class='alert alert-info fade in %key'><a class='close' data-dismiss='alert'>&times;</a><p><strong>%key</strong> %value</p></div>"
+	trait :flashbox => "<div id='flash_%key' class='alert alert-info fade in %key'><a class='close' data-dismiss='alert'>&times;</a><p><strong>%key</strong> %value</p></div>"
 	
 	def show_flashbox
     	flashbox
@@ -152,7 +152,7 @@ class MainController < Controller
 			if you
 				if you[:weapon] === nil && you[:opponent]
 					opponent = Twitter.user(you[:opponent]).screen_name
-					flash[:Fisticuffs] = "#{opponent} has started fisticuffs with you! <a>Arm yourself by clicking here.</a>"
+					flash[:Fisticuffs] = "#{opponent} has started fisticuffs with you! <p><a class='btn btn-success' href='#'>Arm Yourself</a><a class='btn btn-danger close_btn' href='#'>Run Away</a></p>"
 				end
 				if you[:hugged_by]
 					flash[:Hugs] = "You've been hugged by "

@@ -1,22 +1,18 @@
 <div id="content">
-	<!--<div class='alert alert-info'>
-		<a class='close' data-dismiss='alert'>&times;</a><p><strong>Alert!</strong> A really important piece of information that you need to take action on. <br>
-		<button class="btn btn-success">Tweet</button><button class="btn">No, thanks</button> </p>
-	</div>-->
 <?r unless @critter.nil? ?>	
 	<div class="preloader_container"><img class="loader" src="../images/spinner.gif"></div>	
 	<canvas id="your-critter" class="critter_container" width="1000" height="500">Critter requires canvas, upgrade to a nice browser.</canvas>
-	<section class="weapon_selection">
+	<?r if session[:access_token] and @username === session[:access_token].params[:screen_name] ?>
+	#{flashbox}
+	<section class="weapon_selection alert alert-info">
 		<a class="close" data-dismiss="alert">&times;</a>
+		<h4>Choose Your Weapon</h4>
 		<ul>
 			<li><img name="3" src="../images/weapons/1.png">Rock</li>
 			<li><img name="2" src="../images/weapons/2.png">Paper</li>
 			<li><img name="1" src="../images/weapons/3.png">Scissors</li>
 		</ul>
 	</section>
-	
-	<?r if session[:access_token] and @username === session[:access_token].params[:screen_name] ?>
-	#{flashbox}
 	<?r 
 	if flash[:Fisticuffs] and flash[:Fisticuffs].include? 'win'
 		uid = session[:access_token].params[:user_id]
@@ -78,7 +74,7 @@
 </div>
 <section class="friends">
 		<?r if session[:friends].count > 4 ?>
-	<div id="left_scroll"><img src="../images/back.png" alt="Backwards"></div>
+	<div class="scroll_arrows" id="left_scroll"><img src="../images/back.png" alt="Backwards"></div>
 		<?r end ?>
 	<div id="carousel_inner">  
     	<ul> 
@@ -91,7 +87,7 @@
 		</ul>
 	</div>
 		<?r if session[:friends].count > 4 ?>
-	<div id='right_scroll'><img src="../images/next.png" alt="Forwards"></div>
+	<div class="scroll_arrows" id='right_scroll'><img src="../images/next.png" alt="Forwards"></div>
 		<?r end ?>
 </section>
 	<?r end ?>

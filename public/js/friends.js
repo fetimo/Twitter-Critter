@@ -1,14 +1,4 @@
-$(document).ready(function() {
-//	$('.friend').draggable({
-//		revert: true,
-//		helper: 'clone',
-//		containment: 'document',
-//		zIndex: 10000,
-//        appendTo: "body"
-//	});
-//	$('#your-critter').droppable({
-//		drop: function(event, ui) { loadFriend(event, ui) }
-//	});
+$(document).ready(function() {	
 	
 	function loadFriend (event, ui) {
 		ui === undefined ? ui = event.currentTarget.id : ui =  ui.draggable.context.id;
@@ -42,9 +32,9 @@ $(document).ready(function() {
 			success: function() {
 				$('.alert').remove();
 				
-				var alert = document.createElement('div');
-				var root = document.getElementById('content');		
-					//not an error, can show tweet related things
+				var alert = document.createElement('div'),
+					root = document.getElementById('content');
+				//not an error, can show tweet related things
 				alert.className = 'alert alert-success fade in';
 				alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Cool, that\'s been tweeted for you!</p>';
 				alert.style.display = 'block';
@@ -54,13 +44,19 @@ $(document).ready(function() {
 		});
 	}
 	
-	function stopFighting() { 
+	function stopFighting() {	
+		if (typeof friend === 'undefined') {
+			var friend = critterApp.theirs();
+		} else {
+			
+		}
+
 		$.ajax({
 			type: 'POST',
 			url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&friend=' + friend.get('name'),
 			success: function(){
-				var alert = document.createElement('div');
-				var root = document.getElementById('content');		
+				var alert = document.createElement('div'),
+					root = document.getElementById('content');		
 					//not an error, can show tweet related things
 				alert.className = 'alert alert-success fade in';
 				alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>You\'ve hugged ' + friend.get('name') + ' :)</p>';
@@ -71,18 +67,19 @@ $(document).ready(function() {
 	}
 	
 	function prepFight() {
-		$('.weapon_selection').css('display', 'block');
+		$('.weapon_selection').slideToggle(750);
 		$('.weapon_selection img').on('click', clickedWeapon);
 	}
 	
 	function prepFightRetaliate() {
-		$('.weapon_selection').css('display', 'block');
+		if (!$('.weapon_selection').length) console.log('no weapon selection');
+		$('.weapon_selection').slideToggle(750);
 		$('.weapon_selection img').on('click', clickedWeaponRetaliate);
 	}
 	
 	function success(response) {
-		var alert = document.createElement('div');
-		var root = document.getElementById('content');
+		var alert = document.createElement('div'),
+			root = document.getElementById('content');
 		alert.style.display = 'block';
 		if (response.response.substring(0,5) !== 'Error') {
 			//not an error, can show tweet related things
@@ -125,6 +122,7 @@ $(document).ready(function() {
 	$('#hug').on('click', stopFighting);
 	
 	if ($('.Fisticuffs').length) {
-		$('.Fisticuffs p a').on('click', prepFightRetaliate);
+		$('.Fisticuffs a.btn-success').on('click', prepFightRetaliate);
+		$('.Fisticuffs a.btn-danger').on('click', stopFighting);
 	}
 });

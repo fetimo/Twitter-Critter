@@ -2,6 +2,7 @@ var critterApp = (function() {
 	
 	var critter,
 		stage,
+		friend,
 		friend_stage;
 			
 	var Critter = Backbone.Model.extend({
@@ -27,16 +28,15 @@ var critterApp = (function() {
 		
 		critter = build(your_critter, stage, critter_container);
 		
-		if (document.getElementById('flash_fisticuffs')) {
+		if (document.getElementById('flash_Fisticuffs')) {
 			//initial new fight
-			var str = document.getElementById('flash_fisticuffs').innerHTML,
+			var str = document.getElementById('flash_Fisticuffs').textContent,
 				strings = str.split(' '),
-				friend = new Critter (strings[0]),
 				critter_container2 = new Container();
-			
+			friend = new Critter(strings[1]);
 			theirs = build(friend, friend_stage, critter_container2);
 		}
-		
+				
 		if ($('.alert')) {
 			var height = $('.alert').innerHeight(); 
 				if ($('.alert').length > 1) {
@@ -44,12 +44,17 @@ var critterApp = (function() {
 					$('.alert')[1].style.marginTop = '2em';
 				}
 			$('.alert').slideToggle(750);
+			$('.weapon_selection').css('display','none');
 		}
 	}
 	
 	
 	function getYours() {
 		return critter;
+	}
+	
+	function getTheirs() {
+		return friend;
 	}
 	
 	function getYourCritterModel() {
@@ -71,6 +76,7 @@ var critterApp = (function() {
 	return {
 		init: init,
 		yours: getYours,
+		theirs: getTheirs,
 		yourStage: getStage,
 		theirStage: getTheirStage,
 		model: getCritterModel,

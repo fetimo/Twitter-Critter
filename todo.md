@@ -10,5 +10,4 @@ TODO
 * Animate arms
 * Rock/Paper/Scissors images
 * Change background
-* Tweak alert UI
 * Response when you retaliate, auto check win/draw/lose and tweet about it

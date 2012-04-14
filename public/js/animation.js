@@ -38,6 +38,7 @@ function animateEyes(critter) {
 	if (pupils.parent.name === 'small_black') {
 		pupils = pupils.parent;
 	}*/
+	
 	/* actual animations */
 	function leftToRight() {
 		try {
@@ -115,7 +116,5 @@ function tick() {
 	animateArms(critterApp.yours());
 	
 	critterApp.yourStage().update();
-	//try { 
 	if (critterApp.theirStage()) critterApp.theirStage().update(); 
-	//} catch(e) {}
 }
