@@ -20,9 +20,6 @@ class ApiController < Controller
 			DB.fetch('SELECT critter FROM critters WHERE name = ? LIMIT 1', username) do |row|
 				@response = row[:critter]
 			end
-		elsif request.delete?
-			DB[:critters].filter(:uid => uid).delete
-			@response = 'Critter has been deleted'
 		end
 		@response
 	end
@@ -168,10 +165,24 @@ class ApiController < Controller
 					response = fight.where(:uid => uid).delete
 				end
 			rescue => e
-				response = "Error: Unable to hug"
+				response = "Error: Unable to remove fight"
 				message = e.message
 			end
 			
+		elsif request.patch?
+			#remove fight
+			begin
+				you = fight.filter(:uid => uid).first
+				opp = you[:opponent]
+				DB.transaction do
+					fight.where(:uid => opp).update(:status => nil, :weapon => nil, :opponent => nil, :start => nil, :ran_away => uid)
+					fight.where(:uid => uid).update(:status => nil, :weapon => nil, :opponent => nil, :start => nil)
+				end
+				
+			rescue => e
+				response = "Error: Unable to run away"
+				message = e.message
+			end
 		end
 		
 		message = {"response" => response, "detail" => message}

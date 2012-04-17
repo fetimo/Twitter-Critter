@@ -110,7 +110,6 @@ class MainController < Controller
 	end
 	
 	def critter(username)
-		#session.flush # experimental, remove asap
 		@username = username
 		DB.fetch('SELECT critter FROM critters WHERE name = ? LIMIT 1', @username) do |row|
 			@critter = row[:critter]
@@ -167,6 +166,13 @@ class MainController < Controller
 					flash[:Hugs] << " :)"
 					
 					fight.where(:uid => p[:user_id]).update(:hugged_by => nil)
+				end
+				if you[:ran_away] #if opponent ran away
+					opp = Twitter.user(you[:ran_away]).screen_name
+					
+					flash[:Ran] = opp << " didn't want to fight and ran away!"
+					
+					fight.where(:uid => p[:user_id]).update(:ran_away => nil)
 				end
 				if you[:status] === 'ready'
 					#if in battle

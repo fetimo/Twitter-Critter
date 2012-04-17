@@ -28,7 +28,7 @@ $(document).ready(function() {
 	function sendTweet() {
 		$.ajax({
 			type: 'POST',
-			url: 'http://crittr.me/api/battle?uid='+ critterApp.yourModel().get('uid')+'&opponent='+ friend.get('uid')+'&approve_tweet=1',
+			url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid')+'&opponent=' + friend.get('uid') + '&approve_tweet=1',
 			success: function() {
 				$('.alert').remove();
 				
@@ -45,16 +45,16 @@ $(document).ready(function() {
 	}
 	
 	function stopFighting() {	
+		console.log(friend);
+		
 		if (typeof friend === 'undefined') {
 			var friend = critterApp.theirs();
-		} else {
-			
 		}
 
 		$.ajax({
 			type: 'POST',
-			url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&friend=' + friend.get('name'),
-			success: function(){
+			url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&friend=' + friend.get('uid'),
+			success: function() {
 				var alert = document.createElement('div'),
 					root = document.getElementById('content');		
 					//not an error, can show tweet related things
@@ -62,6 +62,29 @@ $(document).ready(function() {
 				alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>You\'ve hugged ' + friend.get('name') + ' :)</p>';
 				root.appendChild(alert);
 				$(".alert").alert();
+			}
+		}); 
+	}
+	
+	function runAway() {			
+		var friend = critterApp.theirs();
+		
+		$.ajax({
+			type: 'PATCH',
+			url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&friend=' + friend.get('uid'),
+			success: function(response) {
+				$('.alert').remove();
+				if (response.response === 1) {
+					var alert = document.createElement('div'),
+						root = document.getElementById('content');
+					alert.className = 'alert alert-info';
+					alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>You\'ve successfully run away!</p>';
+					alert.style.display = 'block';
+					root.appendChild(alert);
+					$('.close_btn').on('click', function() {
+						$(".alert").alert('close');
+					});
+				}
 			}
 		}); 
 	}
@@ -123,6 +146,6 @@ $(document).ready(function() {
 	
 	if ($('.Fisticuffs').length) {
 		$('.Fisticuffs a.btn-success').on('click', prepFightRetaliate);
-		$('.Fisticuffs a.btn-danger').on('click', stopFighting);
+		$('.Fisticuffs a.btn-danger').on('click', runAway);
 	}
 });

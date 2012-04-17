@@ -213,7 +213,7 @@ function build(crit, destination, container) {
 					}
 				}
 												
-				function setColour(colour, body) {
+				function setColour(colour, body) {					
 					var filter;
 					switch(colour) {
 						case 'green':
@@ -244,7 +244,7 @@ function build(crit, destination, container) {
 							filter = new ColorFilter(1,1,1,1);
 						break;
 					}
-										
+					
 					body.filters = [filter];
 					legs.filters = [filter];
 					if (accessory && accessory.name === 'tail') accessory.filters = [filter];
@@ -253,7 +253,7 @@ function build(crit, destination, container) {
 					legs.cache(0, 0, legs.image.width, legs.image.height);
 					if (accessory && accessory.name === 'tail') accessory.cache(0, 0, accessory.image.width, accessory.image.height);
 					if (ears) ears.cache(0, 0, ears.image.width, ears.image.height);
-									
+															
 					//eyelids
 					var	r = Math.round(filter.redMultiplier * 255)-20,
 						g = Math.round(filter.greenMultiplier * 255)-20,
@@ -312,7 +312,7 @@ function build(crit, destination, container) {
 					}
 					
 					position();
-					return this;
+					//return this;
 				}
 					
 				function position() {				
@@ -328,11 +328,10 @@ function build(crit, destination, container) {
 					}
 					legs.x = 80;
 					legs.y = 230;
-					if (legs.name === 'long') {
-						legs.y = 280;
-					}
+					if (legs.name === 'long') legs.y = 280;
 					arms.x = -20;
 					arms.y = -90;
+					if (body.children[0].name === 'simple') arms.x = -43;
 					arms.children[0].regX = 50;
 					arms.children[0].regY = 40;
 					arms.children[1].regX = 50;
@@ -448,10 +447,7 @@ function build(crit, destination, container) {
 					destination.removeAllChildren();		
 					destination.addChild(container);
 					
-					if (window.requestAnimationFrame || window.mozRequestAnimationFrame) {
-				    	Ticker.useRAF = true;
-				    }
-				    
+				    Ticker.useRAF = true;				    
 					Ticker.addListener(window);
 					Ticker.setFPS(40);
 					$('.loader').fadeOut(750, function() {
