@@ -1,6 +1,6 @@
-var theirs,
-	wave = 0,
+var wave = 0,
 	oscillate = true,
+	theirs,
 	arms;
 
 function getAttributes() {

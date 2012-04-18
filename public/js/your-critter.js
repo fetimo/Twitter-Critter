@@ -253,6 +253,49 @@ function build(crit, destination, container) {
 					legs.cache(0, 0, legs.image.width, legs.image.height);
 					if (accessory && accessory.name === 'tail') accessory.cache(0, 0, accessory.image.width, accessory.image.height);
 					if (ears) ears.cache(0, 0, ears.image.width, ears.image.height);
+						
+					if (accessory && accessory.name === 'tail') {
+						function animateTail() {
+							var frames;
+							
+							$.ajax({
+								url: "../images/tails/tail-"+colour+".json"
+							}).done(function(response) {
+								frames = response.frames;
+								var tailData = {
+							    "images":[
+							        "../images/tails/tail-"+colour+".png",
+							    ],
+							    "frames": frames,
+							    "animations": {"all": {"frames": [0, 1]}}
+							};
+							
+							var sheet = new SpriteSheet(tailData);
+							
+							if (!sheet.complete) {
+								// not preloaded, listen for onComplete:
+								sheet.onComplete = animateTail;
+							} else {
+								// add to stage
+								var tail = new BitmapAnimation(sheet);
+								tail.x = 156;
+								tail.y = 270;
+								tail.paused = false;
+								tail.filters = [filter];
+								tail.onAnimationEnd = function() {
+									tail.paused = true;
+									function play() {
+										if (tail.paused === true) tail.paused = false;
+									}
+									setTimeout(play, 4000);
+								};
+								container.addChildAt(tail, 1);
+							}
+							});
+						}
+						
+						animateTail();
+					}
 															
 					//eyelids
 					var	r = Math.round(filter.redMultiplier * 255)-20,
@@ -428,6 +471,7 @@ function build(crit, destination, container) {
 							if (eyes.name === 'small_black') nose.y = -10;
 						}
 					}
+					
 					container.y = 70;
 					container.x = 70;
 					if (legs.name === 'short') {
@@ -436,7 +480,6 @@ function build(crit, destination, container) {
 							container.y += 57;
 						}
 					}
-					if (accessory) if (accessory.name === 'tail') container.addChild(accessory);
 					container.addChild(legs, body, eyes, arms);
 					if (face) container.addChild(face);
 					if (nose) container.addChild(nose);
