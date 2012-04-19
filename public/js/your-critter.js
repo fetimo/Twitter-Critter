@@ -256,42 +256,45 @@ function build(crit, destination, container) {
 						
 					if (accessory && accessory.name === 'tail') {
 						function animateTail() {
-							var frames;
+							var frames,
+								img = new Image();
 							
-							$.ajax({
-								url: "../images/tails/tail-"+colour+".json"
-							}).done(function(response) {
-								frames = response.frames;
-								var tailData = {
-							    "images":[
-							        "../images/tails/tail-"+colour+".png",
-							    ],
-							    "frames": frames,
-							    "animations": {"all": {"frames": [0, 1]}}
-							};
+							img.src = "../images/tails/tail-" + colour + ".png";
 							
-							var sheet = new SpriteSheet(tailData);
-							
-							if (!sheet.complete) {
-								// not preloaded, listen for onComplete:
-								sheet.onComplete = animateTail;
-							} else {
-								// add to stage
-								var tail = new BitmapAnimation(sheet);
-								tail.x = 156;
-								tail.y = 270;
-								tail.paused = false;
-								tail.filters = [filter];
-								tail.onAnimationEnd = function() {
-									tail.paused = true;
-									function play() {
-										if (tail.paused === true) tail.paused = false;
+							img.onload = function (e) {
+								$.ajax({
+									url: "../images/tails/tail-" + colour + ".json"
+								}).done(function(response) {
+									response = $.parseJSON(response);
+									frames = response.frames;
+									var tailData = {
+									    "images" : [img],
+									    "frames" : frames,
+									    "animations" : {"all": {"frames" : [0, 1]}}
+									};
+																		
+									var sheet = new SpriteSheet(tailData);
+																		
+									if (!sheet.complete) {
+										// not preloaded, listen for onComplete:
+										sheet.onComplete = animateTail;
+									} else {
+										// add to stage
+										var tail = new BitmapAnimation(sheet);
+										tail.x = 156;
+										tail.y = 270;
+										tail.paused = false;
+										tail.onAnimationEnd = function() {
+											tail.paused = true;
+											function play() {
+												if (tail.paused === true) tail.paused = false;
+											}
+											setTimeout(play, 4000);
+										};
+										container.addChildAt(tail, 1);
 									}
-									setTimeout(play, 4000);
-								};
-								container.addChildAt(tail, 1);
-							}
-							});
+								});
+							};
 						}
 						
 						animateTail();
