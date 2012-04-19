@@ -7,10 +7,10 @@ $(document).ready(function() {
 			critterApp.yourStage().update();
 		} else {
 			var their_critter;
-		}		
+		}
 		var username = ui,
-			critter_container2 = new Container();
-		var Critter = critterApp.model();
+			critter_container2 = new Container(),
+			Critter = critterApp.model();
 		friend = new Critter(username);
 		$('.loader').fadeIn(400, function() {
 			$('.loader').css('visibility', 'visible');
@@ -44,9 +44,7 @@ $(document).ready(function() {
 		});
 	}
 	
-	function stopFighting() {	
-		console.log(friend);
-		
+	function stopFighting() {			
 		if (typeof friend === 'undefined') {
 			var friend = critterApp.theirs();
 		}
@@ -95,7 +93,7 @@ $(document).ready(function() {
 	}
 	
 	function prepFightRetaliate() {
-		if (!$('.weapon_selection').length) console.log('no weapon selection');
+		//if (!$('.weapon_selection').length) console.log('no weapon selection');
 		$('.weapon_selection').slideToggle(750);
 		$('.weapon_selection img').on('click', clickedWeaponRetaliate);
 	}

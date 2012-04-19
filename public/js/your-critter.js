@@ -378,6 +378,7 @@ function build(crit, destination, container) {
 					arms.x = -20;
 					arms.y = -90;
 					if (body.children[0].name === 'simple') arms.x = -43;
+					if (body.children[0].name === 'simple' && arms.name === 'arms long') arms.x = -20;
 					arms.children[0].regX = 50;
 					arms.children[0].regY = 40;
 					arms.children[1].regX = 50;

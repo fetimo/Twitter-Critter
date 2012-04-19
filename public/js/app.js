@@ -1,5 +1,4 @@
 var critterApp = (function() {
-	
 	var critter,
 		stage,
 		friend,
@@ -28,7 +27,7 @@ var critterApp = (function() {
 		
 		critter = build(your_critter, stage, critter_container);
 		
-		if (document.getElementById('flash_Fisticuffs')) {
+		if (document.getElementById('flash_Fisticuffs') && !document.getElementById('attributes')) {
 			//initial new fight
 			var str = document.getElementById('flash_Fisticuffs').textContent,
 				strings = str.split(' '),
@@ -73,6 +72,10 @@ var critterApp = (function() {
 		return Critter;
 	}
 	
+	function newCritter(username) {
+		return new Critter(username);
+	}
+	
 	return {
 		init: init,
 		yours: getYours,
@@ -80,6 +83,7 @@ var critterApp = (function() {
 		yourStage: getStage,
 		theirStage: getTheirStage,
 		model: getCritterModel,
+		critter: newCritter,
 		yourModel: getYourCritterModel
 	}
 }());

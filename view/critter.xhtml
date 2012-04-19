@@ -18,11 +18,15 @@
 		uid = session[:access_token].params[:user_id]
 		begin
 			you = DB[:interactions].filter(:uid => uid).first
+			@theirs = Twitter.user(you[:opponent]).screen_name
+			show_js = true
 			@opp_attribs = DB[:critters].filter(:uid => you[:opponent]).select(:arms, :eye_colour, :ears, :mouth, :legs, :face, :hands, :nose, :body_colour, :body, :body_type, :accessory).first #=> returns hash of attributes
 			@timestamp = you[:start]
 			?> <div class="alert alert-info">
-				<a class='close' data-dismiss='alert'>&times;</a
-				<p>Give me their&hellip;</p>
+				<a class='close' data-dismiss='alert'>&times;</a>
+				<p>Now that you've won, you can choose an attribute of theirs to have for yourself.
+				<br>
+				Give me their&hellip;</p>
 				<ul id="attributes"> <?r
 				@opp_attribs.each do |r| ?>
 					#{ render_partial :attribute, { :attribute=>r[0].to_s, :value=>r[1] } }
@@ -35,23 +39,6 @@
 		end
 	?>
 </div>
-<script>
-if (document.getElementById('attributes')) {		
-	$('#attributes').children().on('click', function() {
-		$.ajax({
-			type: 'POST',
-			url: 'http://crittr.me/api/battle?uid=' + your_critter.get('uid') + '&attribute=' + this.id + '&hash='+#{@timestamp},
-			complete: function() {
-				$('#attributes').remove();
-				stage.removeAllChildren();
-				your_critter.fetch(); 
-				critter = build(your_critter, stage, critter_container); 
-				stage.update();
-			}
-		});
-	});
-}
-</script>
 <?r 
 	elsif flash[:Fisticuffs] and flash[:Fisticuffs].include? 'draw'
 		uid = session[:access_token].params[:user_id]
@@ -107,6 +94,35 @@ var username = '#{@username}';
 #{(js('app'))}
 #{js('friends')}
 #{js('animation')}
+	<?r if show_js ?>
+	<script>
+	if (document.getElementById('attributes')) {		
+		var critter_container2 = new Container();
+		var friend = critterApp.critter("#{@theirs}");
+		var theirs = build(friend, critterApp.theirStage(), critter_container2);
+		if ($('.alert')) {
+			if ($('.alert').length) {
+				$('.alert')[2].style.top = '105px';
+				$('.alert')[2].style.marginTop = '2em';
+			}
+		}
+			
+		$('#attributes').children().on('click', function() {
+			$.ajax({
+				type: 'POST',
+				url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&attribute=' + this.id + '&hash='+#{@timestamp},
+				complete: function() {
+					$('#attributes').remove();
+					critterApp.yourStage().removeAllChildren();
+					your_critter.fetch(); 
+					critter = build(your_critter, stage, critter_container); 
+					critterApp.yourStage().update();
+				}
+			});
+		});
+	}
+	</script>
+	<?r end ?>
 <?r else ?>
 <p>No Critter called #{@username} exists yet! You can <a href="/user/#{@username}">give life to it though</a>.</p>
 <?r end ?>

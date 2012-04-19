@@ -131,7 +131,7 @@ class MainController < Controller
 			
 			friends = Twitter.friend_ids
 			
-			if session[:friends].nil?			
+			if session[:friends].nil?
 				friends_w_critter = Array.new
 				
 				dataset = DB[:critters]

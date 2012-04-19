@@ -170,7 +170,7 @@ class ApiController < Controller
 			end
 			
 		elsif request.patch?
-			#remove fight
+			#update fight details
 			begin
 				you = fight.filter(:uid => uid).first
 				opp = you[:opponent]
@@ -178,7 +178,7 @@ class ApiController < Controller
 					fight.where(:uid => opp).update(:status => nil, :weapon => nil, :opponent => nil, :start => nil, :ran_away => uid)
 					fight.where(:uid => uid).update(:status => nil, :weapon => nil, :opponent => nil, :start => nil)
 				end
-				
+				response = "Successfully updated"
 			rescue => e
 				response = "Error: Unable to run away"
 				message = e.message
