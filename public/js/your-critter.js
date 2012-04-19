@@ -146,13 +146,6 @@ function build(crit, destination, container) {
 									preload(pattern.image);
 								}
 							break;
-							case 'nose':
-								if (critter[key] !== 'none') {
-									var nose = new Bitmap('../images/critter_assets/noses/'+ critter[key] + '.png');
-									nose.name = critter[key];
-									preload(nose.image);
-								}
-							break;
 							case 'legs':
 								var legs = new Bitmap('../images/critter_assets/legs/'+ critter[key] + '.png');
 								legs.name = critter[key];
@@ -166,7 +159,7 @@ function build(crit, destination, container) {
 								}
 							break;
 							case 'face':
-								if (critter[key] !== 'none' && !nose) {
+								if (critter[key] !== 'none') {
 									var face = true;
 								}
 							break;
@@ -391,11 +384,6 @@ function build(crit, destination, container) {
 						arms.children[1].regX = 125;
 						arms.children[1].regY = 230;
 					}
-					if (nose) {
-						nose.y = -70;
-						nose.x = -50;
-						if (eyes.name === 'small_black') nose.y = -10; 
-					}
 					mouth.x = Math.round(eyes.children[0].image.width/2) - 15;
 					mouth.y = 220;
 					if (mouth.name === 'fangs') {
@@ -468,11 +456,7 @@ function build(crit, destination, container) {
 							//face.y = eyes.children[0].image.height + 25;
 							face.y += 10;
 							face.x += 35;
-						}
-						if (nose) {
-							//nose.x = Math.round(-eyes.children[0].image.width/3);
-							//nose.y = eyes.children[0].image.height + 25;
-							if (eyes.name === 'small_black') nose.y = -10;
+							if (eyes.name === 'small_black') face.y = -10;
 						}
 					}
 					
@@ -486,7 +470,6 @@ function build(crit, destination, container) {
 					}
 					container.addChild(legs, body, eyes, arms);
 					if (face) container.addChild(face);
-					if (nose) container.addChild(nose);
 					if (mouth) container.addChild(mouth);
 					if (ears) container.addChild(ears);
 					if (accessory) if (accessory.name !== 'tail') container.addChild(accessory);

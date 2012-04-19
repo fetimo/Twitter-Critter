@@ -138,18 +138,14 @@ class Critter
 	
 	def fetch_tweet(result)
 		tweet = {:username => String, :tweet => String, :id => 0, :uid => 0}
-		
-		puts tweet
-		
+				
 		tweet[:username] = result.user.screen_name
 		#remove hashtag
 		tweet[:tweet] = result.text.sub(/#critter/, '')
 		#tweet[:geocode] = result.geo
 		tweet[:id] = result.id.to_int
 		tweet[:uid] = result.user.id.to_int
-		
-		puts tweet
-		
+				
 		@@default_critter[:name] = tweet[:username]
 		@@default_critter[:location] = tweet[:geocode]
 		@@default_critter[:uid] = tweet[:uid]
@@ -235,9 +231,7 @@ class Critter
 		critter = Yajl::Encoder.encode(critter)
 				
 		@@default_critter[:critter] = critter
-		
-		p critter
-		
+				
 		#Thread.new do
 			critters.insert(@@default_critter)
 		#end

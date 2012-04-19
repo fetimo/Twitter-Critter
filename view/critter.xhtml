@@ -112,10 +112,10 @@ var username = '#{@username}';
 				type: 'POST',
 				url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&attribute=' + this.id + '&hash='+#{@timestamp},
 				complete: function() {
-					$('#attributes').remove();
+					$('.alert').remove();
 					critterApp.yourStage().removeAllChildren();
-					your_critter.fetch(); 
-					critter = build(your_critter, stage, critter_container); 
+					critterApp.yours().fetch(); 
+					critter = build(your_critter, critterApp.yourStage(), critter_container); 
 					critterApp.yourStage().update();
 				}
 			});
