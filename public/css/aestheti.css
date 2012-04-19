@@ -94,6 +94,8 @@ button {
 	font-family: "Aller Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-weight: normal;
 	font-size: 160%;
+	filter:  progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#F83737', endColorstr='#8F3837'); /* IE6 & IE7 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#F83737', endColorstr='#8F3837')"; /* IE8 */
 	background-image: -o-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
 	background-image: -moz-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
 	background-image: -webkit-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
@@ -142,6 +144,8 @@ button {
 }
 
 #topBar button {
+	filter:  progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#F83737', endColorstr='#8F3837'); /* IE6 & IE7 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#F83737', endColorstr='#8F3837')"; /* IE8 */
 	background-image: -o-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
 	background-image: -moz-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
 	background-image: -webkit-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
