@@ -557,3 +557,7 @@ footer a {
 	-webkit-box-shadow: 3px 3px 1em #b3bae9;
 	box-shadow: 3px 3px 1em #b3bae9;
 }
+
+#flash_Tutorial {
+	display: none; //otherwise .alert's autoshow feature kicks in
+}

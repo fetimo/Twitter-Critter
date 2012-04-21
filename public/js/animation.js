@@ -93,6 +93,18 @@ function animateEyes(critter) {
 	}
 }
 
+function hug() {
+	//sidle next to them
+	
+	//raise arm
+	
+	//rub arm up and down
+	
+	//bring arm back down
+	
+	//resume original position
+}
+
 function animateArms(critter) {
 	if (arms) {
 		var lArm = arms.children[0];

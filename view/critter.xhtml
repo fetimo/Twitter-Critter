@@ -6,6 +6,11 @@
 	#{flashbox}
 	<section class="weapon_selection alert alert-info">
 		<a class="close" data-dismiss="alert">&times;</a>
+		<?r if @fisticuffs_tutorial ?>
+			<h4>First time here?</h4>
+			<p>If you start fisticuffs with someone then they will see a message when they login telling them what to do next. If you win the fight you'll be able to choose a feature of theirs that you like to have yourself!</p>
+			<br>
+		<?r end ?>
 		<h4>Choose Your Weapon</h4>
 		<ul>
 			<li><img name="3" src="../images/weapons/1.png">Rock</li>

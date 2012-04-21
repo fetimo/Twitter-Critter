@@ -45,9 +45,7 @@ $(document).ready(function() {
 	}
 	
 	function stopFighting() {			
-		if (typeof friend === 'undefined') {
-			var friend = critterApp.theirs();
-		}
+		if (typeof friend === 'undefined') var friend = critterApp.theirs();
 
 		$.ajax({
 			type: 'POST',
@@ -55,11 +53,12 @@ $(document).ready(function() {
 			success: function() {
 				var alert = document.createElement('div'),
 					root = document.getElementById('content');		
-					//not an error, can show tweet related things
+				//not an error, can show tweet related things
 				alert.className = 'alert alert-success fade in';
 				alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>You\'ve hugged ' + friend.get('name') + ' :)</p>';
 				root.appendChild(alert);
 				$(".alert").alert();
+				hug();
 			}
 		}); 
 	}
@@ -89,6 +88,7 @@ $(document).ready(function() {
 	
 	function prepFight() {
 		$('.weapon_selection').slideToggle(750);
+		$('#flash_Tutorial').css('display','block');
 		$('.weapon_selection img').on('click', clickedWeapon);
 	}
 	

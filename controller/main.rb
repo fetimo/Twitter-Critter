@@ -149,6 +149,11 @@ class MainController < Controller
 			fight = DB[:interactions]
 			you = fight.where(:uid => p[:user_id]).first
 			if you
+				if !you[:tutorial]
+					@fisticuffs_tutorial = true
+					fight.where(:uid => p[:user_id]).update(:tutorial => 1)
+				end
+				
 				if you[:weapon] === nil && you[:opponent]
 					opponent = Twitter.user(you[:opponent]).screen_name
 					flash[:Fisticuffs] = "#{opponent} has started fisticuffs with you! <p><a class='btn btn-success' href='#'>Arm Yourself</a><a class='btn btn-danger close_btn' href='#'>Run Away</a></p>"
