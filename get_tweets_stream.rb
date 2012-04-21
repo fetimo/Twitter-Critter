@@ -47,16 +47,16 @@ RULES = {
 		'j' => 'button'
 	},
 	:eye_colour => {
-		'a' => 'green',
-		'e' => 'blue',
-		'o' => 'orange',
-		'i' => 'brown',
-		'u' => 'yellow',
-		'A' => 'deep_blue',
-		'E' => 'small_black',
-		'I' => 'purple',
-		'O' => 'pink',
-		'U' => 'black'
+		'A' => 'green',
+		'E' => 'blue',
+		'I' => 'orange',
+		'O' => 'brown',
+		'U' => 'yellow',
+		'a' => 'deep_blue',
+		'e' => 'small_black',
+		'i' => 'purple',
+		'o' => 'pink',
+		'u' => 'black'
 	},
 	:legs => {
 		'n' => 'long',

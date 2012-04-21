@@ -1,13 +1,15 @@
 var wave = 0,
 	oscillate = true,
 	theirs,
-	arms;
+	arms,
+	eyes;
 
 function getAttributes() {
-	if (critterApp.yours().getArms() === undefined) {
+	if (critterApp.yours().getArms() === undefined || critterApp.yours().getEyes() === undefined) {
 		_.delay(getAttributes, 300)
 	} else {
 		arms = critterApp.yours().getArms();
+		eyes = critterApp.yours().getEyes();
 		if (arms.name === 'arms short') {
 			arms.cache(0, 0, 450, 400);
 		} else {
@@ -20,42 +22,43 @@ function getAttributes() {
 getAttributes();
 
 function animateEyes(critter) {
-		
+
 	var eyeAnimations = [0,1,2], //array of available functions
-		waitTime = Math.round(2000+(Math.random()*(8000-2000)));
-	
-	//need to change this so we're not using a for loop _every_ frame	
-	for (var i=0; i < critter.children.length; i+=1) { 
-		if (critter.children[i].name && critter.children[i].name.substr(0,4) === 'eyes') {
-			var eyes = critter.children[i],
-				pupils = eyes.children[1];
-			break;
-		}
-	}
+		waitTime = Math.round(2000+(Math.random()*(8000-2000))),
+		pupils = eyes.children[1];	
 	
 	/*
+	if (eyes.name === 'eyes small_black') {
+		pupils = eyes.children[0];
+	}
+	
 	//this makes the small black eyes move, but it doesn't look very good
 	if (pupils.parent.name === 'small_black') {
 		pupils = pupils.parent;
-	}*/
+	}
+	*/
 	
 	/* actual animations */
 	function leftToRight() {
 		try {
-			if (pupils.x <= 3) {
-				pupils.x += Math.round(Math.random()*3.5);
-			} else {
-				setTimeout(function() { pupils.x -= 3 }, waitTime);
+			if (eyes.name !== 'eyes small_black') {
+				if (pupils.x <= 3) {
+					pupils.x += Math.round(Math.random()*3.5);
+				} else {
+					setTimeout(function() { pupils.x -= 3 }, waitTime);
+				}
 			}
 		} catch(e) {}
 	}
 	
 	function upDown() {
 		try {
-			if (pupils.y < 3) {
-				pupils.y += Math.round(Math.random()*4);
-			} else { 
-				setTimeout(function() { pupils.y -= 3 }, waitTime);
+			if (eyes.name !== 'eyes small_black') {
+				if (pupils.y < 3) {
+					pupils.y += Math.round(Math.random()*4);
+				} else { 
+					setTimeout(function() { pupils.y -= 3 }, waitTime);
+				}
 			}
 		} catch(e) {}
 	}
@@ -64,6 +67,10 @@ function animateEyes(critter) {
 		try {
 			var el = eyes.children[2],
 				el2 = eyes.children[3];
+			if (eyes.name === 'eyes small_black') {
+				el = eyes.children[1];
+				el2 = eyes.children[2];
+			}	
 			el.alpha = 1;
 			el2.alpha = 1;
 			function clearBlink(el,el2) {
@@ -88,20 +95,39 @@ function animateEyes(critter) {
 
 function animateArms(critter) {
 	if (arms) {
+		var lArm = arms.children[0];
 		if (wave <= 2) {
-			if (arms.children[0].scaleY > -1) arms.children[0].scaleY -= .4;
+			if (lArm.scaleY > -1) lArm.scaleY -= .4;
 			if (oscillate) {
-				arms.children[0].rotation += 5;
-				if (arms.children[0].rotation > 60) { oscillate = false; wave += 1}
+				lArm.rotation += 5;
+				if (lArm.rotation > 60) { oscillate = false; wave += 1; }
 			} else if (!oscillate){
-				arms.children[0].rotation -= 5;
-				if (arms.children[0].rotation <= 0) { oscillate = true; }
+				lArm.rotation -= 5;
+				if (lArm.rotation <= 0) { oscillate = true; }
 			}
 		} else {
-			if (arms.children[0].scaleY < 1) arms.children[0].scaleY += .5;
-			if (arms.children[0].rotation > 0) arms.children[0].rotation -= 5;
+			if (lArm.scaleY < 1) lArm.scaleY += .5;
+			if (lArm.rotation > 0) lArm.rotation -= 5;
 		}
 		arms.uncache();
+		
+		/*
+		Jiggle arms
+		if (lArm.scaleY === 1) {
+			//can be fairly certain that waving has stopped
+			var rArm = arms.children[1];
+			
+			//console.log(oscillate, rArm.rotation);
+			if (rArm.rotation === 360) rArm.rotation = 0;
+			if (oscillate) {
+				rArm.rotation -= 5;
+				if (rArm.rotation > 60) { oscillate = false; }
+			} else if (!oscillate){
+				rArm.rotation += 5;
+				if (rArm.rotation <= 5) { oscillate = true; }
+			}
+		}
+		*/
 	}
 }
 

@@ -72,7 +72,7 @@ $(document).ready(function() {
 			url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&friend=' + friend.get('uid'),
 			success: function(response) {
 				$('.alert').remove();
-				if (response.response === 1) {
+				if (response.response.substring(0,7) === 'Success') {
 					var alert = document.createElement('div'),
 						root = document.getElementById('content');
 					alert.className = 'alert alert-info';
@@ -133,10 +133,10 @@ $(document).ready(function() {
 		$.ajax({
 			type: 'POST',
 			url: 'http://crittr.me/api/battle?update=1&uid='+ critterApp.yourModel().get('uid')+'&weapon=' + weapon,
-			//success: success
 		});
 		$('.weapon_selection').css('display','none');
 	}
+	
 	// click handlers	
 	$('#fisticuffs').on('click', prepFight);
 	$('.friend').on('click', loadFriend);

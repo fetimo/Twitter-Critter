@@ -276,6 +276,10 @@ function build(crit, destination, container) {
 										var tail = new BitmapAnimation(sheet);
 										tail.x = 156;
 										tail.y = 270;
+										if (body_shape.name === 'furry') {
+											tail.x = 200;
+											tail.y = 300;
+										}
 										tail.paused = false;
 										tail.onAnimationEnd = function() {
 											tail.paused = true;
@@ -306,7 +310,7 @@ function build(crit, destination, container) {
 					eyelid.bezierCurveTo(0,15.903,6.556,0,26.172,0);
 					eyelid.bezierCurveTo(45.787,0,52.343,15.903,52.343,35.519);
 					var el = new Shape(eyelid);
-					if (eyes.name !== 'small_black') {
+					if (eyes.name !== 'eyes small_black') {
 						el.scaleX = 1.45;
 						el.scaleY = 1.45;
 					} else {
@@ -316,7 +320,7 @@ function build(crit, destination, container) {
 					el.alpha = 0;
 					//clone eyelid to make a second
 					var el2 = el.clone();
-					eyes.name !== 'small_black' ? el2.x += 105 : el2.x += 56;
+					eyes.name !== 'eyes small_black' ? el2.x += 105 : el2.x += 56;
 					eyes.addChild(el,el2);
 					
 					var shadow = new Shadow('rgb('+r+','+g+','+b+')', 0 , 4 , 0);
@@ -351,18 +355,17 @@ function build(crit, destination, container) {
 					}
 					
 					position();
-					//return this;
 				}
 					
 				function position() {				
 					//position elements
-					if (eyes.name !== 'small_black') {
+					if (eyes.name !== 'eyes small_black') {
 						eyes.x = Math.round(body.children[0].image.width/5);
 						eyes.y = 60;
 						eyes.children[1].regY = 5;
 					} else {
 						eyes.x = Math.round(body.children[0].image.width/3);
-						eyes.y = 60;
+						eyes.y = 80;
 						eyes.children[1].regY = 5;
 					}
 					legs.x = 80;
@@ -389,9 +392,9 @@ function build(crit, destination, container) {
 					if (mouth.name === 'fangs') {
 						mouth.y += 10;
 					}
-					if (eyes.name === 'small_black') {
-						mouth.x += -30;
-						mouth.y += -20;
+					if (eyes.name === 'eyes small_black') {
+						mouth.y += -50;
+						mouth.x = 65;
 					}
 					if (pattern) {
 						pattern.x = -96;
@@ -401,7 +404,7 @@ function build(crit, destination, container) {
 					if (face) {
 						face.x = Math.round(eyes.children[0].image.width/2 + 20);
 						face.y = eyes.children[0].image.height + 60;
-						if (eyes.name === 'small_black') face.y = -130;
+						if (eyes.name === 'eyes small_black') face.y = -130;
 					}
 					if (accessory && accessory.name === 'horns') {
 						accessory.x = -100;
@@ -439,6 +442,12 @@ function build(crit, destination, container) {
 						} else if (arms.name === 'arms short') {
 							arms.x += 20;
 						}
+						if (eyes.name === 'eyes small_black') {
+							eyes.x = 150;
+							eyes.y = 130;
+							mouth.x = 110;
+							mouth.y = 230;
+						}
 						if (accessory) {
 							accessory.y += 50;
 							accessory.x += 46;
@@ -452,11 +461,13 @@ function build(crit, destination, container) {
 							}
 						}
 						if (face) {
-							//face.x = Math.round(-eyes.children[0].image.width/3);
-							//face.y = eyes.children[0].image.height + 25;
 							face.y += 10;
 							face.x += 35;
-							if (eyes.name === 'small_black') face.y = -10;
+							if (eyes.name === 'eyes small_black') {
+								face.x += 50;
+								face.y = 180;
+								mouth.y = 240;
+							}
 						}
 					}
 					
@@ -507,11 +518,21 @@ function build(crit, destination, container) {
 		}
 		return arms;
 	}
+	function getEyes() {
+		for (var i=0; i < container.children.length; i+=1) { 
+			if (container.children[i].name && container.children[i].name.substr(0,4) === 'eyes') {
+				var eyes = container.children[i];
+				break;
+			}
+		}
+		return eyes;
+	}
 
 	//your_critter.save(); sends POST request to crittr.me/critters/username
 	return {
 		getContainer: getContainer,
 		getStage: getStage,
-		getArms: getArms
+		getArms: getArms,
+		getEyes: getEyes
 	};
 }

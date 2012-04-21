@@ -91,15 +91,16 @@
 <script>
 var username = '#{@username}';
 </script>
-#{(js('app'))}
+#{js('app')}
 #{js('friends')}
 #{js('animation')}
 	<?r if show_js ?>
 	<script>
 	if (document.getElementById('attributes')) {		
-		var critter_container2 = new Container();
-		var friend = critterApp.critter("#{@theirs}");
-		var theirs = build(friend, critterApp.theirStage(), critter_container2);
+		var critter_container2 = new Container(),
+			friend = critterApp.critter("#{@theirs}"),
+			theirs = build(friend, critterApp.theirStage(), critter_container2);
+			
 		if ($('.alert')) {
 			if ($('.alert').length) {
 				$('.alert')[2].style.top = '105px';
@@ -114,9 +115,11 @@ var username = '#{@username}';
 				complete: function() {
 					$('.alert').remove();
 					critterApp.yourStage().removeAllChildren();
-					critterApp.yours().fetch(); 
-					critter = build(your_critter, critterApp.yourStage(), critter_container); 
+					var your_critter = critterApp.yourModel();
+					your_critter.fetch(); 
+					critter = build(your_critter, critterApp.yourStage(), critterApp.yours().getContainer()); 
 					critterApp.yourStage().update();
+					critterApp.theirStage().removeAllChildren();
 				}
 			});
 		});
