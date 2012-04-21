@@ -1,17 +1,17 @@
 $(document).ready(function() {	
-	
+		
 	function loadFriend (event, ui) {
-		ui === undefined ? ui = event.currentTarget.id : ui =  ui.draggable.context.id;
+		var username = event.currentTarget.id;
 		if (theirs) {
 			theirs.getContainer().removeAllChildren();
 			critterApp.yourStage().update();
 		} else {
 			var their_critter;
 		}
-		var username = ui,
-			critter_container2 = new Container(),
+		var	critter_container2 = new Container(),
 			Critter = critterApp.model();
 		friend = new Critter(username);
+		critterApp.setFriend(friend);	
 		$('.loader').fadeIn(400, function() {
 			$('.loader').css('visibility', 'visible');
 		});
@@ -46,7 +46,8 @@ $(document).ready(function() {
 	
 	function stopFighting() {			
 		if (typeof friend === 'undefined') var friend = critterApp.theirs();
-
+		hugFriend = true;
+		
 		$.ajax({
 			type: 'POST',
 			url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&friend=' + friend.get('uid'),

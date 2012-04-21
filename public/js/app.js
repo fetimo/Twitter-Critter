@@ -47,7 +47,6 @@ var critterApp = (function() {
 		}
 	}
 	
-	
 	function getYours() {
 		return critter;
 	}
@@ -76,6 +75,11 @@ var critterApp = (function() {
 		return new Critter(username);
 	}
 	
+	function setFriend(newFriend) {
+		friend = newFriend;
+		return friend;
+	}
+	
 	return {
 		init: init,
 		yours: getYours,
@@ -84,7 +88,8 @@ var critterApp = (function() {
 		theirStage: getTheirStage,
 		model: getCritterModel,
 		critter: newCritter,
-		yourModel: getYourCritterModel
+		yourModel: getYourCritterModel,
+		setFriend: setFriend
 	}
 }());
 
