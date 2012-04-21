@@ -286,7 +286,8 @@ function build(crit, destination, container) {
 											function play() {
 												if (tail.paused === true) tail.paused = false;
 											}
-											setTimeout(play, 4000);
+											var interval = Math.round(Math.random()*(15000));
+											setTimeout(play, interval);
 										};
 										container.addChildAt(tail, 1);
 									}
