@@ -261,13 +261,11 @@ function build(crit, destination, container) {
 									response = $.parseJSON(response);
 									frames = response.frames;
 									var tailData = {
-									    "images" : [img],
+									    "images" : ["../images/tails/tail-" + colour + ".png"],
 									    "frames" : frames,
 									    "animations" : {"all": {"frames" : [0, 1]}}
 									};
-																		
 									var sheet = new SpriteSheet(tailData);
-																		
 									if (!sheet.complete) {
 										// not preloaded, listen for onComplete:
 										sheet.onComplete = animateTail;
