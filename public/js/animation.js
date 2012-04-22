@@ -4,15 +4,13 @@ var wave = 0,
 	oscillateHug = true,
 	hugFriend = false,
 	theirs,
-	arms,
-	eyes;
+	arms;
 
 function getAttributes() {
 	if (critterApp.yours().getArms() === undefined || critterApp.yours().getEyes() === undefined) {
 		_.delay(getAttributes, 300)
 	} else {
 		arms = critterApp.yours().getArms();
-		eyes = critterApp.yours().getEyes();
 		if (arms.name === 'arms short') {
 			arms.cache(0, 0, 450, 400);
 		} else {
@@ -25,7 +23,19 @@ function getAttributes() {
 getAttributes();
 
 function animateEyes(critter) {
-
+	
+	for (var i=0; i < critter.children.length; i+=1) { 
+		if (critter.children[i].name && critter.children[i].name.substr(0,4) === 'eyes') {
+			var eyes = critter.children[i],
+			pupils = eyes.children[1];
+			break;
+		}
+	}
+	
+	if (eyes.name === 'eyes small_black') {
+		pupils = eyes.children[0];
+	}
+	
 	var eyeAnimations = [0,1,2], //array of available functions
 		waitTime = Math.round(2000+(Math.random()*(8000-2000))),
 		pupils = eyes.children[1];	
