@@ -2,25 +2,11 @@ var wave = 0,
 	rub = 0,
 	oscillate = true,
 	oscillateHug = true,
+	oscillateTheirs = true,
 	hugFriend = false,
-	theirs,
-	arms;
-
-function getAttributes() {
-	if (critterApp.yours().getArms() === undefined || critterApp.yours().getEyes() === undefined) {
-		_.delay(getAttributes, 300)
-	} else {
-		arms = critterApp.yours().getArms();
-		if (arms.name === 'arms short') {
-			arms.cache(0, 0, 450, 400);
-		} else {
-			//long arms require caching a larger portion of the canvas
-			arms.cache(-300, -400, 750, 538);
-		}
-	}
-}
-
-getAttributes();
+	jiggle = false,
+	jiggleTheirs = false,
+	theirs;
 
 function animateEyes(critter) {
 	
@@ -31,6 +17,7 @@ function animateEyes(critter) {
 			break;
 		}
 	}
+	
 	if (eyes) {
 		if (eyes.name === 'eyes small_black') {
 			pupils = eyes.children[0];
@@ -151,42 +138,70 @@ function hug(critter) {
 }
 
 function animateArms(critter) {
-	if (arms) {
+		
+	for (var i=0; i < critter.children.length; i+=1) { 
+		if (critter.children[i].name && critter.children[i].name.substr(0,4) === 'arms') {
+			var arms = critter.children[i];
+			break;
+		}
+	}
+	
+	if (wave !== 42) {
 		var lArm = arms.children[0];
-		if (wave !== 42) {
-			if (wave <= 2) {
-				if (lArm.scaleY > -1) lArm.scaleY -= .4;
-				if (oscillate) {
-					lArm.rotation += 5;
-					if (lArm.rotation > 60) { oscillate = false; wave += 1; }
-				} else if (!oscillate){
-					lArm.rotation -= 5;
-					if (lArm.rotation <= 0) { oscillate = true; }
+		if (wave <= 2) {
+			if (lArm.scaleY > -1) lArm.scaleY -= .4;
+			if (oscillate) {
+				lArm.rotation += 5;
+				if (lArm.rotation > 60) { oscillate = false; wave += 1; }
+			} else if (!oscillate){
+				lArm.rotation -= 5;
+				if (lArm.rotation <= 0) { oscillate = true; }
+			}
+		} else {
+			if (lArm.scaleY < 1) lArm.scaleY += .5;
+			if (lArm.rotation > 0) lArm.rotation -= 5;
+			if (lArm.scaleY === 1 && lArm.rotation === 0) wave = 42; // 42 = waving has finished, used by hug(), dirty reuse of a variable
+		}
+		//arms.uncache();
+	} else {
+		if (jiggle && !hugFriend && critter.id === 7) {			
+			//jiggle arms
+			var lArm = arms.children[0];
+			var rArm = arms.children[1];
+			var speed = Math.round(Math.random()*8);
+			
+			if (rArm.rotation === 360 || rArm.rotation === -360) rArm.rotation = 0;
+			if (oscillate) {
+				rArm.rotation += speed;
+				lArm.rotation += speed;
+				if (rArm.rotation > 220) {
+					oscillate = false;
 				}
 			} else {
-				if (lArm.scaleY < 1) lArm.scaleY += .5;
-				if (lArm.rotation > 0) lArm.rotation -= 5;
-				if (lArm.scaleY === 1 && lArm.rotation === 0) wave = 42; // 42 = waving has finished, used by hug(), dirty reuse of a variable
+				rArm.rotation -= speed;
+				lArm.rotation -= speed;
+				if (rArm.rotation <= 180) oscillate = true;
 			}
-			arms.uncache();
 		}
-		/*
-		Jiggle arms
-		if (lArm.scaleY === 1) {
-			//can be fairly certain that waving has stopped
-			var rArm = arms.children[1];
+		if (jiggleTheirs && !hugFriend && critter.id !== 7) {			
+			//jiggle arms
+			var tlArm = arms.children[0];
+			var trArm = arms.children[1];
+			var speed = Math.round(Math.random()*8);
 			
-			//console.log(oscillate, rArm.rotation);
-			if (rArm.rotation === 360) rArm.rotation = 0;
-			if (oscillate) {
-				rArm.rotation -= 5;
-				if (rArm.rotation > 60) { oscillate = false; }
-			} else if (!oscillate){
-				rArm.rotation += 5;
-				if (rArm.rotation <= 5) { oscillate = true; }
+			if (trArm.rotation === 360 || trArm.rotation === -360) trArm.rotation = 0;
+			if (oscillateTheirs) {
+				trArm.rotation += speed;
+				tlArm.rotation += speed;
+				if (trArm.rotation > 220) {
+					oscillateTheirs = false;
+				}
+			} else {
+				trArm.rotation -= speed;
+				tlArm.rotation -= speed;
+				if (trArm.rotation <= 180) oscillateTheirs = true;
 			}
 		}
-		*/
 	}
 }
 
@@ -194,11 +209,28 @@ function tick() {
 	//only animate some of the time
 	if (Math.round(Math.random()*40) === 4) { //http://xkcd.com/221/
 		animateEyes(critterApp.yours().getContainer());
+		if (jiggle) jiggle = false;
+		var randInt = Math.round(Math.random()*40);
+		if (randInt === 4 || randInt === 3 || randInt === 2 || randInt === 1) {
+			if(!jiggle) jiggle = true;
+		}
 	}
-	if (theirs && theirs.getStage() && Math.round(Math.random()*40) === 4) {
-		animateEyes(theirs.getContainer());
+	
+	if (theirs && theirs.getArms()) {
+			
+		animateArms(theirs.getContainer());
+		
+		if (Math.round(Math.random()*40) === 4) {
+			animateEyes(theirs.getContainer());
+			if (jiggleTheirs) jiggleTheirs = false;
+			var randInt2 = Math.round(Math.random()*40);
+			if (randInt2 === 4 || randInt2 === 3 || randInt2 === 2 || randInt2 === 1) {
+				if(!jiggleTheirs) jiggleTheirs = true;
+			}
+		}
 	}
-	animateArms(critterApp.yours());
+	
+	if (critterApp.yours()) animateArms(critterApp.yours().getContainer());
 	
 	if (hugFriend) hug(critterApp.yours().getContainer());
 	
