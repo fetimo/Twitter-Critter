@@ -356,7 +356,7 @@ function build(crit, destination, container) {
 					position();
 				}
 					
-				function position() {				
+				function position() {
 					//position elements
 					if (eyes.name !== 'eyes small_black') {
 						eyes.x = Math.round(body.children[0].image.width/5);
@@ -486,6 +486,11 @@ function build(crit, destination, container) {
 					
 					destination.removeAllChildren();		
 					destination.addChild(container);
+					
+					// tickle your critter!
+					container.onClick = function () {
+						container.id === 7 ? jiggle = true : jiggleTheirs = true;
+					};
 					
 				    Ticker.useRAF = true;				    
 					Ticker.addListener(window);
