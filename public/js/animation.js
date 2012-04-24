@@ -94,46 +94,51 @@ function animateEyes(critter) {
 }
 
 function hug(critter) {
-	if (wave === 42 && critter && arms) {
-		//sidle next to them
-		//raise arm
-		var lArm = arms.children[0];
-		var rArm = arms.children[1];
-		
-		if (rArm.rotation === 360) rArm.rotation = 0;
-		
-		if (rub <= 2) {
-			if (critter.x < 115) critter.x += 5;
-			if (lArm.rotation === 0 || lArm.rotation > -90) {
-				//finished waving
-				lArm.rotation -= 5;
+	if (critter) {
+	
+		for (var i=0; i < critter.children.length; i+=1) { 
+			if (critter.children[i].name && critter.children[i].name.substr(0,4) === 'arms') {
+				var arms = critter.children[i];
+				break;
 			}
-			//lArm.rotation = 5 when stationary
-			
-			if (oscillateHug) {
-				rArm.rotation += 2.5;
-				if (rArm.rotation > 290) {
-					oscillateHug = false;
-					rub += 1;
-				}
-			} else if (!oscillateHug){
-				rArm.rotation -= 2.5;
-				if (rArm.rotation <= 270) oscillateHug = true;
-			}
-		} else {
-			if (lArm.rotation !== 0) {
-				//finished waving
-				lArm.rotation += 5;
-			}
-			if (rArm.rotation > 180) rArm.rotation -= 5;
-			if (critter.x > 70) critter.x -= 5;
-			if (critter.x === 70 && rArm.rotation === 180) hugFriend = false;
 		}
-		//rub arm up and down
 		
-		//bring arm back down
-		
-		//resume original position
+		if (wave === 42 && arms) {
+			//sidle next to them
+			//raise arm
+			var lArm = arms.children[0];
+			var rArm = arms.children[1];
+			
+			if (rArm.rotation === 360) rArm.rotation = 0;
+			
+			if (rub <= 2) {
+				if (critter.x < 115) critter.x += 5;
+				if (lArm.rotation === 0 || lArm.rotation > -90) {
+					//finished waving
+					lArm.rotation -= 5;
+				}
+				//lArm.rotation = 5 when stationary
+				
+				if (oscillateHug) {
+					rArm.rotation += 2.5;
+					if (rArm.rotation > 290) {
+						oscillateHug = false;
+						rub += 1;
+					}
+				} else if (!oscillateHug){
+					rArm.rotation -= 2.5;
+					if (rArm.rotation <= 270) oscillateHug = true;
+				}
+			} else {
+				if (lArm.rotation !== 0) {
+					//finished waving
+					lArm.rotation += 5;
+				}
+				if (rArm.rotation > 180) rArm.rotation -= 5;
+				if (critter.x > 70) critter.x -= 5;
+				if (critter.x === 70 && rArm.rotation === 180) hugFriend = false;
+			}
+		}
 	}
 }
 

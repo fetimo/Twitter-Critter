@@ -95,16 +95,20 @@ class ApiController < Controller
 				end
 			elsif request.params['friend']
 				#send message to frind telling them that they've been hugged!
+				uid = request.params['uid']
 				begin
 					username = Twitter.user(uid.to_i).screen_name
-					friend = Twitter.user(request.params['friend']).id
+					friend = request.params['friend'].to_i
 					
 					critter_exist = 0
 		
 					fight.filter(:uid => friend).each do |row|
 						critter_exist += 1
+						if critter_exist === 1
+							break
+						end
 					end
-					
+										
 					if critter_exist === 0
 						fight.insert(:uid => friend)
 					end
