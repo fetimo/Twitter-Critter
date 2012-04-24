@@ -95,7 +95,6 @@ function animateEyes(critter) {
 
 function hug(critter) {
 	if (critter) {
-	
 		for (var i=0; i < critter.children.length; i+=1) { 
 			if (critter.children[i].name && critter.children[i].name.substr(0,4) === 'arms') {
 				var arms = critter.children[i];
@@ -108,13 +107,14 @@ function hug(critter) {
 			//raise arm
 			var lArm = arms.children[0];
 			var rArm = arms.children[1];
-			
-			if (rArm.rotation === 360) rArm.rotation = 0;
+								
+			if (rArm.rotation >= 360) rArm.rotation = 0;
+			if (lArm.rotation >= 360) lArm.rotation = 0;
 			
 			if (rub <= 2) {
 				if (critter.x < 115) critter.x += 5;
 				if (lArm.rotation === 0 || lArm.rotation > -90) {
-					//finished waving
+					//finished rubbing
 					lArm.rotation -= 5;
 				}
 				//lArm.rotation = 5 when stationary
@@ -136,7 +136,13 @@ function hug(critter) {
 				}
 				if (rArm.rotation > 180) rArm.rotation -= 5;
 				if (critter.x > 70) critter.x -= 5;
-				if (critter.x === 70 && rArm.rotation === 180) hugFriend = false;
+				if (critter.x === 70 && lArm.rotation >= 0) {
+					//reset arm rotation values to initial values
+					lArm.rotation = 0;
+					rArm.rotation = 180;
+					hugFriend = false;
+					rub = 0;
+				}
 			}
 		}
 	}
@@ -151,7 +157,7 @@ function animateArms(critter) {
 		}
 	}
 	
-	if (wave !== 42) {
+	if (wave !== 42 && critter.id === 7) {
 		var lArm = arms.children[0];
 		if (wave <= 2) {
 			if (lArm.scaleY > -1) lArm.scaleY -= .4;
