@@ -15,6 +15,7 @@
     constructor: Alert
 
   , close: function ( e ) {
+      error_exist = false;	 //when clicked, error_exist for error alerts reverts to false
       var $this = $(this)
         , selector = $this.attr('data-target')
         , $parent

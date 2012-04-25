@@ -157,7 +157,7 @@ function animateArms(critter) {
 		}
 	}
 	
-	if (wave !== 42 && critter.id === 7) {
+	if (wave !== 42 && critter.id === 7 && arms) {
 		var lArm = arms.children[0];
 		if (wave <= 2) {
 			if (lArm.scaleY > -1) lArm.scaleY -= .4;

@@ -24,7 +24,7 @@ $(document).ready(function() {
 			});
 		}
 	}
-	
+		
 	function sendTweet() {
 		$.ajax({
 			type: 'POST',
@@ -37,8 +37,24 @@ $(document).ready(function() {
 				//not an error, can show tweet related things
 				alert.className = 'alert alert-success fade in';
 				alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Cool, that\'s been tweeted for you!</p>';
-				alert.style.display = 'block';
+				//alert.style.display = 'block';
 				root.appendChild(alert);
+				var	heights = [];
+				var set = $('.alert').clone();
+				set.appendTo('#content');
+				
+				for (var i=0; i < set.length; i+=1) { 
+					set[i].style.visibility = 'hidden'; 
+					heights.push(set[i].clientHeight);
+				}
+							
+				set.remove();
+				
+				for (var j=0; j < heights.length; j+=1) {
+					if (j !== 0) $('.alert')[j].style.top = 24 + heights[j-1] + 'px';
+				}
+				
+				$(alert).slideDown(750);
 				$(".alert").alert();
 			}
 		});
@@ -51,15 +67,32 @@ $(document).ready(function() {
 		$.ajax({
 			type: 'POST',
 			url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&friend=' + friend.get('uid'),
-			success: function() {
+			success: function() {				
+				$(".hug").remove();
 				var alert = document.createElement('div'),
 					root = document.getElementById('content');		
-				//not an error, can show tweet related things
-				alert.className = 'alert alert-success fade in';
+				alert.className = 'alert alert-info hug';
 				alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>You\'ve hugged ' + friend.get('name') + ' :)</p>';
 				root.appendChild(alert);
 				$(".alert").alert();
-				hug();
+				// if weapon selection is showing, show underneath that
+			
+				var	heights = [];
+				var set = $('.alert').clone();
+				set.appendTo('#content');
+				
+				for (var i=0; i < set.length; i+=1) { 
+					set[i].style.visibility = 'hidden'; 
+					heights.push(set[i].clientHeight);
+				}
+							
+				set.remove();
+				
+				for (var j=0; j < heights.length; j+=1) {
+					if (j !== 0) $('.alert')[j].style.top = 24 + heights[j-1] + 'px';
+				}
+				
+				$(alert).slideDown(750);
 			}
 		}); 
 	}
@@ -82,27 +115,88 @@ $(document).ready(function() {
 					$('.close_btn').on('click', function() {
 						$(".alert").alert('close');
 					});
+					
+					var	heights = [];
+					var set = $('.alert').clone();
+					set.appendTo('#content');
+					
+					for (var i=0; i < set.length; i+=1) { 
+						set[i].style.visibility = 'hidden'; 
+						heights.push(set[i].clientHeight);
+					}
+								
+					set.remove();
+					
+					for (var j=0; j < heights.length; j+=1) {
+						if (j !== 0) $('.alert')[j].style.top = 24 + heights[j-1] + 'px';
+					}
+					
+					$(alert).slideDown(750);
 				}
 			}
 		}); 
 	}
 	
+	function rebuildWeaponSelection() {
+		if (!$('.weapon_selection').length) {
+			// alert has removed the node so we're going to rebuild it
+			var weapon_selection = document.createElement('section'),
+				root = document.getElementById('content');
+			weapon_selection.className = "weapon_selection alert alert-info";
+			weapon_selection.innerHTML = 
+				"<a class='close' data-dismiss='alert'>&times;</a> \
+				<h4>Choose Your Weapon</h4> \
+				<ul> \
+					<li><img name='3' src='../images/weapons/1.png'>Rock</li> \
+					<li><img name='2' src='../images/weapons/2.png'>Paper</li> \
+					<li><img name='1' src='../images/weapons/3.png'>Scissors</li> \
+				</ul>";
+			
+			root.appendChild(weapon_selection);
+			
+			var	heights = [];
+			var set = $('.alert').clone();
+			set.appendTo('#content');
+			set.slideDown(0);
+			
+			for (var i=0; i < set.length; i+=1) { 
+				set[i].style.visibility = 'hidden'; 
+				heights.push(set[i].clientHeight);
+			}
+						
+			set.remove();
+			
+			for (var j=0; j < heights.length; j+=1) {
+				if (j !== 0) $('.alert')[j].style.top = 24 + heights[j-1] + 'px';
+			}
+		}
+	}
+	
 	function prepFight() {
+		rebuildWeaponSelection();
 		$('.weapon_selection').slideToggle(750);
 		$('#flash_Tutorial').css('display','block');
-		$('.weapon_selection img').on('click', clickedWeapon);
+		if (!$('.weapon_selection img').data('events')) {
+			$('.weapon_selection img').on('click', clickedWeapon); //checks to see if click handler already assigned
+		}
 	}
 	
 	function prepFightRetaliate() {
-		//if (!$('.weapon_selection').length) console.log('no weapon selection');
+		rebuildWeaponSelection();
 		$('.weapon_selection').slideToggle(750);
-		$('.weapon_selection img').on('click', clickedWeaponRetaliate);
+		if (!$('.weapon_selection img').data('events')) {
+			$('.weapon_selection img').on('click', clickedWeaponRetaliate);
+			//checks to see if click handler already assigned
+		}
 	}
 	
+	error_exist = false;
+
 	function success(response) {
 		var alert = document.createElement('div'),
 			root = document.getElementById('content');
 		alert.style.display = 'block';
+		
 		if (response.response.substring(0,5) !== 'Error') {
 			//not an error, can show tweet related things
 			alert.className = 'alert alert-info';
@@ -112,15 +206,38 @@ $(document).ready(function() {
 			alert.className = 'alert alert-error';
 			alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p><strong>Error!</strong> "' + response.response.substring(7) + '"</p>';
 		}
-		root.appendChild(alert);
+		
+		//check to see if the same error is already displayed
+		$('.alert').each(function () {
+			if (this.innerHTML === alert.innerHTML) error_exist = true;	
+		});
+		//if there isn't, append the new error
+		if (!error_exist) root.appendChild(alert);
+		
 		$('.close_btn').on('click', function() {
 			$(".alert").alert('close');
 		});
+		var	heights = [];
+		var set = $('.alert').clone();
+		set.appendTo('#content');
+		
+		for (var i=0; i < set.length; i+=1) { 
+			set[i].style.visibility = 'hidden'; 
+			heights.push(set[i].clientHeight);
+		}
+					
+		set.remove();
+		
+		for (var j=0; j < heights.length; j+=1) {
+			if (j !== 0) $('.alert')[j].style.top = 24 + heights[j-1] + 'px';
+		}
+		
+		$(alert).slideDown(750);
 		$('#tweet').on('click', sendTweet);
 	}
 	
 	function clickedWeapon(e) {
-		weapon = e.currentTarget.name;
+		var weapon = e.currentTarget.name;
 		$.ajax({
 			type: 'POST',
 			url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&opponent=' + friend.get('uid') + '&weapon=' + weapon,
@@ -130,7 +247,7 @@ $(document).ready(function() {
 	}
 	
 	function clickedWeaponRetaliate(e) {
-		weapon = e.currentTarget.name;
+		var weapon = e.currentTarget.name;
 		$.ajax({
 			type: 'POST',
 			url: 'http://crittr.me/api/battle?update=1&uid='+ critterApp.yourModel().get('uid')+'&weapon=' + weapon,

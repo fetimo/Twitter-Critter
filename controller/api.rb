@@ -47,7 +47,9 @@ class ApiController < Controller
 			end
 			
 			begin
-				opponent_name = Twitter.user(opponent.to_i).screen_name
+				if opponent 
+					opponent_name = Twitter.user(opponent.to_i).screen_name
+				end
 			rescue => e
 				response = "Error: failed to set Twitter opponent name" 
 				message = e.message
@@ -116,6 +118,7 @@ class ApiController < Controller
 					# this is really, really bad
 					DB.run "UPDATE interactions SET hugged_by = CONCAT(COALESCE(hugged_by, ''), '#{username},') WHERE uid = #{friend}"
 					
+					response = "Successfully hugged"
 				rescue => e
 					response = e.message
 				end

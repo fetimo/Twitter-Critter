@@ -28,16 +28,16 @@ require __DIR__('controller/init')
 #)
 
 # Setup database caching
-Ramaze::Cache.options.names.push(:sequel)
-Ramaze::Cache.options.sequel = Ramaze::Cache::Sequel.using(
-	:connection => Sequel.mysql(
-		:adapter  => 'mysql2',
-		:host     => 'mysql.fetimo.com',
-		:user     => 'fetimocom1',
-		:password => 'iBMbSSIz',
-		:database => 'twittercritter'
-	)
-)
+#Ramaze::Cache.options.names.push(:sequel)
+#Ramaze::Cache.options.sequel = Ramaze::Cache::Sequel.using(
+#	:connection => Sequel.mysql(
+#		:adapter  => 'mysql2',
+#		:host     => 'mysql.fetimo.com',
+#		:user     => 'fetimocom1',
+#		:password => 'iBMbSSIz',
+#		:database => 'twittercritter'
+#	)
+#)
 
 #Rack::Mime::MIME_TYPES['.js'] = 'application/javascript'
 #Rack::Mime::MIME_TYPES['.css'] = 'text/css'
