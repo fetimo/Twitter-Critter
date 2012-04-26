@@ -110,12 +110,11 @@ var username = '#{@username}';
 			friend = critterApp.critter("#{@theirs}"),
 			theirs = build(friend, critterApp.theirStage(), critter_container2);
 			
-		if ($('.alert')) {
-			if ($('.alert').length) {
-				$('.alert')[2].style.top = '105px';
-				//$('.alert')[2].style.marginTop = '2em';
-			}
-		}
+//		if ($('.alert')) {
+//			if ($('.alert').length) {
+//				$('.alert')[2].style.top = '105px';
+//			}
+//		}
 			
 		$('#attributes').children().on('click', function() {
 			$.ajax({

@@ -188,7 +188,7 @@ class MainController < Controller
 							opp_weapon = opponent[:weapon]
 							@result = ''
 							flash[:Fisticuffs] = 'Result is in, you '
-							
+    						
 							if weapon === opp_weapon
 								flash[:Fisticuffs] << 'draw'
 								opp_status = 'draw'

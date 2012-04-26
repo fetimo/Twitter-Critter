@@ -160,7 +160,7 @@ class ApiController < Controller
 						
 						response = "@#{opponent_name} I'm battling my Critter against yours, go to http://crittr.me/critter/#{opponent_name} to retaliate!"
 					else 
-						response = "Error: You or your opponent is already in a battle, finish that before starting another."
+						response = "Error: You or your opponent is already in a battle, you're not allowed more than one fight at a time - that's just mean!"
 					end
 				rescue => e
 					#already battling, send message to user via flash

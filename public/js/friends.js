@@ -169,12 +169,13 @@ $(document).ready(function() {
 	}
 	
 	function clickedWeaponRetaliate(e) {
-		var weapon = e.currentTarget.name;
+		var weapon = e.currentTarget.id;
 		$.ajax({
 			type: 'POST',
 			url: 'http://crittr.me/api/battle?update=1&uid='+ critterApp.yourModel().get('uid')+'&weapon=' + weapon,
 		});
 		$('.weapon_selection').css('display','none');
+		$('.flash_Fisticuffs').remove();
 	}
 	
 	// click handlers	

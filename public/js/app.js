@@ -32,7 +32,7 @@ var critterApp = (function() {
 			var str = document.getElementById('flash_Fisticuffs').textContent,
 				strings = str.split(' '),
 				critter_container2 = new Container();
-			friend = new Critter(strings[1]);
+			if (strings[1] !== 'Result') friend = new Critter(strings[1]);
 			theirs = build(friend, friend_stage, critter_container2);
 		}
 				

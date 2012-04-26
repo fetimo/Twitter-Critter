@@ -15,7 +15,7 @@ listen "/home/timofe_/crittr.me/tmp/sockets/unicorn.sock", :backlog => 1024 # 64
 
 pid "/home/timofe_/crittr.me/tmp/pids/unicorn.pid"
 
-# Set the path of the log files inside the log folder of the testapp
+# Set the path of the log files inside the log folder of the app
 stderr_path "/home/timofe_/crittr.me/log/unicorn.stderr.log"
 stdout_path "/home/timofe_/crittr.me/log/unicorn.stdout.log"
 
