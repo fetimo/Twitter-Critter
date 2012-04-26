@@ -148,7 +148,10 @@ class MainController < Controller
 						
 			fight = DB[:interactions]
 			you = fight.where(:uid => p[:user_id]).first
-			if you
+			
+			if !you
+				fight.insert(:uid => p[:user_id])
+
 				if !you[:tutorial]
 					@fisticuffs_tutorial = true
 					fight.where(:uid => p[:user_id]).update(:tutorial => 1)
