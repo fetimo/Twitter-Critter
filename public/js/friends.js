@@ -33,27 +33,11 @@ $(document).ready(function() {
 				$('.alert').remove();
 				
 				var alert = document.createElement('div'),
-					root = document.getElementById('content');
+					root = $('.alerts')[0];
 				//not an error, can show tweet related things
 				alert.className = 'alert alert-success fade in';
 				alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Cool, that\'s been tweeted for you!</p>';
-				//alert.style.display = 'block';
 				root.appendChild(alert);
-				var	heights = [];
-				var set = $('.alert').clone();
-				set.appendTo('#content');
-				
-				for (var i=0; i < set.length; i+=1) { 
-					set[i].style.visibility = 'hidden'; 
-					heights.push(set[i].clientHeight);
-				}
-							
-				set.remove();
-				
-				for (var j=0; j < heights.length; j+=1) {
-					if (j !== 0) $('.alert')[j].style.top = 24 + heights[j-1] + 'px';
-				}
-				
 				$(alert).slideDown(750);
 				$(".alert").alert();
 			}
@@ -70,28 +54,11 @@ $(document).ready(function() {
 			success: function() {				
 				$(".hug").remove();
 				var alert = document.createElement('div'),
-					root = document.getElementById('content');		
+					root = $('.alerts')[0];		
 				alert.className = 'alert alert-info hug';
 				alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>You\'ve hugged ' + friend.get('name') + ' :)</p>';
 				root.appendChild(alert);
 				$(".alert").alert();
-				// if weapon selection is showing, show underneath that
-			
-				var	heights = [];
-				var set = $('.alert').clone();
-				set.appendTo('#content');
-				
-				for (var i=0; i < set.length; i+=1) { 
-					set[i].style.visibility = 'hidden'; 
-					heights.push(set[i].clientHeight);
-				}
-							
-				set.remove();
-				
-				for (var j=0; j < heights.length; j+=1) {
-					if (j !== 0) $('.alert')[j].style.top = 24 + heights[j-1] + 'px';
-				}
-				
 				$(alert).slideDown(750);
 			}
 		}); 
@@ -107,7 +74,7 @@ $(document).ready(function() {
 				$('.alert').remove();
 				if (response.response.substring(0,7) === 'Success') {
 					var alert = document.createElement('div'),
-						root = document.getElementById('content');
+						root = $('.alerts')[0];
 					alert.className = 'alert alert-info';
 					alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>You\'ve successfully run away!</p>';
 					alert.style.display = 'block';
@@ -115,21 +82,6 @@ $(document).ready(function() {
 					$('.close_btn').on('click', function() {
 						$(".alert").alert('close');
 					});
-					
-					var	heights = [];
-					var set = $('.alert').clone();
-					set.appendTo('#content');
-					
-					for (var i=0; i < set.length; i+=1) { 
-						set[i].style.visibility = 'hidden'; 
-						heights.push(set[i].clientHeight);
-					}
-								
-					set.remove();
-					
-					for (var j=0; j < heights.length; j+=1) {
-						if (j !== 0) $('.alert')[j].style.top = 24 + heights[j-1] + 'px';
-					}
 					
 					$(alert).slideDown(750);
 				}
@@ -141,34 +93,18 @@ $(document).ready(function() {
 		if (!$('.weapon_selection').length) {
 			// alert has removed the node so we're going to rebuild it
 			var weapon_selection = document.createElement('section'),
-				root = document.getElementById('content');
+				root = $('.alerts')[0];
 			weapon_selection.className = "weapon_selection alert alert-info";
 			weapon_selection.innerHTML = 
 				"<a class='close' data-dismiss='alert'>&times;</a> \
 				<h4>Choose Your Weapon</h4> \
 				<ul> \
-					<li><img name='3' src='../images/weapons/1.png'>Rock</li> \
-					<li><img name='2' src='../images/weapons/2.png'>Paper</li> \
-					<li><img name='1' src='../images/weapons/3.png'>Scissors</li> \
+					<li><img id='3' src='../images/weapons/1.png'>Rock</li> \
+					<li><img id='2' src='../images/weapons/2.png'>Paper</li> \
+					<li><img id='1' src='../images/weapons/3.png'>Scissors</li> \
 				</ul>";
 			
 			root.appendChild(weapon_selection);
-			
-			var	heights = [];
-			var set = $('.alert').clone();
-			set.appendTo('#content');
-			set.slideDown(0);
-			
-			for (var i=0; i < set.length; i+=1) { 
-				set[i].style.visibility = 'hidden'; 
-				heights.push(set[i].clientHeight);
-			}
-						
-			set.remove();
-			
-			for (var j=0; j < heights.length; j+=1) {
-				if (j !== 0) $('.alert')[j].style.top = 24 + heights[j-1] + 'px';
-			}
 		}
 	}
 	
@@ -194,7 +130,7 @@ $(document).ready(function() {
 
 	function success(response) {
 		var alert = document.createElement('div'),
-			root = document.getElementById('content');
+			root = $('.alerts')[0];
 		alert.style.display = 'block';
 		
 		if (response.response.substring(0,5) !== 'Error') {
@@ -203,8 +139,8 @@ $(document).ready(function() {
 			alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Is it ok if I tweet them this message to let them know you\'re fighting them? "' + response.response + '"</p><p><a class="btn btn-info" href="#"><span id="tweet">Tweet</span></a><a class="btn close_btn" href="#">No, thanks</a></p>';
 		} else {
 			//there be errors
-			alert.className = 'alert alert-error';
-			alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p><strong>Error!</strong> "' + response.response.substring(7) + '"</p>';
+			alert.className = 'alert alert-error';			
+			alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p><strong>Error!</strong> ' + response.response.substring(7) + '</p>';
 		}
 		
 		//check to see if the same error is already displayed
@@ -217,27 +153,13 @@ $(document).ready(function() {
 		$('.close_btn').on('click', function() {
 			$(".alert").alert('close');
 		});
-		var	heights = [];
-		var set = $('.alert').clone();
-		set.appendTo('#content');
-		
-		for (var i=0; i < set.length; i+=1) { 
-			set[i].style.visibility = 'hidden'; 
-			heights.push(set[i].clientHeight);
-		}
-					
-		set.remove();
-		
-		for (var j=0; j < heights.length; j+=1) {
-			if (j !== 0) $('.alert')[j].style.top = 24 + heights[j-1] + 'px';
-		}
 		
 		$(alert).slideDown(750);
 		$('#tweet').on('click', sendTweet);
 	}
 	
 	function clickedWeapon(e) {
-		var weapon = e.currentTarget.name;
+		var weapon = e.currentTarget.id;
 		$.ajax({
 			type: 'POST',
 			url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&opponent=' + friend.get('uid') + '&weapon=' + weapon,

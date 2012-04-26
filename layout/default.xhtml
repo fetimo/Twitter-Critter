@@ -13,11 +13,11 @@
     	<section id="topBar">
 			<a href="/"><img src="../images/topbranding.png" alt="Critter logo"></a>
 			<?r if session[:access_token] and @username == session[:access_token].params[:screen_name] ?>
-				<a class="button" href="/logout"><button>Logout</button></a>
+				<form method="post" action="/logout"><button>Logout</button></form>
 			<?r elsif session[:access_token] ?>
-				<a class="button" href="/critter/#{session[:access_token].params[:screen_name]}"><button>Back To Your Critter</button></a>
+				<form method="get" action="/critter/#{session[:access_token].params[:screen_name]}"><button>Back To Your Critter</button></form>
 			<?r else ?>
-				<form method="post" action="/evolve"><button>Adopt Your Critter</button></form>
+				<form method="post" action="/evolve"><button>Login</button></form>
 			<?r end ?>
 		</section>
     	#{@content}

@@ -37,21 +37,6 @@ var critterApp = (function() {
 		}
 				
 		if ($('.alert')) {
-			var	heights = [];
-			var set = $('.alert').clone();
-			set.appendTo('#content');
-			set.slideDown(0);
-
-			for (var i=0; i < set.length; i+=1) { 
-				set[i].style.visibility = 'hidden'; 
-				heights.push(set[i].clientHeight);
-			}
-			
-			set.remove();
-						
-			for (var j=0; j < heights.length; j+=1) {
-				if (j !== 0) $('.alert')[j].style.top = 18 + heights[j-1] + 'px';
-			}
 			$('.alert').slideToggle(750);
 			$('.weapon_selection').css('display','none');
 		}

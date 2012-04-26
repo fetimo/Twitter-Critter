@@ -51,7 +51,7 @@ class ApiController < Controller
 					opponent_name = Twitter.user(opponent.to_i).screen_name
 				end
 			rescue => e
-				response = "Error: failed to set Twitter opponent name" 
+				response = "Error: failed to set Twitter opponent name :(" 
 				message = e.message
 			end
 			
@@ -62,7 +62,7 @@ class ApiController < Controller
 				rescue Twitter::Error => e
 					response = "Error: " << e.message
 				rescue => e
-					response = "Error: failed to tweet from user"
+					response = "Error: failed to tweet from user :("
 					message = e.message
 				end
 			elsif request.params['update'].to_i === 1
@@ -93,7 +93,7 @@ class ApiController < Controller
 					fight.where(:uid => uid).update(:status => nil, :opponent => nil, :weapon => nil, :start => nil)
 					response = critter
 				else
-					response = abort("Error: hashes do not match")
+					response = abort("Error: hashes do not match >_<")
 				end
 			elsif request.params['friend']
 				#send message to frind telling them that they've been hugged!
@@ -118,7 +118,7 @@ class ApiController < Controller
 					# this is really, really bad
 					DB.run "UPDATE interactions SET hugged_by = CONCAT(COALESCE(hugged_by, ''), '#{username},') WHERE uid = #{friend}"
 					
-					response = "Successfully hugged"
+					response = "Successfully hugged!"
 				rescue => e
 					response = e.message
 				end
@@ -128,12 +128,19 @@ class ApiController < Controller
 				
 				begin
 					check_opp = fight.filter(:uid => opponent).first
+					check_you = fight.filter(:uid => uid).first
 					
 					if check_opp === nil
 						fight.insert(:uid => opponent)
 						check_opp = fight.filter(:uid => opponent).first
 					end
-					if check_opp[:opponent] === nil
+					
+					if check_you === nil
+						fight.insert(:uid => uid)
+						check_you = fight.filter(:uid => uid).first
+					end
+					
+					if check_opp[:opponent] === nil && check_you[:opponent] === nil
 						
 						time = Time.now.to_i
 						
@@ -150,14 +157,14 @@ class ApiController < Controller
 						end
 						
 						fight.where(:uid => opponent).update(:status => 'waiting', :opponent => uid, :start => time)
-							
+						
 						response = "@#{opponent_name} I'm battling my Critter against yours, go to http://crittr.me/critter/#{opponent_name} to retaliate!"
 					else 
-						response = "Error: Opponent is already in a battle"
+						response = "Error: You or your opponent is already in a battle, finish that before starting another."
 					end
 				rescue => e
 					#already battling, send message to user via flash
-					response = "Error: You are already in a battle"
+					response = "Error: You are already in a battle!"
 					message = e.message
 				end
 			end
@@ -172,7 +179,7 @@ class ApiController < Controller
 					response = fight.where(:uid => uid).delete
 				end
 			rescue => e
-				response = "Error: Unable to remove fight"
+				response = "Error: Unable to remove fight :("
 				message = e.message
 			end
 			
@@ -187,7 +194,7 @@ class ApiController < Controller
 				end
 				response = "Successfully updated"
 			rescue => e
-				response = "Error: Unable to run away"
+				response = "Error: Unable to run away :("
 				message = e.message
 			end
 		end

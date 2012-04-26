@@ -1,24 +1,26 @@
 <div id="content">
 <?r unless @critter.nil? ?>	
-	<div class="preloader_container"><img class="loader" src="../images/spinner.gif"></div>	
+	<div class="preloader_container"><img class="loader" alt="Loading icon" src="../images/spinner.gif"></div>	
 	<canvas id="your-critter" class="critter_container" width="1000" height="500">Critter requires canvas, upgrade to a nice browser.</canvas>
 	<?r if session[:access_token] and @username === session[:access_token].params[:screen_name] ?>
-	#{flashbox}
-	<section class="weapon_selection alert alert-info">
-		<a class="close" data-dismiss="alert">&times;</a>
-		<?r if @fisticuffs_tutorial ?>
-			<h4>First time here?</h4>
-			<p>If you start fisticuffs with someone then they will see a message when they login telling them what to do next. If you win the fight you'll be able to choose a feature of theirs that you like to have yourself!</p>
-			<br>
-		<?r end ?>
-		<h4>Choose Your Weapon</h4>
-		<ul>
-			<li><img name="3" src="../images/weapons/1.png">Rock</li>
-			<li><img name="2" src="../images/weapons/2.png">Paper</li>
-			<li><img name="1" src="../images/weapons/3.png">Scissors</li>
-		</ul>
-	</section>
-	<?r 
+	<aside class="alerts">
+		<!-- alerts to be dynamically generated and placed inside here -->
+		#{flashbox}
+		<section class="weapon_selection alert alert-info">
+			<a class="close" data-dismiss="alert">&times;</a>
+			<?r if @fisticuffs_tutorial ?>
+				<h4>First time here?</h4>
+				<p>If you start fisticuffs with someone then they will see a message when they login telling them what to do next. If you win the fight you'll be able to choose a feature of theirs that you like to have yourself!</p>
+				<br>
+			<?r end ?>
+			<h4>Choose Your Weapon</h4>
+			<ul>
+				<li><img alt="Icon of rock" id="3" src="../images/weapons/1.png">Rock</li>
+				<li><img alt="Icon of paper" id="2" src="../images/weapons/2.png">Paper</li>
+				<li><img alt="Icon of scissors" id="1" src="../images/weapons/3.png">Scissors</li>
+			</ul>
+		</section>
+		<?r 
 	if flash[:Fisticuffs] and flash[:Fisticuffs].include? 'win'
 		uid = session[:access_token].params[:user_id]
 		begin
@@ -43,7 +45,6 @@
 			?> <p>#{message}</p> <?r	
 		end
 	?>
-</div>
 <?r 
 	elsif flash[:Fisticuffs] and flash[:Fisticuffs].include? 'draw'
 		uid = session[:access_token].params[:user_id]
@@ -58,31 +59,34 @@
 	end 
 	flash.delete(:Fisticuffs)
 	?>
-<div class="friends_tab">
-	<ul>
-		<li><a id="fisticuffs" href="#">Fisticuffs</a></li>
-		<li><a id="hug" href="#">Hug</a></li>
-	</ul>
-</div>
-<section class="friends">
-		<?r if session[:friends].count > 4 ?>
-	<div class="scroll_arrows" id="left_scroll"><img src="../images/back.png" alt="Backwards"></div>
-		<?r end ?>
-	<div id="carousel_inner">  
-    	<ul> 
-			<?r session[:friends].sort.each do |f| #from http://blog.xambr.com/2009/11/26/ramaze-partials-with-etanni/ ?>
-		    	#{ render_partial :friend, { :friend=>f } }
-			<?r end ?>
-			<?r if @suggested_friend ?>
-				<p>You look a bit lonely,<br>why not make a Critter for <a href="/user/#{@suggested_friend['username']}">#{@suggested_friend['name']}</a>?</p>
-			<?r end ?>
+	</aside>
+
+	<div class="friends_tab">
+		<ul>
+			<li><a id="fisticuffs" href="#">Fisticuffs</a></li>
+			<li><a id="hug" href="#">Hug</a></li>
 		</ul>
 	</div>
-		<?r if session[:friends].count > 4 ?>
-	<div class="scroll_arrows" id='right_scroll'><img src="../images/next.png" alt="Forwards"></div>
-		<?r end ?>
-</section>
+	<section class="friends">
+			<?r if session[:friends].count > 4 ?>
+		<div class="scroll_arrows" id="left_scroll"><img src="../images/back.png" alt="Backwards"></div>
+			<?r end ?>
+		<div id="carousel_inner">  
+	    	<ul> 
+				<?r session[:friends].sort.each do |f| #from http://blog.xambr.com/2009/11/26/ramaze-partials-with-etanni/ ?>
+			    	#{ render_partial :friend, { :friend=>f } }
+				<?r end ?>
+				<?r if @suggested_friend ?>
+					<li id="lonely">You look a bit lonely,<br>why not make a Critter for <a href="/user/#{@suggested_friend['username']}">#{@suggested_friend['name']}</a>?</li>
+				<?r end ?>
+			</ul>
+		</div>
+			<?r if session[:friends].count > 4 ?>
+		<div class="scroll_arrows" id='right_scroll'><img src="../images/next.png" alt="Forwards"></div>
+			<?r end ?>
+	</section>
 	<?r end ?>
+</div>
 <!-- libraries -->
 #{js('easel/lib/easel')}
 #{js('easel/src/easeljs/filters/Filter')}
