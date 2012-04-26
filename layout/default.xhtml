@@ -21,9 +21,9 @@
 					</div>
 				</section>
 			<?r elsif session[:access_token] ?>
-				<form method="get" action="/critter/#{session[:access_token].params[:screen_name]}"><button>Back To Your Critter</button></form>
+				<a class="actions action_btn" href="/critter/#{session[:access_token].params[:screen_name]}">Back To Your Critter</a>
 			<?r else ?>
-				<form method="post" action="/evolve"><button>Login</button></form>
+				<form method="post" action="/evolve"><button class="actions">Login</button></form>
 			<?r end ?>
 		</section>
     	#{@content}
