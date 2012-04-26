@@ -505,7 +505,7 @@ function build(crit, destination, container) {
 				}
 			}
 			function getAttributes() {
-				crit.get('uid') === undefined ? _.delay(getAttributes, 100) : process();
+				if (typeof crit !== 'undefined') crit.get('uid') === undefined ? _.delay(getAttributes, 100) : process();
 			}
 			getAttributes();
 		}
