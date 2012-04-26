@@ -61,12 +61,6 @@
 	?>
 	</aside>
 
-	<div class="friends_tab">
-		<ul>
-			<li><a id="fisticuffs" href="#">Fisticuffs</a></li>
-			<li><a id="hug" href="#">Hug</a></li>
-		</ul>
-	</div>
 	<section class="friends">
 			<?r if session[:friends].count > 4 ?>
 		<div class="scroll_arrows" id="left_scroll"><img src="../images/back.png" alt="Backwards"></div>
@@ -109,12 +103,6 @@ var username = '#{@username}';
 		var critter_container2 = new Container(),
 			friend = critterApp.critter("#{@theirs}"),
 			theirs = build(friend, critterApp.theirStage(), critter_container2);
-			
-//		if ($('.alert')) {
-//			if ($('.alert').length) {
-//				$('.alert')[2].style.top = '105px';
-//			}
-//		}
 			
 		$('#attributes').children().on('click', function() {
 			$.ajax({

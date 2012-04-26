@@ -138,12 +138,8 @@ button {
 	display: block;
 }
 
-#topBar form, #topBar .button {
+#topBar button, .action_btn {
 	float: right;
-	margin-top: -32px;
-}
-
-#topBar button {
 	filter:  progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#F83737', endColorstr='#8F3837'); /* IE6 & IE7 */
 	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#F83737', endColorstr='#8F3837')"; /* IE8 */
 	background-image: -o-linear-gradient(bottom, rgb(143,56,55) 0%, rgb(248,55,55) 100%);
@@ -166,6 +162,29 @@ button {
 	margin-right: 1em;
 	padding: .5em;
 	line-height: 14px;
+	font-size: .8em;
+}
+
+.friends_tab .action_btn:first-child {
+	margin-right: 0;
+}
+
+.actions {
+	margin-top: -30px;
+}
+
+.friends_tab {
+	background: rgba(255,255,255,.2);
+	position: relative;
+	padding: .5em;
+	border-radius: 3px;
+	display: none;
+	margin-right: .75em;
+	margin-top: -7px;
+	float: right;
+	-moz-box-shadow: inset 0 0 2px #000;
+	-webkit-box-shadow: inset 0 0 2px #000;
+	box-shadow: inset 0 0 2px #000;
 }
 
 #content {
@@ -277,25 +296,6 @@ footer a {
 .scroll_arrows img:active {  
 	position: relative;
 	top: 1px;
-}
-
-.friends_tab {
-	width: 139px;
-	margin: 0 auto;
-	margin-bottom: -2em;
-	-webkit-border-top-left-radius: 4px;
-	-webkit-border-top-right-radius: 4px;
-	-moz-border-radius-topleft: 4px;
-	-moz-border-radius-topright: 4px;
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-	background: #fff;
-	height: 50px;
-	display: none;
-}
-.friends_tab li {
-	float: left;
-	padding: 1em;
 }
 
 #attributes {
