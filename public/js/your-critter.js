@@ -274,6 +274,10 @@ function build(crit, destination, container) {
 										var tail = new BitmapAnimation(sheet);
 										tail.x = 156;
 										tail.y = 270;
+										if (legs.name === 'short') {
+											tail.y = 210;
+											tail.x = 220;
+										}
 										if (body_shape.name === 'furry') {
 											tail.x = 200;
 											tail.y = 300;
