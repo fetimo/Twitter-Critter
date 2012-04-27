@@ -99,9 +99,9 @@ $(document).ready(function() {
 				"<a class='close' data-dismiss='alert'>&times;</a> \
 				<h4>Choose Your Weapon</h4> \
 				<ul> \
-					<li><img id='3' src='../images/weapons/1.png'>Rock</li> \
-					<li><img id='2' src='../images/weapons/2.png'>Paper</li> \
-					<li><img id='1' src='../images/weapons/3.png'>Scissors</li> \
+					<li><img id='3' src='../images/weapons/rock.png'></li> \
+					<li><img id='2' src='../images/weapons/paper.png'></li> \
+					<li><img id='1' src='../images/weapons/scissors.png'></li> \
 				</ul>";
 			
 			root.appendChild(weapon_selection);

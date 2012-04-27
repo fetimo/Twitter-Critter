@@ -170,6 +170,22 @@ button {
 	margin-right: 0;
 }
 
+.action_btn:focus {
+	position: relative;
+	top: 1px;
+}
+
+.action_btn:hover {
+	background: #fd6f6f; /* Old browsers */
+	background: -moz-linear-gradient(top, hsl(0,97%,71%) 0%, hsl(0,94%,62%) 0%, hsl(1,44%,42%) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,97%,71%)), color-stop(0%,hsl(0,94%,62%)), color-stop(100%,hsl(1,44%,42%))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, hsl(0,97%,71%) 0%,hsl(0,94%,62%) 0%,hsl(1,44%,42%) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, hsl(0,97%,71%) 0%,hsl(0,94%,62%) 0%,hsl(1,44%,42%) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, hsl(0,97%,71%) 0%,hsl(0,94%,62%) 0%,hsl(1,44%,42%) 100%); /* IE10+ */
+	background: linear-gradient(top, hsl(0,97%,71%) 0%,hsl(0,94%,62%) 0%,hsl(1,44%,42%) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fd6f6f', endColorstr='#9c3e3c',GradientType=0 ); /* IE6-9 */
+}
+
 .actions {
 	margin-top: -30px;
 }
@@ -189,7 +205,7 @@ button {
 }
 
 #content {
-	background: rgb(136,101,45) url(../images/critterbg.jpg) no-repeat;
+	background: rgb(136,101,45) url('../images/critterbg.jpg') no-repeat;
 	height: 500px;
 	width: 100%;
 	margin: 0 auto;
@@ -385,7 +401,7 @@ footer a {
 	padding: 8px 35px 8px 14px;
 	margin-bottom: 18px;
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-	background: rgb(136,101,45) url(../images/paper.jpg) repeat;
+	background: rgb(136,101,45) url('../images/paper.jpg') repeat;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
@@ -546,12 +562,11 @@ footer a {
 
 .weapon_selection img {
 	cursor: pointer;
+	-moz-transition: all .3s ease;
 }
 
 .weapon_selection img:hover {
-	-moz-box-shadow: 3px 3px 1em #b3bae9;
-	-webkit-box-shadow: 3px 3px 1em #b3bae9;
-	box-shadow: 3px 3px 1em #b3bae9;
+	-moz-transform: scale(1.15);
 }
 
 #carousel_inner ul li#lonely {

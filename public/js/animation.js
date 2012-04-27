@@ -153,6 +153,7 @@ function animateArms(critter) {
 	for (var i=0; i < critter.children.length; i+=1) { 
 		if (critter.children[i].name && critter.children[i].name.substr(0,4) === 'arms') {
 			var arms = critter.children[i];
+			arms.uncache();
 			break;
 		}
 	}
