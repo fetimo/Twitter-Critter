@@ -12,18 +12,19 @@
     <body>
     	<section id="topBar">
 			<a href="/"><img src="../images/topbranding.png" alt="Critter logo"></a>
-			<?r if session[:access_token] and @username == session[:access_token].params[:screen_name] ?>
+			<?r if session[:access_token] and @username == session[:access_token][:screen_name] ?>
 				<section class="actions">
 					<a class="action_btn" href="/logout">Logout</a>
+					<a id="change" class="action_btn" href="#">Change Critter</a>
 					<div class="friends_tab">
 						<a class="action_btn" id="fisticuffs" href="#">Fisticuffs</a>
 						<a class="action_btn" id="hug" href="#">Hug</a>
 					</div>
 				</section>
 			<?r elsif session[:access_token] ?>
-				<a class="actions action_btn" href="/critter/#{session[:access_token].params[:screen_name]}">Back To Your Critter</a>
+				<a class="actions action_btn" href="/critter/#{session[:access_token][:screen_name]}">Back To Your Critter</a>
 			<?r else ?>
-				<form method="post" action="/evolve"><button class="actions">Login</button></form>
+				<form method="post" action="/evolve/#{@username}"><button class="actions">Login</button></form>
 			<?r end ?>
 		</section>
     	#{@content}

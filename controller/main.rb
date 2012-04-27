@@ -115,18 +115,16 @@ class MainController < Controller
 			@critter = row[:critter]
 		end
 
-		if session[:access_token] and username == session[:access_token].params[:screen_name]
+		if session[:access_token] and username == session[:access_token][:screen_name]
 			session.resid!
 			# only do this if you're on your own critter page due to limitations with the twitter api and friends
 			#TODO: Expire friends session after x time
 						
-			p = session[:access_token].params
-			
 			Twitter.configure do |config|
 				config.consumer_key = 'DQicogvXxpbW7oleCfV3Q'
 				config.consumer_secret = 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
-				config.oauth_token = p[:oauth_token]
-				config.oauth_token_secret = p[:oauth_token_secret]
+				config.oauth_token = session[:access_token][:oauth_token]
+				config.oauth_token_secret = session[:access_token][:oauth_token_secret]
 			end
 			
 			friends = Twitter.friend_ids
@@ -147,14 +145,14 @@ class MainController < Controller
 			end
 						
 			fight = DB[:interactions]
-			you = fight.where(:uid => p[:user_id]).first
+			you = fight.where(:uid => session[:access_token][:user_id]).first
 			
 			if !you
-				fight.insert(:uid => p[:user_id])
+				fight.insert(:uid => session[:access_token][:user_id])
 
 				if !you[:tutorial]
 					@fisticuffs_tutorial = true
-					fight.where(:uid => p[:user_id]).update(:tutorial => 1)
+					fight.where(:uid => session[:access_token][:user_id]).update(:tutorial => 1)
 				end
 				
 				if you[:weapon] === nil && you[:opponent]
@@ -173,14 +171,14 @@ class MainController < Controller
 					end
 					flash[:Hugs] << " :)"
 					
-					fight.where(:uid => p[:user_id]).update(:hugged_by => nil)
+					fight.where(:uid => session[:access_token][:user_id]).update(:hugged_by => nil)
 				end
 				if you[:ran_away] #if opponent ran away
 					opp = Twitter.user(you[:ran_away]).screen_name
 					
 					flash[:Ran] = opp << " didn't want to fight and ran away!"
 					
-					fight.where(:uid => p[:user_id]).update(:ran_away => nil)
+					fight.where(:uid => session[:access_token][:user_id]).update(:ran_away => nil)
 				end
 				if you[:status] === 'ready'
 					#if in battle
@@ -255,18 +253,43 @@ class MainController < Controller
 		redirect MainController.r(:index)
 	end
 	
-	def evolve
+	def evolve(username)
 		
-		client = TwitterOAuth::Client.new(
-			:consumer_key => 'DQicogvXxpbW7oleCfV3Q',
-			:consumer_secret => 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
-		)
+		if request.post?
 				
-		request_token = client.request_token(:oauth_callback => 'http://crittr.me/auth')
-						
-		session[:request_token] = request_token
+			auth_users = DB[:authorised_users]
+			user = auth_users.filter(:screen_name => username).first
+			
+			if user.eql? nil #user is not found
+				client = TwitterOAuth::Client.new(
+					:consumer_key => 'DQicogvXxpbW7oleCfV3Q',
+					:consumer_secret => 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
+				)
+					
+				request_token = client.request_token(:oauth_callback => 'http://crittr.me/auth')
+							
+				session[:request_token] = request_token
 				
-		redirect request_token.authorize_url
+				redirect request_token.authorize_url
+			else
+				
+				client = TwitterOAuth::Client.new(
+					:consumer_key => 'DQicogvXxpbW7oleCfV3Q',
+					:consumer_secret => 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o',
+					:token => user[:token],
+					:secret => user[:secret]
+				)
+										
+				session[:access_token] = {
+					:oauth_token => user[:token],
+					:oauth_token_secret => user[:secret],
+					:screen_name => user[:screen_name],
+					:user_id => user[:user_id]
+				}
+										
+				redirect MainController.r(:critter, user[:screen_name])
+			end
+		end
 	end
 		
 	def auth
@@ -283,26 +306,29 @@ class MainController < Controller
 			:consumer_key => 'DQicogvXxpbW7oleCfV3Q',
 			:consumer_secret => 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
 		)
-						
+		
 		access_token = client.authorize(
 			session[:request_token].token,
 			session[:request_token].secret,
 			:oauth_verifier => request.params[:oauth_verifier]
 		)
 		
-		session[:access_token] = access_token
-				
-		p = access_token.params
-			
+		session[:access_token] = {
+			:oauth_token => access_token.token,
+			:oauth_token_secret => access_token.secret,
+			:screen_name => access_token.params[:screen_name],
+			:user_id => access_token.params[:user_id]
+		}
+					
 		if client.authorized?
 			begin
-				@auth_users = DB[:authorised_users]
-				@auth_users.insert(p[:user_id], p[:screen_name])
+				auth_users = DB[:authorised_users]
+				auth_users.insert(:user_id => session[:access_token][:user_id], :screen_name => session[:access_token][:screen_name], :token => session[:access_token][:oauth_token], :secret => session[:access_token][:oauth_token_secret])
 			rescue Sequel::DatabaseError
 				#logger.error "database error (probably because user has already authorised Critter)"
 			end
 						
-			redirect MainController.r(:critter, p[:screen_name])
+			redirect MainController.r(:critter, session[:access_token][:screen_name])
 		end
 			
 	end

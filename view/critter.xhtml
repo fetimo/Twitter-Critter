@@ -2,7 +2,7 @@
 <?r unless @critter.nil? ?>	
 	<div class="preloader_container"><img class="loader" alt="Loading icon" src="../images/spinner.gif"></div>	
 	<canvas id="your-critter" class="critter_container" width="1000" height="500">Critter requires canvas, upgrade to a nice browser.</canvas>
-	<?r if session[:access_token] and @username === session[:access_token].params[:screen_name] ?>
+	<?r if session[:access_token] and @username === session[:access_token][:screen_name] ?>
 	<aside class="alerts">
 		<!-- alerts to be dynamically generated and placed inside here -->
 		#{flashbox}
@@ -20,7 +20,7 @@
 		</section>
 		<?r 
 	if flash[:Fisticuffs] and flash[:Fisticuffs].include? 'win'
-		uid = session[:access_token].params[:user_id]
+		uid = session[:access_token][:user_id]
 		begin
 			you = DB[:interactions].filter(:uid => uid).first
 			@theirs = Twitter.user(you[:opponent]).screen_name
@@ -45,7 +45,7 @@
 	?>
 <?r 
 	elsif flash[:Fisticuffs] and flash[:Fisticuffs].include? 'draw'
-		uid = session[:access_token].params[:user_id]
+		uid = session[:access_token][:user_id]
 		begin
 			require 'net/http'
 			http = Net::HTTP.new("crittr.me")

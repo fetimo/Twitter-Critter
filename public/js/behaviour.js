@@ -176,10 +176,28 @@ $(document).ready(function() {
 		$('.flash_Fisticuffs').remove();
 	}
 	
+	function changeCritter() {
+		console.log('changeCritter inited');
+		$.ajax({
+			type: 'POST',
+			//url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&attribute=' + this.id + '&hash='+#{@timestamp},
+			complete: function() {
+				//$('.alert').remove();
+				//critterApp.yourStage().removeAllChildren();
+				//var your_critter = critterApp.yourModel();
+				//your_critter.fetch(); 
+//				critter = build(your_critter, critterApp.yourStage(), critterApp.yours().getContainer()); 
+//				critterApp.yourStage().update();
+//				critterApp.theirStage().removeAllChildren();
+			}
+		});
+	}
+	
 	// click handlers	
 	$('#fisticuffs').on('click', prepFight);
 	$('.friend').on('click', loadFriend);
 	$('#hug').on('click', stopFighting);
+	$('#change').on('click', changeCritter);
 	
 	if ($('.Fisticuffs').length) {
 		$('.Fisticuffs a.btn-success').on('click', prepFightRetaliate);
