@@ -76,15 +76,15 @@ var critterApp = (function() {
 	}
 	
 	return {
-		init: init,
-		yours: getYours,
-		theirs: getTheirs,
-		yourStage: getStage,
-		theirStage: getTheirStage,
-		model: getCritterModel,
-		critter: newCritter,
-		yourModel: getYourCritterModel,
-		setFriend: setFriend
+		init		: init,
+		yours		: getYours,
+		theirs		: getTheirs,
+		yourStage	: getStage,
+		theirStage	: getTheirStage,
+		model		: getCritterModel,
+		critter		: newCritter,
+		yourModel	: getYourCritterModel,
+		setFriend	: setFriend
 	}
 }());
 

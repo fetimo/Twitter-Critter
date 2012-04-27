@@ -1,4 +1,7 @@
 function build(crit, destination, container) {
+	
+	container.children = []; //reset container's children so we don't end up with duplicates
+	
 	// Always check for properties and methods, to make sure your code doesn't break in other browsers.
 	var elem = document.getElementById('your-critter');
 	if (elem && elem.getContext) {
@@ -535,7 +538,7 @@ function build(crit, destination, container) {
 		}
 		return eyes;
 	}
-
+	
 	//your_critter.save(); sends POST request to crittr.me/critters/username
 	return {
 		getContainer: getContainer,

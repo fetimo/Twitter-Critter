@@ -98,11 +98,9 @@ $(document).ready(function() {
 			weapon_selection.innerHTML = 
 				"<a class='close' data-dismiss='alert'>&times;</a> \
 				<h4>Choose Your Weapon</h4> \
-				<ul> \
-					<li><img id='3' src='../images/weapons/rock.png'></li> \
-					<li><img id='2' src='../images/weapons/paper.png'></li> \
-					<li><img id='1' src='../images/weapons/scissors.png'></li> \
-				</ul>";
+				<img id='3' src='../images/weapons/rock.png'> \
+				<img id='2' src='../images/weapons/paper.png'> \
+				<img id='1' src='../images/weapons/scissors.png'>";
 			
 			root.appendChild(weapon_selection);
 		}
