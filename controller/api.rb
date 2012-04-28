@@ -66,180 +66,178 @@ class ApiController < Controller
 	
 	def battle
 		response['Content-Type'] = 'application/json'
-		
-		fight = DB[:interactions]
-		uid = request.params['uid']
-		
-		if request.get? 
-			#get fight details of requested critter
-			response = fight.filter(:uid => uid.to_i).first
+		unless request.cookies.empty?
+			fight = DB[:interactions]
+			uid = request.params['uid']
 			
-		elsif request.post?
-			opponent = request.params['opponent']
-			
-			p = session[:access_token].params
-									
-			Twitter.configure do |config|
-				config.consumer_key = 'DQicogvXxpbW7oleCfV3Q'
-				config.consumer_secret = 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
-				config.oauth_token = p[:oauth_token]
-				config.oauth_token_secret = p[:oauth_token_secret]
-			end
-			
-			begin
-				if opponent 
-					opponent_name = Twitter.user(opponent.to_i).screen_name
+			if request.get? 
+				#get fight details of requested critter
+				response = fight.filter(:uid => uid.to_i).first
+				
+			elsif request.post?
+				opponent = request.params['opponent']
+														
+				Twitter.configure do |config|
+					config.consumer_key = 'DQicogvXxpbW7oleCfV3Q'
+					config.consumer_secret = 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
+					config.oauth_token = session[:access_token][:oauth_token]
+					config.oauth_token_secret = session[:access_token][:oauth_token_secret]
 				end
-			rescue => e
-				response = "Error: failed to set Twitter opponent name :(" 
-				message = e.message
-			end
-			
-			if request.params['approve_tweet'].to_i === 1
-				response = "@#{opponent_name} I'm battling my Critter against yours, go to http://crittr.me/critter/#{opponent_name} to retaliate!"
+				
 				begin
-					Twitter.update(response)
-				rescue Twitter::Error => e
-					response = "Error: " << e.message
+					if opponent 
+						opponent_name = Twitter.user(opponent.to_i).screen_name
+					end
 				rescue => e
-					response = "Error: failed to tweet from user :("
+					response = "Error: failed to set Twitter opponent name :(" 
 					message = e.message
 				end
-			elsif request.params['update'].to_i === 1
-				#update 
-				weapon = request.params['weapon']
-				response = fight.filter(:uid => uid).update(:status => 'ready', :weapon => weapon)
-			
-			elsif request.params['attribute'] and request.params['hash']
 				
-				you = fight.filter(:uid => uid).first
-					
-				if request.params['hash'].to_i === you[:start] && request.params['attribute']
-					
-					attribute = request.params['attribute']
-					opponent = you[:opponent]
-					attrib = {}
-					type = ''
-					DB.fetch("SELECT #{attribute} FROM critters WHERE uid = ?", opponent) { |row| attrib = row }
-					attrib.each { |key, value| type = value.to_s };
-					
-					#insert value into own critter						
-					DB[:critters].filter(:uid => uid).update(attribute => type)
-					you.update(:start => 0)
-					critter = DB[:critters].filter(:uid => uid).select(:name, :arms, :eye_colour, :ears, :mouth, :legs, :face, :hands, :nose, :body_colour, :body, :body_type, :accessory, :uid).first					
-					require 'yajl'
-					critter = Yajl::Encoder.encode(critter)
-					DB[:critters].filter(:uid => uid).update(:critter => critter)
-					fight.where(:uid => uid).update(:status => nil, :opponent => nil, :weapon => nil, :start => nil)
-					response = critter
-				else
-					response = abort("Error: hashes do not match >_<")
-				end
-			elsif request.params['friend']
-				#send message to frind telling them that they've been hugged!
-				uid = request.params['uid']
-				begin
-					username = Twitter.user(uid.to_i).screen_name
-					friend = request.params['friend'].to_i
-					
-					critter_exist = 0
-		
-					fight.filter(:uid => friend).each do |row|
-						critter_exist += 1
-						if critter_exist === 1
-							break
-						end
+				if request.params['approve_tweet'].to_i === 1
+					response = "@#{opponent_name} I'm battling my Critter against yours, go to http://crittr.me/critter/#{opponent_name} to retaliate!"
+					begin
+						Twitter.update(response)
+					rescue Twitter::Error => e
+						response = "Error: " << e.message
+					rescue => e
+						response = "Error: failed to tweet from user :("
+						message = e.message
 					end
-										
-					if critter_exist === 0
-						fight.insert(:uid => friend)
-					end
-					
-					# this is really, really bad
-					DB.run "UPDATE interactions SET hugged_by = CONCAT(COALESCE(hugged_by, ''), '#{username},') WHERE uid = #{friend}"
-					
-					response = "Successfully hugged!"
-				rescue => e
-					response = e.message
-				end
-			else
-				#start new fight
-				weapon = request.params['weapon']
+				elsif request.params['update'].to_i === 1
+					#update 
+					weapon = request.params['weapon']
+					response = fight.filter(:uid => uid).update(:status => 'ready', :weapon => weapon)
 				
-				begin
-					check_opp = fight.filter(:uid => opponent).first
-					check_you = fight.filter(:uid => uid).first
+				elsif request.params['attribute'] and request.params['hash']
 					
-					if check_opp === nil
-						fight.insert(:uid => opponent)
-						check_opp = fight.filter(:uid => opponent).first
-					end
-					
-					if check_you === nil
-						fight.insert(:uid => uid)
-						check_you = fight.filter(:uid => uid).first
-					end
-					
-					if check_opp[:opponent] === nil && check_you[:opponent] === nil
+					you = fight.filter(:uid => uid).first
 						
-						time = Time.now.to_i
+					if request.params['hash'].to_i === you[:start] && request.params['attribute']
+						
+						attribute = request.params['attribute']
+						opponent = you[:opponent]
+						attrib = {}
+						type = ''
+						DB.fetch("SELECT #{attribute} FROM critters WHERE uid = ?", opponent) { |row| attrib = row }
+						attrib.each { |key, value| type = value.to_s };
+						
+						#insert value into own critter						
+						DB[:critters].filter(:uid => uid).update(attribute => type)
+						you.update(:start => 0)
+						critter = DB[:critters].filter(:uid => uid).select(:name, :arms, :eye_colour, :ears, :mouth, :legs, :face, :hands, :nose, :body_colour, :body, :body_type, :accessory, :uid).first					
+						require 'yajl'
+						critter = Yajl::Encoder.encode(critter)
+						DB[:critters].filter(:uid => uid).update(:critter => critter)
+						fight.where(:uid => uid).update(:status => nil, :opponent => nil, :weapon => nil, :start => nil)
+						response = critter
+					else
+						response = abort("Error: hashes do not match >_<")
+					end
+				elsif request.params['friend']
+					#send message to frind telling them that they've been hugged!
+					uid = request.params['uid']
+					begin
+						username = Twitter.user(uid.to_i).screen_name
+						friend = request.params['friend'].to_i
 						
 						critter_exist = 0
-						
-						fight.filter(:uid => uid).each do |row|
+			
+						fight.filter(:uid => friend).each do |row|
 							critter_exist += 1
+							if critter_exist === 1
+								break
+							end
 						end
-						
+											
 						if critter_exist === 0
-							fight.insert(:uid => uid, :status => 'ready', :opponent => opponent, :weapon => weapon, :start => time)
-						else
-							fight.where(:uid => uid).update(:status => 'ready', :opponent => opponent, :weapon => weapon, :start => time)
+							fight.insert(:uid => friend)
 						end
 						
-						fight.where(:uid => opponent).update(:status => 'waiting', :opponent => uid, :start => time)
+						# this is really, really bad
+						DB.run "UPDATE interactions SET hugged_by = CONCAT(COALESCE(hugged_by, ''), '#{username},') WHERE uid = #{friend}"
 						
-						response = "@#{opponent_name} I'm battling my Critter against yours, go to http://crittr.me/critter/#{opponent_name} to retaliate!"
-					else 
-						response = "Error: You or your opponent is already in a battle, you're not allowed more than one fight at a time - that's just mean!"
+						response = "Successfully hugged!"
+					rescue => e
+						response = e.message
+					end
+				else
+					#start new fight
+					weapon = request.params['weapon']
+					
+					begin
+						check_opp = fight.filter(:uid => opponent).first
+						check_you = fight.filter(:uid => uid).first
+						
+						if check_opp === nil
+							fight.insert(:uid => opponent)
+							check_opp = fight.filter(:uid => opponent).first
+						end
+						
+						if check_you === nil
+							fight.insert(:uid => uid)
+							check_you = fight.filter(:uid => uid).first
+						end
+						
+						if check_opp[:opponent] === nil && check_you[:opponent] === nil
+							
+							time = Time.now.to_i
+							
+							critter_exist = 0
+							
+							fight.filter(:uid => uid).each do |row|
+								critter_exist += 1
+							end
+							
+							if critter_exist === 0
+								fight.insert(:uid => uid, :status => 'ready', :opponent => opponent, :weapon => weapon, :start => time)
+							else
+								fight.where(:uid => uid).update(:status => 'ready', :opponent => opponent, :weapon => weapon, :start => time)
+							end
+							
+							fight.where(:uid => opponent).update(:status => 'waiting', :opponent => uid, :start => time)
+							
+							response = "@#{opponent_name} I'm battling my Critter against yours, go to http://crittr.me/critter/#{opponent_name} to retaliate!"
+						else 
+							response = "Error: You or your opponent is already in a battle, you're not allowed more than one fight at a time - that's just mean!"
+						end
+					rescue => e
+						#already battling, send message to user via flash
+						response = "Error: You are already in a battle!"
+						message = e.message
+					end
+				end
+			elsif request.delete?
+				#remove fight
+				#if opponent's opponent is you then delete their fight too to avoid broken fights
+				begin
+					you = fight.filter(:uid => uid).first
+					opp = you[:opponent]
+					DB.transaction do
+						fight.where(:uid => opp).delete
+						response = fight.where(:uid => uid).delete
 					end
 				rescue => e
-					#already battling, send message to user via flash
-					response = "Error: You are already in a battle!"
+					response = "Error: Unable to remove fight :("
+					message = e.message
+				end
+				
+			elsif request.patch?
+				#update fight details
+				begin
+					you = fight.filter(:uid => uid).first
+					opp = you[:opponent]
+					DB.transaction do
+						fight.where(:uid => opp).update(:status => nil, :weapon => nil, :opponent => nil, :start => nil, :ran_away => uid)
+						fight.where(:uid => uid).update(:status => nil, :weapon => nil, :opponent => nil, :start => nil)
+					end
+					response = "Successfully updated"
+				rescue => e
+					response = "Error: Unable to run away :("
 					message = e.message
 				end
 			end
-		elsif request.delete?
-			#remove fight
-			#if opponent's opponent is you then delete their fight too to avoid broken fights
-			begin
-				you = fight.filter(:uid => uid).first
-				opp = you[:opponent]
-				DB.transaction do
-					fight.where(:uid => opp).delete
-					response = fight.where(:uid => uid).delete
-				end
-			rescue => e
-				response = "Error: Unable to remove fight :("
-				message = e.message
-			end
-			
-		elsif request.patch?
-			#update fight details
-			begin
-				you = fight.filter(:uid => uid).first
-				opp = you[:opponent]
-				DB.transaction do
-					fight.where(:uid => opp).update(:status => nil, :weapon => nil, :opponent => nil, :start => nil, :ran_away => uid)
-					fight.where(:uid => uid).update(:status => nil, :weapon => nil, :opponent => nil, :start => nil)
-				end
-				response = "Successfully updated"
-			rescue => e
-				response = "Error: Unable to run away :("
-				message = e.message
-			end
+			message = {"response" => response, "detail" => message}
+			@response = Yajl::Encoder.encode(message)
 		end
-		
-		message = {"response" => response, "detail" => message}
-		@response = Yajl::Encoder.encode(message)
 	end
 end
