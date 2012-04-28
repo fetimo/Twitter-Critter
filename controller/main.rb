@@ -143,99 +143,6 @@ class MainController < Controller
 				friends_w_critter.compact! #removes blank entries leaving us with just the friends
 				session[:friends] = friends_w_critter
 			end
-						
-			fight = DB[:interactions]
-			you = fight.where(:uid => session[:access_token][:user_id]).first
-			
-			if !you
-				fight.insert(:uid => session[:access_token][:user_id])
-
-				if !you[:tutorial]
-					@fisticuffs_tutorial = true
-					fight.where(:uid => session[:access_token][:user_id]).update(:tutorial => 1)
-				end
-				
-				if you[:weapon] === nil && you[:opponent]
-					opponent = Twitter.user(you[:opponent]).screen_name
-					flash[:Fisticuffs] = "#{opponent} has started fisticuffs with you! <p><a class='btn btn-success' href='#'>Arm Yourself</a><a class='btn btn-danger close_btn' href='#'>Run Away</a></p>"
-				end
-				if you[:hugged_by]
-					flash[:Hugs] = "You've been hugged by "
-					hugs = you[:hugged_by].split(',')
-					hugs.uniq!
-					hugs.each_with_index do |hug, index|
-						if index > 0
-							flash[:Hugs] << " and "
-						end
-						flash[:Hugs] << hug
-					end
-					flash[:Hugs] << " :)"
-					
-					fight.where(:uid => session[:access_token][:user_id]).update(:hugged_by => nil)
-				end
-				if you[:ran_away] #if opponent ran away
-					opp = Twitter.user(you[:ran_away]).screen_name
-					
-					flash[:Ran] = opp << " didn't want to fight and ran away!"
-					
-					fight.where(:uid => session[:access_token][:user_id]).update(:ran_away => nil)
-				end
-				if you[:status] === 'ready'
-					#if in battle
-					opponent = fight.where(:uid => you[:opponent]).first
-					if opponent
-						if opponent[:status] === 'ready'
-							weapon = you[:weapon]
-							opp_weapon = opponent[:weapon]
-							@result = ''
-							flash[:Fisticuffs] = 'Result is in, you '
-    						
-							if weapon === opp_weapon
-								flash[:Fisticuffs] << 'draw'
-								opp_status = 'draw'
-							elsif weapon === 1 and opp_weapon === 2
-								flash[:Fisticuffs] << 'win'
-								opp_status = 'lose'
-							elsif weapon === 2 and opp_weapon === 1
-								flash[:Fisticuffs] << 'lose'
-								opp_status = 'win'
-							elsif weapon === 3 and opp_weapon === 1
-								flash[:Fisticuffs] << 'win'
-								opp_status = 'lose'
-							elsif weapon === 1 and opp_weapon === 3
-								flash[:Fisticuffs] << 'lose'
-								opp_status = 'win'
-							elsif weapon === 2 and opp_weapon === 3
-								flash[:Fisticuffs] << 'win'
-								opp_status = 'lose'
-							elsif weapon === 3 and opp_weapon === 2
-								flash[:Fisticuffs] << 'lose'
-								opp_status = 'win'
-							end
-							flash[:Fisticuffs] << '! Now hug to make up, no hard feelings, eh?'
-							
-							# deletes all battle data for a fresh start
-							begin
-								unless flash[:Fisticuffs].include? 'win'
-									opp = you[:opponent]
-									DB.transaction do
-										fight.where(:uid => you[:uid]).update(:status => nil, :opponent => nil, :weapon => nil, :start => nil)
-										fight.where(:uid => opp).update(:status => opp_status)
-									end
-								end
-							rescue => e
-								message = e.message
-							end
-						end
-					end
-				elsif you[:status] === 'win' || you[:status] === 'draw' || you[:status] === 'lose'
-					#you have won, lost, or drawn but you weren't the first to know about it
-					flash[:Fisticuffs] = "Result is in, you #{you[:status]}! Now hug to make up, no hard feelings, eh?"
-					unless flash[:Fisticuffs].include? 'win'
-						fight.where(:uid => you[:uid]).update(:status => nil, :opponent => nil, :weapon => nil, :start => nil)
-					end
-				end
-			end
 			
 			if session[:friends].count < 3
 				friend = Twitter.user(friends.ids.sample)
@@ -244,8 +151,101 @@ class MainController < Controller
 					'username' => friend[:screen_name]
 				}
 			end
+						
+			fight = DB[:interactions]
+			you = fight.where(:uid => session[:access_token][:user_id]).first
+			
+			if !you
+				fight.insert(:uid => session[:access_token][:user_id])
+			end
+			
+			if !you[:tutorial]
+				@fisticuffs_tutorial = true
+				fight.where(:uid => session[:access_token][:user_id]).update(:tutorial => 1)
+			end
+			if you[:weapon] === nil && you[:opponent]
+				opponent = Twitter.user(you[:opponent]).screen_name
+				flash[:Fisticuffs] = "#{opponent} has started fisticuffs with you! <p><a class='btn btn-success' href='#'>Arm Yourself</a><a class='btn btn-danger close_btn' href='#'>Run Away</a></p>"
+			end
+			if you[:hugged_by]
+				flash[:Hugs] = "You've been hugged by "
+				hugs = you[:hugged_by].split(',')
+				hugs.uniq!
+				hugs.each_with_index do |hug, index|
+					if index > 0
+						flash[:Hugs] << " and "
+					end
+					flash[:Hugs] << hug
+				end
+				flash[:Hugs] << " :)"
+				
+				fight.where(:uid => session[:access_token][:user_id]).update(:hugged_by => nil)
+			end
+			if you[:ran_away] #if opponent ran away
+				opp = Twitter.user(you[:ran_away]).screen_name
+				
+				flash[:Ran] = opp << " didn't want to fight and ran away!"
+				
+				fight.where(:uid => session[:access_token][:user_id]).update(:ran_away => nil)
+			end
+			if you[:status] === 'ready'
+				#if in battle
+				opponent = fight.where(:uid => you[:opponent]).first
+				if opponent
+					if opponent[:status] === 'ready'
+						weapon = you[:weapon]
+						opp_weapon = opponent[:weapon]
+						@result = ''
+						flash[:Fisticuffs] = 'The results are in, you '
+						
+						if weapon.eql? opp_weapon
+							result = 'draw'
+							opp_status = 'draw'
+						elsif weapon.eql? 1 and opp_weapon.eql? 2
+							result = 'win'
+							opp_status = 'lose'
+						elsif weapon.eql? 2 and opp_weapon.eql? 1
+							result = 'lose'
+							opp_status = 'win'
+						elsif weapon.eql? 3 and opp_weapon.eql? 1
+							result = 'win'
+							opp_status = 'lose'
+						elsif weapon.eql? 1 and opp_weapon.eql? 3
+							result = 'lose'
+							opp_status = 'win'
+						elsif weapon.eql? 2 and opp_weapon.eql? 3
+							result = 'win'
+							opp_status = 'lose'
+						elsif weapon.eql? 3 and opp_weapon.eql? 2
+							result = 'lose'
+							opp_status = 'win'
+						end
+						flash[:Fisticuffs] << "#{result} against #{Twitter.user(you[:opponent]).screen_name}! Now hug to make up, no hard feelings, eh?"
+						
+						# deletes all battle data for a fresh start
+						begin
+							unless result.include? 'win'
+								opp = you[:opponent]
+								DB.transaction do
+									fight.where(:uid => you[:uid]).update(:status => nil, :opponent => nil, :weapon => nil, :start => nil)
+									fight.where(:uid => opp).update(:status => opp_status)
+								end
+							end
+						rescue => e
+							message = e.message
+						end
+					end
+				end
+			elsif you[:status] === 'win' || you[:status] === 'draw' || you[:status] === 'lose'
+				#you have won, lost, or drawn but you weren't the first to know about it
+				flash[:Fisticuffs] = "The results are in, you #{you[:status]} against #{Twitter.user(you[:opponent]).screen_name}! Now hug to make up, no hard feelings, eh?"
+				unless you[:status].include? 'win'
+					fight.where(:uid => you[:uid]).update(:status => nil, :opponent => nil, :weapon => nil, :start => nil)
+				end
+			end
 		end
 	end
+	#end
 	
 	def logout
 		session.delete(:friends)
@@ -341,10 +341,3 @@ class MainController < Controller
 		return 'There is no \'notemplate.xhtml\' associated with this action.'
 	end
 end
-
-=begin
-Setting mime types
-
-https://github.com/rack/rack/blob/master/lib/rack/mime.rb#L21-39
-Rack::Mime::MIME_TYPES['.foo'] = 'foo/bar'
-=end
