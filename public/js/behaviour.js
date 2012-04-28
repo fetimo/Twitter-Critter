@@ -181,7 +181,7 @@ $(document).ready(function() {
 		var alert = document.createElement('div'),
 			root = $('.alerts')[0];
 		alert.className = 'alert alert-info';
-		alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Are you sure you want to kill your current Critter?</p><p><a class="btn btn-info" id="kill" href="#">Yes, I do</a><a class="btn close_btn" href="#" id="do_not_kill">No, please don\'t!</a></p>';
+		alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>This will make a Critter out of your most recent tweet. Are you sure you want to kill your current Critter?</p><p><a class="btn btn-info" id="kill" href="#">Yes, I do</a><a class="btn close_btn" href="#" id="do_not_kill">No, please don\'t!</a></p>';
 		root.appendChild(alert);
 		$(alert).slideToggle(750);
 		
