@@ -177,16 +177,44 @@ $(document).ready(function() {
 	}
 	
 	function changeCritter() {
+		
+		var alert = document.createElement('div'),
+			root = $('.alerts')[0];
+		alert.className = 'alert alert-info';
+		alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Are you sure you want to kill your current Critter?</p><p><a class="btn btn-info" id="kill" href="#">Yes, I do</a><a class="btn close_btn" href="#" id="do_not_kill">No, please don\'t!</a></p>';
+		root.appendChild(alert);
+		$(alert).slideToggle(750);
+		
+		$('#kill').on('click', function() {
+			killCritter(alert);
+		});
+		
+		$('#do_not_kill').on('click', function() {
+			saveCritter(alert);
+		});
+	}
+	
+	function saveCritter(alert) {
+		$(alert).slideToggle(750);
+		$(alert).remove();
+		var alert = document.createElement('div'),
+		root = $('.alerts')[0];
+		alert.className = 'alert alert-info';
+		alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Your Critter is still alive but please don\'t scare them like that!</p>';
+		root.appendChild(alert);
+		$(alert).slideToggle(750);
+	}
+	
+	function killCritter(alert) {
+		$(alert).slideToggle(750, function() {
+			this.remove();
+		});
+		
 		$.ajax({
 			type: 'POST',
 			url: 'http://crittr.me/api/critters/'+username,
 			success: function(e) {
-				critterApp.yourStage().removeAllChildren();
-				var your_critter = critterApp.yourModel();
-				your_critter.fetch(); 
-				critter = build(your_critter, critterApp.yourStage(), critterApp.yours().getContainer()); 
-				critterApp.yourStage().update();
-				critterApp.theirStage().removeAllChildren();
+				change = true;
 			}
 		});
 	}

@@ -17,7 +17,7 @@ Ramaze.options.roots = [__DIR__]
 require __DIR__('model/init')
 require __DIR__('controller/init')
 
-# Setup memcache
+#Setup memcache
 Ramaze::Cache.options.session = Ramaze::Cache::MemCache.using(
 	:compress => true,
 	:expires_in => 86400

@@ -122,7 +122,7 @@ function build(crit, destination, container) {
 									armG.closePath();
 									var armL = new Shape(armG);
 									var armR = armL.clone();
-									armR.x = 280;
+									armR.x = 260;
 									armR.rotation = 180;
 									armR.skewX = 180;
 									arms.addChild(armL, armR);
@@ -150,9 +150,55 @@ function build(crit, destination, container) {
 								}
 							break;
 							case 'legs':
-								var legs = new Bitmap('../images/critter_assets/legs/'+ critter[key] + '.png');
-								legs.name = critter[key];
-								preload(legs.image);
+								var legs = new Container();
+								legs.name = critter[key];								
+								if (legs.name === 'short') {
+									var leg = new Graphics();
+									leg.moveTo(0,0);
+									leg.lineTo(57,0);
+									leg.lineTo(57,89);
+									leg.lineTo(0,89);
+									leg.closePath();
+									leg.setStrokeStyle(1,0,0,4);
+									leg.beginFill(fillColour);
+									leg.moveTo(286.449,412.373);
+									leg.bezierCurveTo(286.449,419.407,279.512,425.114,270.952,425.114);
+									leg.lineTo(244.609,425.114);
+									leg.bezierCurveTo(236.05,425.114,229.112,419.407,229.112,412.373);
+									leg.lineTo(229.112,348.664);
+									leg.bezierCurveTo(229.112,341.627,236.05,335.921,244.609,335.921);
+									leg.lineTo(270.952,335.921);
+									leg.bezierCurveTo(279.512,335.921,286.449,341.627,286.449,348.664);
+									leg.lineTo(286.449,412.373);
+									leg.closePath();
+									legL = new Shape(leg);
+									var legR = legL.clone();
+									legR.x = 110;
+									legs.addChild(legL, legR);
+								} else {
+									var leg = new Graphics();
+									leg.moveTo(0,0);
+									leg.lineTo(57,0);
+									leg.lineTo(57,152);
+									leg.lineTo(0,152);
+									leg.closePath();
+									leg.setStrokeStyle(1,0,0,4);
+									leg.beginFill(fillColour);
+									leg.moveTo(286.447,475.619);
+									leg.bezierCurveTo(286.447,482.655,279.511,488.361,270.952,488.361);
+									leg.lineTo(244.61,488.361);
+									leg.bezierCurveTo(236.051,488.361,229.112,482.655,229.112,475.619);
+									leg.lineTo(229.112,348.664);
+									leg.bezierCurveTo(229.112,341.627,236.05,335.921,244.61,335.921);
+									leg.lineTo(270.952,335.921);
+									leg.bezierCurveTo(279.511,335.921,286.447,341.627,286.447,348.664);
+									leg.lineTo(286.447,475.619);
+									leg.closePath();
+									legL = new Shape(leg);
+									var legR = legL.clone();
+									legR.x = 100;
+									legs.addChild(legL, legR);
+								}
 							break;
 							case 'ears':
 								if (critter[key] !== 'none') {
@@ -186,12 +232,6 @@ function build(crit, destination, container) {
 									mouth.scaleY = 2.12731;
 								}
 							break;
-							//case 'hands':
-								/*if (critter[key] !== 'none') {
-									var hands = new Bitmap('../images/critter_assets/hands/'+ critter[key] + '.png');
-									preload(hands.image);
-								}*/
-							//break;
 							case 'body_type':
 								var body_shape = new Bitmap('../images/critter_assets/bodies/'+ critter[key] + '.png');
 								body_shape.name = critter[key];
@@ -242,12 +282,8 @@ function build(crit, destination, container) {
 					}
 					
 					body.filters = [filter];
-					legs.filters = [filter];
-					if (accessory && accessory.name === 'tail') accessory.filters = [filter];
 					if (ears) ears.filters = [filter];
 					body.cache(0, 0, body.image.width, body.image.height);
-					legs.cache(0, 0, legs.image.width, legs.image.height);
-					if (accessory && accessory.name === 'tail') accessory.cache(0, 0, accessory.image.width, accessory.image.height);
 					if (ears) ears.cache(0, 0, ears.image.width, ears.image.height);
 						
 					if (accessory && accessory.name === 'tail') {
@@ -284,6 +320,9 @@ function build(crit, destination, container) {
 										if (body_shape.name === 'furry') {
 											tail.x = 200;
 											tail.y = 300;
+											if (legs.name === 'long') {
+												tail.y = 270;
+											}
 										}
 										tail.paused = false;
 										tail.onAnimationEnd = function() {
@@ -374,9 +413,13 @@ function build(crit, destination, container) {
 						eyes.y = 80;
 						eyes.children[1].regY = 5;
 					}
-					legs.x = 80;
-					legs.y = 230;
-					if (legs.name === 'long') legs.y = 280;
+					if (legs.name === 'long') {
+						legs.x = -150;
+						legs.y = -55;
+					} else {
+						legs.x = -150;
+						legs.y = -105;
+					}
 					arms.x = -20;
 					arms.y = -90;
 					if (body.children[0].name === 'simple') arms.x = -43;
@@ -440,11 +483,18 @@ function build(crit, destination, container) {
 						}
 						mouth.x = Math.round(eyes.children[0].image.width/2) + 20;
 						eyes.y = 80;
-						legs.x += 30;
-						if (legs.name === 'short') legs.y += 60;
+						if (legs.name === 'long') {
+							legs.x = -105;
+							legs.y = -20;
+						} else {
+							legs.x = -110;
+							legs.y = -45;
+						}
+//						if (legs.name === 'short') legs.y += 60;
+						if (legs.name === 'long') legs.y -= 38;
 						if (arms.name === 'arms long') {
 							arms.x += 50;
-							arms.y = -60;
+							arms.y = 170;
 						} else if (arms.name === 'arms short') {
 							arms.x += 20;
 						}
@@ -498,7 +548,7 @@ function build(crit, destination, container) {
 					container.onClick = function () {
 						container.id === 7 ? jiggle = true : jiggleTheirs = true;
 					};
-					
+										
 				    Ticker.useRAF = true;				    
 					Ticker.addListener(window);
 					Ticker.setFPS(40);

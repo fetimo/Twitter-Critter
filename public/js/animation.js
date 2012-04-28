@@ -6,6 +6,7 @@ var wave = 0,
 	hugFriend = false,
 	jiggle = false,
 	jiggleTheirs = false,
+	change = false,
 	theirs;
 
 function animateEyes(critter) {
@@ -96,9 +97,12 @@ function animateEyes(critter) {
 function hug(critter) {
 	if (critter) {
 		for (var i=0; i < critter.children.length; i+=1) { 
-			if (critter.children[i].name && critter.children[i].name.substr(0,4) === 'arms') {
-				var arms = critter.children[i];
-				break;
+			if (critter.children[i].name) {
+				if (critter.children[i].name && critter.children[i].name.substr(0,4) === 'arms') {
+					var arms = critter.children[i];
+				} else if (critter.children[i].name && critter.children[i].name.substr(0,4) === 'long' || critter.children[i].name.substr(0,5) === 'short') {
+					var legs = critter.children[i];
+				}
 			}
 		}
 		
@@ -107,12 +111,18 @@ function hug(critter) {
 			//raise arm
 			var lArm = arms.children[0];
 			var rArm = arms.children[1];
-								
+			
 			if (rArm.rotation >= 360) rArm.rotation = 0;
 			if (lArm.rotation >= 360) lArm.rotation = 0;
 			
 			if (rub <= 2) {
 				if (critter.x < 115) critter.x += 5;
+				if (legs.children[0].rotation < 5) {
+					legs.children[0].rotation += .5;
+					legs.children[1].rotation += .5;
+					legs.children[0].y -= 2;
+					legs.children[1].y -= 2;
+				}
 				if (lArm.rotation === 0 || lArm.rotation > -90) {
 					//finished rubbing
 					lArm.rotation -= 5;
@@ -129,7 +139,13 @@ function hug(critter) {
 					rArm.rotation -= 2.5;
 					if (rArm.rotation <= 270) oscillateHug = true;
 				}
-			} else {
+			} else {				
+				if (legs.children[0].rotation >= 0) {
+					legs.children[0].rotation -= .5;
+					legs.children[1].rotation -= .5;
+					legs.children[0].y += 2;
+					legs.children[1].y += 2;
+				}
 				if (lArm.rotation !== 0) {
 					//finished waving
 					lArm.rotation += 5;
@@ -145,6 +161,22 @@ function hug(critter) {
 				}
 			}
 		}
+	}
+}
+
+function kill(critter) {
+	critter.alpha -= .02;
+	wave = 0;
+	
+	if (critter.alpha <= 0) {
+		change = false;
+		critterApp.yours().getContainer().alpha = 1;
+		critterApp.yourStage().removeAllChildren();
+		var your_critter = critterApp.yourModel();
+		your_critter.fetch(); 
+		critter = build(your_critter, critterApp.yourStage(), critterApp.yours().getContainer()); 
+		critterApp.yourStage().update();
+		critterApp.theirStage().removeAllChildren();
 	}
 }
 
@@ -176,7 +208,7 @@ function animateArms(critter) {
 		}
 		//arms.uncache();
 	} else {
-		if (jiggle && !hugFriend && critter.id === 7) {			
+		if (jiggle && !hugFriend && critter.id === 7 && arms) {			
 			//jiggle arms
 			var lArm = arms.children[0];
 			var rArm = arms.children[1];
@@ -491,8 +523,10 @@ function tick() {
 	}
 	
 	if (critterApp.yours()) animateArms(critterApp.yours().getContainer());
-	
+		
 	if (hugFriend) hug(critterApp.yours().getContainer());
+	
+	if (change) kill(critterApp.yours().getContainer());
 	
 	critterApp.yourStage().update();
 	if (critterApp.theirStage()) critterApp.theirStage().update(); 
