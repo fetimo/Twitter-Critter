@@ -177,18 +177,16 @@ $(document).ready(function() {
 	}
 	
 	function changeCritter() {
-		console.log('changeCritter inited');
 		$.ajax({
 			type: 'POST',
-			//url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&attribute=' + this.id + '&hash='+#{@timestamp},
-			complete: function() {
-				//$('.alert').remove();
-				//critterApp.yourStage().removeAllChildren();
-				//var your_critter = critterApp.yourModel();
-				//your_critter.fetch(); 
-//				critter = build(your_critter, critterApp.yourStage(), critterApp.yours().getContainer()); 
-//				critterApp.yourStage().update();
-//				critterApp.theirStage().removeAllChildren();
+			url: 'http://crittr.me/api/critters/'+username,
+			success: function(e) {
+				critterApp.yourStage().removeAllChildren();
+				var your_critter = critterApp.yourModel();
+				your_critter.fetch(); 
+				critter = build(your_critter, critterApp.yourStage(), critterApp.yours().getContainer()); 
+				critterApp.yourStage().update();
+				critterApp.theirStage().removeAllChildren();
 			}
 		});
 	}

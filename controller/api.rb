@@ -15,13 +15,53 @@ class ApiController < Controller
 		response['Content-Type'] = 'application/json'
 		
 		username.delete!('@')
-		
+
 		if request.get? 
 			DB.fetch('SELECT critter FROM critters WHERE name = ? LIMIT 1', username) do |row|
 				@response = row[:critter]
 			end
+		elsif request.post?
+			unless request.cookies.empty?
+				logger = Ramaze::Logger::RotatingInformer.new('./log')
+	    		logger.info request.inspect
+				critters = DB[:critters]
+				@response = critters.filter(:name => username).delete
+				
+				@default_critter = {
+					#default values
+					:name => 'Steve',
+					:arms => 'short',
+					:eye_colour => 'blue',
+					:nose => 'none',
+					:legs => 'short',
+					:ears => 'none',
+					:face => 'none',
+					:hands => 'none',
+					:mouth => 'plain',
+					:accessory => 'none',
+					:body => 'plain',
+					:body_colour => 'orange',
+					:body_type => 'simple',
+					:critter => '',
+					:uid => 0
+				}
+				
+				require File.join(File.dirname(__FILE__), 'critter_algorithm')
+				
+				begin
+					@data = Twitter.user_timeline(username).first.text
+					user_info = Twitter.users(username)
+					uid = user_info[0].id
+				rescue
+					#useful for if user 404s or Twitter offline
+					redirect MainController.r(:critter, @user[:username])
+				end
+				
+				generate = Critter.new(@data, username, @default_critter, uid)
+				@response = generate.critter
+			end
 		end
-		@response
+		@response 
 	end
 	
 	def battle
