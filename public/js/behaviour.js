@@ -207,7 +207,7 @@ $(document).ready(function() {
 	
 	function killCritter(alert) {
 		$(alert).slideToggle(750, function() {
-			this.remove();
+			$(alert).remove();
 		});
 		
 		$.ajax({
