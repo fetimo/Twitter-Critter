@@ -225,7 +225,7 @@ function build(crit, destination, container) {
 										if(sentiment === 'smile') {
 											mouth = new Bitmap('../images/critter_assets/mouths/smile-fangs.png');
 										} else {
-											mouth = new Bitmap('../images/critter_assets/mouths/'+ critter[key] + '.png');
+											mouth = new Bitmap('../images/critter_assets/mouths/fangs.png');
 										}
 										mouth.name = critter[key];
 										preload(mouth.image);
