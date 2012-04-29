@@ -216,13 +216,20 @@ function build(crit, destination, container) {
 							break;
 							case 'mouth':
 								if (critter[key] === 'fangs') {
-									var mouth = new Bitmap('../images/critter_assets/mouths/'+ critter[key] + '.png');
-									mouth.name = critter[key];
-									preload(mouth.image);
+									var mouth;
+
 									$.ajax({
 										url: "http://crittr.me/api/critters/" + crit.attributes.name + "?mood=true"
 									}).done(function(response) {
 										sentiment = response;
+										if(sentiment === 'smile') {
+											mouth = new Bitmap('../images/critter_assets/mouths/smile-fangs.png');
+										} else {
+											mouth = new Bitmap('../images/critter_assets/mouths/'+ critter[key] + '.png');
+										}
+										mouth.name = critter[key];
+										preload(mouth.image);
+
 										positionMouth();
 									});
 								} else {					
