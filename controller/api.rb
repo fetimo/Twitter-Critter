@@ -16,14 +16,17 @@ class ApiController < Controller
 		
 		username.delete!('@')
 
-		if request.get? 
-			DB.fetch('SELECT critter FROM critters WHERE name = ? LIMIT 1', username) do |row|
-				@response = row[:critter]
+		if request.get?
+			critters = DB[:critters]
+			critter = critters.filter('name = ?', username).first
+			if request.params['mood']
+				@response = critter[:sentiment]
+				return Yajl::Encoder.encode(@response)
+			else
+				@response = critter[:critter]
 			end
 		elsif request.post?
 			unless request.cookies.empty?
-				logger = Ramaze::Logger::RotatingInformer.new('./log')
-	    		logger.info request.inspect
 				critters = DB[:critters]
 				@response = critters.filter(:name => username).delete
 				
@@ -125,7 +128,6 @@ class ApiController < Controller
 						DB[:critters].filter(:uid => uid).update(attribute => type)
 						you.update(:start => 0)
 						critter = DB[:critters].filter(:uid => uid).select(:name, :arms, :eye_colour, :ears, :mouth, :legs, :face, :hands, :nose, :body_colour, :body, :body_type, :accessory, :uid).first					
-						require 'yajl'
 						critter = Yajl::Encoder.encode(critter)
 						DB[:critters].filter(:uid => uid).update(:critter => critter)
 						fight.where(:uid => uid).update(:status => nil, :opponent => nil, :weapon => nil, :start => nil)

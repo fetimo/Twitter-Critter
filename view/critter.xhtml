@@ -10,7 +10,7 @@
 			<a class="close" data-dismiss="alert">&times;</a>
 			<?r if @fisticuffs_tutorial ?>
 				<h4>First time here?</h4>
-				<p>If you start fisticuffs with someone then they will see a message when they login telling them what to do next. If you win the fight you'll be able to choose a feature of theirs that you like to have yourself!</p>
+				<p>If you start fisticuffs with someone then they will see a message when they login telling them what to do next. If you win the fight you'll be able to choose a feature of theirs that you'd like to have yourself!</p>
 				<br>
 			<?r end ?>
 			<h4>Choose Your Weapon</h4>
@@ -91,7 +91,6 @@
 #{js('your-critter')}
 <script>
 var username = '#{@username}';
-<?r if @sentiment ?> var sentiment = '#{@sentiment}'; <?r end ?>
 </script>
 #{js('app')}
 #{js('behaviour')}
@@ -110,10 +109,10 @@ var username = '#{@username}';
 				complete: function() {
 					$('.alert').remove();
 					critterApp.yourStage().removeAllChildren();
-					var your_critter = critterApp.yourModel();
-					your_critter.fetch(); 
-					critter = build(your_critter, critterApp.yourStage(), critterApp.yours().getContainer()); 
-					critterApp.yourStage().update();
+					var critter = critterApp.yourModel();
+					var name = critter.attributes.name;
+					var your_critter = critterApp.critter(name);		
+					critter = build(your_critter, critterApp.yourStage(), critterApp.yours().getContainer());
 					critterApp.theirStage().removeAllChildren();
 				}
 			});

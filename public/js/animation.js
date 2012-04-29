@@ -177,7 +177,7 @@ function kill(critter) {
 		var name = critter.attributes.name;
 		var your_critter = critterApp.critter(name);
 				
-		critter = build(your_critter, critterApp.yourStage(), critterApp.yours().getContainer()); 
+		critter = build(your_critter, critterApp.yourStage(), critterApp.yours().getContainer());
 	}
 }
 

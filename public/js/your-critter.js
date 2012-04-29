@@ -4,6 +4,8 @@ function build(crit, destination, container) {
 	
 	// Always check for properties and methods, to make sure your code doesn't break in other browsers.
 	var elem = document.getElementById('your-critter');
+	var sentiment = null;
+	
 	if (elem && elem.getContext) {
 		// Remember: you can only initialize one context per element.	
 		var context = elem.getContext('2d');
@@ -13,7 +15,7 @@ function build(crit, destination, container) {
 				var critter = crit.attributes,
 					totalImages = 0,
 					loaded = 0;
-								
+				
 				/*
 					This function takes an unlimited amount of arguments
 					and for each image it receives, adds it to the totalImages
@@ -217,17 +219,37 @@ function build(crit, destination, container) {
 									var mouth = new Bitmap('../images/critter_assets/mouths/'+ critter[key] + '.png');
 									mouth.name = critter[key];
 									preload(mouth.image);
-								} else {
+									$.ajax({
+										url: "http://crittr.me/api/critters/" + crit.attributes.name + "?mood=true"
+									}).done(function(response) {
+										sentiment = response;
+										positionMouth();
+									});
+								} else {					
+									
+									//determine happy/sad
+									$.ajax({
+										url: "http://crittr.me/api/critters/" + crit.attributes.name + "?mood=true"
+									}).done(function(response) {
+										sentiment = response;
+										positionMouth();
+									});
+									
 									var mouthG = new Graphics();
 									mouthG.setStrokeStyle(1, 0, 0, 4);
-									mouthG.beginFill("#000100");
+									var rgbRegex = /(^rgb\((\d+),\s*(\d+),\s*(\d+)\)$)|(^rgba\((\d+),\s*(\d+),\s*(\d+)(,\s*\d+\.\d+)*\)$)/;
+									var rgb = fillColour.match(rgbRegex);
+									var r = rgb[2] - 150;
+									var g = rgb[3] - 150;
+									var b = rgb[4] - 150;
+									mouthG.beginFill('rgb('+r+','+g+','+b+')');
 									mouthG.moveTo(0,0);
 									mouthG.bezierCurveTo(0,0,16,4,38,4);
 									mouthG.bezierCurveTo(50,4,65,3,79,0);
 									mouthG.bezierCurveTo(79,0,43,14,0,0);
 									mouthG.closePath();
 									var mouth = new Shape(mouthG);
-									mouth.alpha = 0.5;
+									//mouth.alpha = 0.5;
 									mouth.scaleX = 2.12731;
 									mouth.scaleY = 2.12731;
 								}
@@ -245,6 +267,38 @@ function build(crit, destination, container) {
 									preload(accessory.image);
 								}
 							break;
+						}
+					}
+				}
+				
+				function positionMouth() {
+					mouth.x = 70;
+					mouth.y = 220;
+					if (mouth.name === 'fangs') {
+						mouth.y += 10;
+					}
+					if (eyes.name === 'eyes small_black') {
+						mouth.y += -50;
+						mouth.x = 65;
+					}
+					if (sentiment === 'frown') {
+						mouth.scaleX = -2.12731;
+						mouth.scaleY = -2.12731;
+						mouth.x = 240;
+						mouth.y += 20;
+					}
+					if (body.children[0].name === 'furry') {
+						mouth.x = Math.round(eyes.children[0].image.width/2) + 20;
+						if (eyes.name === 'eyes small_black') {
+							mouth.x = 110;
+							mouth.y = 230;
+						}
+						if (face && eyes.name === 'eyes small_black') {
+							mouth.y = 240;
+						}
+						if (sentiment === 'frown') {
+							mouth.x += 165;
+							mouth.y += 20;
 						}
 					}
 				}
@@ -436,15 +490,6 @@ function build(crit, destination, container) {
 						arms.children[1].regX = 125;
 						arms.children[1].regY = 230;
 					}
-					mouth.x = Math.round(eyes.children[0].image.width/2) - 15;
-					mouth.y = 220;
-					if (mouth.name === 'fangs') {
-						mouth.y += 10;
-					}
-					if (eyes.name === 'eyes small_black') {
-						mouth.y += -50;
-						mouth.x = 65;
-					}
 					if (pattern) {
 						pattern.x = -96;
 						pattern.y = -103;
@@ -481,7 +526,6 @@ function build(crit, destination, container) {
 							pattern.x = 0;
 							pattern.y = 0;
 						}
-						mouth.x = Math.round(eyes.children[0].image.width/2) + 20;
 						eyes.y = 80;
 						if (legs.name === 'long') {
 							legs.x = -105;
@@ -501,8 +545,6 @@ function build(crit, destination, container) {
 						if (eyes.name === 'eyes small_black') {
 							eyes.x = 150;
 							eyes.y = 130;
-							mouth.x = 110;
-							mouth.y = 230;
 						}
 						if (accessory) {
 							accessory.y += 50;
@@ -522,7 +564,6 @@ function build(crit, destination, container) {
 							if (eyes.name === 'eyes small_black') {
 								face.x += 50;
 								face.y = 180;
-								mouth.y = 240;
 							}
 						}
 					}
@@ -542,13 +583,13 @@ function build(crit, destination, container) {
 					if (accessory) if (accessory.name !== 'tail') container.addChild(accessory);
 					
 					destination.removeAllChildren();		
-					destination.addChild(container);
+					if (sentiment) destination.addChild(container);
 					
 					// tickle your critter!
 					container.onClick = function () {
 						container.id === 7 ? jiggle = true : jiggleTheirs = true;
 					};
-										
+												
 				    Ticker.useRAF = true;				    
 					Ticker.addListener(window);
 					Ticker.setFPS(40);

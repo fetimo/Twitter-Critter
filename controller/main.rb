@@ -151,12 +151,17 @@ class MainController < Controller
 				
 				if sa.quota > 0
 					sentiment = sa.review(data)	
-					if sentiment.parsed_response['mood'] === 'positive'
+					
+					critters = DB[:critters] 
+					
+					if sentiment.parsed_response['mood'] === 'positive' && sentiment.parsed_response['prob'] > 0.5
 						#smile
-						@sentiment = 'smile'
-					else
+						critters.filter('name = ?', session[:access_token][:screen_name]).update(:sentiment => 'smile')
+					elsif sentiment.parsed_response['mood'] === 'negative' && sentiment.parsed_response['prob'] > 0.5
 						#frown
-						@sentiment = 'frown'
+						critters.filter('name = ?', session[:access_token][:screen_name]).update(:sentiment => 'frown')
+					else
+						critters.filter('name = ?', session[:access_token][:screen_name]).update(:sentiment => 'smile')
 					end
 				end
 			rescue => e
@@ -164,7 +169,8 @@ class MainController < Controller
     			logger.info e.message
     			logger.info sa.quota
 				#useful for if Twitter is offline
-				@sentiment = 'frown'
+				critters = DB[:critters]
+				critters.filter('name = ?', session[:access_token][:screen_name]).update(:sentiment => 'frown')
 			end
 					
 			fight = DB[:interactions]
@@ -172,6 +178,7 @@ class MainController < Controller
 			
 			if !you
 				fight.insert(:uid => session[:access_token][:user_id])
+				you = fight.where(:uid => session[:access_token][:user_id]).first
 			end
 			
 			if !you[:tutorial]
@@ -272,10 +279,10 @@ class MainController < Controller
 		
 		if request.post?
 				
-			auth_users = DB[:authorised_users]
-			user = auth_users.filter(:screen_name => username).first
+			#auth_users = DB[:authorised_users]
+			#user = auth_users.filter(:screen_name => username).first
 			
-			if user.eql? nil #user is not found
+			#if user.eql? nil #user is not found
 				client = TwitterOAuth::Client.new(
 					:consumer_key => 'DQicogvXxpbW7oleCfV3Q',
 					:consumer_secret => 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
@@ -286,24 +293,24 @@ class MainController < Controller
 				session[:request_token] = request_token
 				
 				redirect request_token.authorize_url
-			else
-				
-				client = TwitterOAuth::Client.new(
-					:consumer_key => 'DQicogvXxpbW7oleCfV3Q',
-					:consumer_secret => 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o',
-					:token => user[:token],
-					:secret => user[:secret]
-				)
-										
-				session[:access_token] = {
-					:oauth_token => user[:token],
-					:oauth_token_secret => user[:secret],
-					:screen_name => user[:screen_name],
-					:user_id => user[:user_id]
-				}
-										
-				redirect MainController.r(:critter, user[:screen_name])
-			end
+#			else
+#				
+#				client = TwitterOAuth::Client.new(
+#					:consumer_key => 'DQicogvXxpbW7oleCfV3Q',
+#					:consumer_secret => 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o',
+#					:token => user[:token],
+#					:secret => user[:secret]
+#				)
+#										
+#				session[:access_token] = {
+#					:oauth_token => user[:token],
+#					:oauth_token_secret => user[:secret],
+#					:screen_name => user[:screen_name],
+#					:user_id => user[:user_id]
+#				}
+#										
+#				redirect MainController.r(:critter, user[:screen_name])
+#			end
 		end
 	end
 		
@@ -336,12 +343,12 @@ class MainController < Controller
 		}
 					
 		if client.authorized?
-			begin
-				auth_users = DB[:authorised_users]
-				auth_users.insert(:user_id => session[:access_token][:user_id], :screen_name => session[:access_token][:screen_name], :token => session[:access_token][:oauth_token], :secret => session[:access_token][:oauth_token_secret])
-			rescue Sequel::DatabaseError
+#			begin
+#				auth_users = DB[:authorised_users]
+#				auth_users.insert(:user_id => session[:access_token][:user_id], :screen_name => session[:access_token][:screen_name], :token => session[:access_token][:oauth_token], :secret => session[:access_token][:oauth_token_secret])
+#			rescue Sequel::DatabaseError
 				#logger.error "database error (probably because user has already authorised Critter)"
-			end
+#			end
 						
 			redirect MainController.r(:critter, session[:access_token][:screen_name])
 		end
