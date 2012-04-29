@@ -250,12 +250,19 @@ function animateArms(critter) {
 	}
 }
 
+var rpsAdded = false;
+
 function RPS(weapon) {
 
 	function addToStage(graphic) {
 		var rps = new Shape(graphic);
+		rpsAdded = true;
+		
 		rps.snapToPixel = true;
-		critterApp.yourStage().addChild(rps);	
+		
+		critterApp.yourStage().addChild(rps);
+		rps.scaleX = .5;
+		rps.scaleY = .5;
 		return rps;
 	}
 
@@ -339,7 +346,7 @@ function RPS(weapon) {
 			rock.closePath();
 			rock.beginFill("#898a8c");
 			rock.moveTo(25.89,68.683);
-			rock.lineTo(25.51,66.12700000000001);
+			rock.lineTo(25.51,66.127);
 			rock.bezierCurveTo(25.51,66.127,26.262,67.785,25.89,68.683);
 			rock.closePath();
 			rock.beginFill("#898a8c");
@@ -524,8 +531,15 @@ function tick() {
 	}
 	
 	if (critterApp.yours()) animateArms(critterApp.yours().getContainer());
-		
+
 	if (hugFriend) hug(critterApp.yours().getContainer());
+	
+	if (rpsAdded) {
+		var index = critterApp.yourStage().children.length - 1;
+		//can be fairly certain it was the last thing added
+		critterApp.yourStage().children[index].y = critterApp.yours().getArms().children[0]._matrix.ty;
+		critterApp.yourStage().children[index].x = critterApp.yours().getArms().children[0]._matrix.tx;
+	}
 	
 	if (change) kill(critterApp.yours().getContainer());
 	

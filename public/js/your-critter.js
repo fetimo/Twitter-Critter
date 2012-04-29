@@ -227,9 +227,9 @@ function build(crit, destination, container) {
 										} else {
 											mouth = new Bitmap('../images/critter_assets/mouths/fangs.png');
 										}
-										mouth.name = critter[key];
+										mouth.name = 'fangs';
 										preload(mouth.image);
-
+										
 										positionMouth();
 									});
 								} else {					
@@ -241,7 +241,6 @@ function build(crit, destination, container) {
 										sentiment = response;
 										positionMouth();
 									});
-									
 									var mouthG = new Graphics();
 									mouthG.setStrokeStyle(1, 0, 0, 4);
 									var rgbRegex = /(^rgb\((\d+),\s*(\d+),\s*(\d+)\)$)|(^rgba\((\d+),\s*(\d+),\s*(\d+)(,\s*\d+\.\d+)*\)$)/;
@@ -259,6 +258,7 @@ function build(crit, destination, container) {
 									//mouth.alpha = 0.5;
 									mouth.scaleX = 2.12731;
 									mouth.scaleY = 2.12731;
+									mouth.name = 'simple';
 								}
 							break;
 							case 'body_type':
@@ -288,7 +288,7 @@ function build(crit, destination, container) {
 						mouth.y += -50;
 						mouth.x = 65;
 					}
-					if (sentiment === 'frown') {
+					if (sentiment === 'frown' && mouth.name === 'simple') {
 						mouth.scaleX = -2.12731;
 						mouth.scaleY = -2.12731;
 						mouth.x = 240;
@@ -303,7 +303,7 @@ function build(crit, destination, container) {
 						if (face && eyes.name === 'eyes small_black') {
 							mouth.y = 240;
 						}
-						if (sentiment === 'frown') {
+						if (sentiment === 'frown' && mouth.name === 'simple') {
 							mouth.x += 165;
 							mouth.y += 20;
 						}
