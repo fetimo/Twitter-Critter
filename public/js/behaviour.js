@@ -163,7 +163,7 @@ $(document).ready(function() {
 			url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&opponent=' + friend.get('uid') + '&weapon=' + weapon,
 			success: success
 		});
-		$('.weapon_selection').css('display','none');
+		$('.weapon_selection').slideToggle(750) || rebuildWeaponSelection();
 	}
 	
 	function clickedWeaponRetaliate(e) {
@@ -171,13 +171,13 @@ $(document).ready(function() {
 		$.ajax({
 			type: 'POST',
 			url: 'http://crittr.me/api/battle?update=1&uid='+ critterApp.yourModel().get('uid')+'&weapon=' + weapon,
+			complete: function() { location.reload(false); }
 		});
-		$('.weapon_selection').css('display','none');
+		$('.weapon_selection').slideToggle(750) || rebuildWeaponSelection();
 		$('.flash_Fisticuffs').remove();
 	}
 	
 	function changeCritter() {
-		
 		var alert = document.createElement('div'),
 			root = $('.alerts')[0];
 		alert.className = 'alert alert-info';
@@ -200,9 +200,14 @@ $(document).ready(function() {
 		var alert = document.createElement('div'),
 		root = $('.alerts')[0];
 		alert.className = 'alert alert-info';
-		alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Your Critter is still alive but please don\'t scare them like that!</p>';
+		alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Your Critter is still alive but please don\'t scare them like that!</p><a class="btn btn-info" href="#">Okay</a>';
 		root.appendChild(alert);
 		$(alert).slideToggle(750);
+		$(alert).on('click', function() {
+			$(alert).slideToggle(750, function() {
+				$(alert).remove();
+			});
+		});
 	}
 	
 	function killCritter(alert) {

@@ -91,6 +91,7 @@
 #{js('your-critter')}
 <script>
 var username = '#{@username}';
+<?r if @sentiment ?> var sentiment = '#{@sentiment}'; <?r end ?>
 </script>
 #{js('app')}
 #{js('behaviour')}

@@ -167,16 +167,17 @@ function hug(critter) {
 function kill(critter) {
 	critter.alpha -= .02;
 	wave = 0;
+	critterApp.theirStage().removeAllChildren();
 	
 	if (critter.alpha <= 0) {
 		change = false;
 		critterApp.yours().getContainer().alpha = 1;
 		critterApp.yourStage().removeAllChildren();
-		var your_critter = critterApp.yourModel();
-		your_critter.fetch(); 
+		var critter = critterApp.yourModel();
+		var name = critter.attributes.name;
+		var your_critter = critterApp.critter(name);
+				
 		critter = build(your_critter, critterApp.yourStage(), critterApp.yours().getContainer()); 
-		critterApp.yourStage().update();
-		critterApp.theirStage().removeAllChildren();
 	}
 }
 

@@ -107,7 +107,7 @@ class ApiController < Controller
 					#update 
 					weapon = request.params['weapon']
 					response = fight.filter(:uid => uid).update(:status => 'ready', :weapon => weapon)
-				
+					
 				elsif request.params['attribute'] and request.params['hash']
 					
 					you = fight.filter(:uid => uid).first

@@ -11,20 +11,12 @@
 
 require 'twitter_oauth'
 require 'twitter'
-#require 'sentiment_analysis'
+require 'sentiment_analysis'
 require File.join(File.dirname(__FILE__), 'critter_algorithm')
 
 class MainController < Controller
 	# the index action is called automatically when no other action is specified
 	
-#	provide(:js, :type => 'application/javascript') do |action, value|
-#		value
-#	end
-#	provide(:css, :type => 'text/css') do |action, value|
-#		value
-#	end
-#	
-#	
 	helper :flash
 	
 	layout do |path|
@@ -151,7 +143,30 @@ class MainController < Controller
 					'username' => friend[:screen_name]
 				}
 			end
-						
+			
+			# lets find out if their latest tweet is happy or sad
+			begin				
+				data = Twitter.user_timeline(session[:access_token][:screen_name]).first.text
+				sa = SentimentAnalysis::Client.new(:api_key => 'cPl26pIqRtPJZxFHnAP')
+				
+				if sa.quota > 0
+					sentiment = sa.review(data)	
+					if sentiment.parsed_response['mood'] === 'positive'
+						#smile
+						@sentiment = 'smile'
+					else
+						#frown
+						@sentiment = 'frown'
+					end
+				end
+			rescue => e
+				logger = Ramaze::Logger::RotatingInformer.new('./log')
+    			logger.info e.message
+    			logger.info sa.quota
+				#useful for if Twitter is offline
+				@sentiment = 'frown'
+			end
+					
 			fight = DB[:interactions]
 			you = fight.where(:uid => session[:access_token][:user_id]).first
 			
