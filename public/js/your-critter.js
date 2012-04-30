@@ -5,6 +5,7 @@ function build(crit, destination, container) {
 	// Always check for properties and methods, to make sure your code doesn't break in other browsers.
 	var elem = document.getElementById('your-critter');
 	var sentiment = null;
+	var tailLoaded = false;
 	
 	if (elem && elem.getContext) {
 		// Remember: you can only initialize one context per element.	
@@ -395,6 +396,7 @@ function build(crit, destination, container) {
 											setTimeout(play, interval);
 										};
 										container.addChildAt(tail, 1);
+										tailLoaded = true;
 									}
 								});
 							};
@@ -541,7 +543,6 @@ function build(crit, destination, container) {
 							legs.x = -110;
 							legs.y = -45;
 						}
-//						if (legs.name === 'short') legs.y += 60;
 						if (legs.name === 'long') legs.y -= 38;
 						if (arms.name === 'arms long') {
 							arms.x += 50;
@@ -591,11 +592,23 @@ function build(crit, destination, container) {
 					
 					destination.removeAllChildren();		
 					if (sentiment) {
-						destination.addChild(container);
+						if (accessory && accessory.name === 'tail' && tailLoaded) {
+							destination.addChild(container);
+						} else if (accessory && accessory.name !== 'tail') {
+							destination.addChild(container);
+						} else if (!accessory) {
+							destination.addChild(container);
+						} else {
+							//loop until tailLoaded === true
+							function waitForTail() {
+								tailLoaded === false ? _.delay(waitForTail, 100) : destination.addChild(container);
+							}
+							waitForTail();
+						}
 					} else {
 						//loop until sentiment is defined
 						function getSentiment() {
-							sentiment === undefined ? _.delay(getSentiment, 100) : destination.addChild(container);
+							!sentiment ? _.delay(getSentiment, 100) : destination.addChild(container);
 						}
 						getSentiment();
 					}
