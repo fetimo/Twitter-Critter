@@ -107,12 +107,12 @@ class MainController < Controller
 			@critter = row[:critter]
 		end
 		
+		#show the intro text if you've been redirected from the homepage
     	@introduction = true if request.http_variables['HTTP_REFERER'] === 'http://crittr.me/'
 				
 		if session[:access_token] and username == session[:access_token][:screen_name]
 			session.resid!
 			# only do this if you're on your own critter page due to limitations with the twitter api and friends
-			#TODO: Expire friends session after x time
 						
 			Twitter.configure do |config|
 				config.consumer_key = 'DQicogvXxpbW7oleCfV3Q'
@@ -254,6 +254,8 @@ class MainController < Controller
 									fight.where(:uid => you[:uid]).update(:status => nil, :opponent => nil, :weapon => nil, :start => nil)
 									fight.where(:uid => opp).update(:status => opp_status)
 								end
+							else
+								flash[:Fisticuffs] << "<br>Is it okay if I tweet about your victory?<p><a class='btn btn-info' href='#'><span id='victory_tweet'>Tweet</span></a><a class='btn close_btn' href='#'>No, thanks</a></p>"
 							end
 						rescue => e
 							message = e.message
@@ -265,6 +267,8 @@ class MainController < Controller
 				flash[:Fisticuffs] = "The results are in, you #{you[:status]} against #{Twitter.user(you[:opponent]).screen_name}! Now hug to make up, no hard feelings, eh?"
 				unless you[:status].include? 'win'
 					fight.where(:uid => you[:uid]).update(:status => nil, :opponent => nil, :weapon => nil, :start => nil)
+				else
+					flash[:Fisticuffs] << "<br>Is it okay if I tweet about your victory?<p><a class='btn btn-info' href='#'><span id='victory_tweet'>Tweet</span></a><a class='btn close_btn' href='#'>No, thanks</a></p>"
 				end
 			end
 		end

@@ -124,7 +124,7 @@ $(document).ready(function() {
 		}
 	}
 	
-	error_exist = false;
+	error_exist = false; // global on purpse so alert.js can use it (sorry)
 
 	function success(response) {
 		var alert = document.createElement('div'),
@@ -215,7 +215,7 @@ $(document).ready(function() {
 		$(alert).slideToggle(750);
 		$(alert).remove();
 		var alert = document.createElement('div'),
-		root = $('.alerts')[0];
+			root = $('.alerts')[0];
 		alert.className = 'alert alert-info';
 		alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Your Critter is still alive but please don\'t scare them like that!</p><a class="btn btn-info" href="#">Okay</a>';
 		root.appendChild(alert);

@@ -106,6 +106,16 @@ class ApiController < Controller
 						response = "Error: failed to tweet from user :("
 						message = e.message
 					end
+				elsif request.params['victory_tweet']
+					response = "My Critter won against @#{opponent_name} at http://crittr.me/ !"
+					begin
+						Twitter.update(response)
+					rescue Twitter::Error => e
+						response = "Error: " << e.message
+					rescue => e
+						response = "Error: failed to tweet from user :("
+						message = e.message
+					end
 				elsif request.params['update'].to_i === 1
 					#update 
 					weapon = request.params['weapon']

@@ -3,6 +3,11 @@
 	<div class="preloader_container"><img class="loader" alt="Loading icon" src="../images/spinner.gif"></div>	
 	<canvas id="your-critter" class="critter_container" width="1000" height="500">Critter requires canvas, upgrade to a nice browser.</canvas>
 	<aside class="alerts">
+		<?r if @introduction ?>
+		<div class="alert alert-info">
+			<a class='close' data-dismiss='alert'>&times;</a><p>Here is your Critter! Isn't it cute.</p><p>These features are given to your Critter based on your last tweet.</p><p>If you wish to adopt your Critter (don't worry we will look after it so no need for pet insurance), just login to Twitter with the button above.</p><p>Then you will be able to compare your Critter to the people you follow, you can also hug them or choose to challenge them to a game of Rock-paper-scissors!</p><a class='btn btn-info' href='#'>Noted</a>
+		</div>
+		<?r end ?>
 	<?r if session[:access_token] and @username === session[:access_token][:screen_name] ?>
 		<!-- alerts to be dynamically generated and placed inside here -->
 		#{flashbox}
@@ -31,7 +36,7 @@
 				<a class='close' data-dismiss='alert'>&times;</a>
 				<p>Now that you've won, you can choose an attribute of theirs to have for yourself.
 				<br>
-				Give me their&hellip;</p>
+				<strong>Give me their&hellip;</strong></p>
 				<ul id="attributes"> <?r
 				@opp_attribs.each do |r| ?>
 					#{ render_partial :attribute, { :attribute=>r[0].to_s, :value=>r[1] } }
@@ -103,7 +108,37 @@ var username = '#{@username}';
 		var critter_container2 = new Container(),
 			friend = critterApp.critter("#{@theirs}"),
 			theirs = build(friend, critterApp.theirStage(), critter_container2);
-			
+		
+		$('#flash_Fisticuffs .close_btn').on('click', function(e) {
+			$('#flash_Fisticuffs').slideToggle(750, function() {
+				$('#flash_Fisticuffs').remove();
+			});
+		});
+		
+		$('#victory_tweet').on('click', function() {
+			$.ajax({
+				type: 'POST',
+				url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&opponent='+ critterApp.theirStage().children[0].uid + '&victory_tweet=true',
+				success: function (response) {
+					//insert confirmation alert
+					$('#flash_Fisticuffs').slideToggle(750, function() {
+						$('#flash_Fisticuffs').remove();
+					});
+					var alert = document.createElement('div'),
+						root = $('.alerts')[0];
+					alert.className = 'alert alert-info';
+					alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>I tweeted that you won against ' + critterApp.theirStage().children[0].name +' :)</p><a class="btn btn-info" href="#">Thanks</a>';
+					root.appendChild(alert);
+					$(alert).slideToggle(750);
+					$(alert).on('click', function() {
+						$(alert).slideToggle(750, function() {
+							$(alert).remove();
+						});
+					});
+				}
+			});
+		});
+		
 		$('#attributes').children().on('click', function() {
 			$.ajax({
 				type: 'POST',
@@ -125,12 +160,7 @@ var username = '#{@username}';
 	<?r if @introduction ?>
 		<script>
 		$(document).ready(function() {
-			var alert = document.createElement('div'),
-				root = $('.alerts')[0];
-			alert.className = 'alert alert-info';
-			alert.innerHTML = "<a class='close' data-dismiss='alert'>&times;</a><p>Here is your Critter! Isn't it cute.</p><p>These features are given to your Critter based on your last tweet.</p><p>If you wish to adopt your Critter (don't worry we will look after it so no need for pet insurance), just login to Twitter with the button above.</p><p>Then you will be able to compare your Critter to the people you follow, you can also hug them or choose to challenge them to a game of Rock-paper-scissors!</p><a class='btn btn-info' href='#'>Noted</a>";
-			root.appendChild(alert);
-			$(alert).slideToggle(750);
+			var alert = $('.alert')[0];
 			$('.alert a').on('click', function() {
 				$(alert).slideToggle(750, function() {
 					$(alert).remove();

@@ -584,6 +584,8 @@ function build(crit, destination, container) {
 							container.y += 57;
 						}
 					}
+					container.name = crit.get('name');
+					container.uid = crit.get('uid'); //used when you win a battle and tweet
 					container.addChild(legs, body, eyes, arms);
 					if (face) container.addChild(face);
 					if (mouth) container.addChild(mouth);

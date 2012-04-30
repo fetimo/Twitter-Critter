@@ -21,3 +21,7 @@ Twitter Critter.esproj
 Twitter Critter.esproj/user.fetimo.espressostorage
 
 test.rb
+
+build/*
+intermediate/*
+publish/*

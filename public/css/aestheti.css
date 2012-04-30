@@ -315,25 +315,14 @@ footer a {
 }
 
 #attributes {
-	height: 110px;
+	height: 105px;
+	width: 310px;
 }
 
 #attributes li {
 	float: left;
-	padding: 0 .5em;
-	margin: .3em;
 	cursor: pointer;
-	background: rgba(255,255,255,.6);
-	border-radius: 5px;
-}
-
-#attributes li:hover {
-	box-shadow: 0px 1px 1px #444;
-}
-
-#attributes li:active {
-	position: relative;
-	top: 1px;
+	margin-top: .3em;
 }
 
 .wide {
