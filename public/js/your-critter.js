@@ -590,7 +590,15 @@ function build(crit, destination, container) {
 					if (accessory) if (accessory.name !== 'tail') container.addChild(accessory);
 					
 					destination.removeAllChildren();		
-					if (sentiment) destination.addChild(container);
+					if (sentiment) {
+						destination.addChild(container);
+					} else {
+						//loop until sentiment is defined
+						function getSentiment() {
+							sentiment === undefined ? _.delay(getSentiment, 100) : destination.addChild(container);
+						}
+						getSentiment();
+					}
 					
 					// tickle your critter!
 					container.onClick = function () {
