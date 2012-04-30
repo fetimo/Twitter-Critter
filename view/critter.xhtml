@@ -2,8 +2,8 @@
 <?r unless @critter.nil? ?>	
 	<div class="preloader_container"><img class="loader" alt="Loading icon" src="../images/spinner.gif"></div>	
 	<canvas id="your-critter" class="critter_container" width="1000" height="500">Critter requires canvas, upgrade to a nice browser.</canvas>
-	<?r if session[:access_token] and @username === session[:access_token][:screen_name] ?>
 	<aside class="alerts">
+	<?r if session[:access_token] and @username === session[:access_token][:screen_name] ?>
 		<!-- alerts to be dynamically generated and placed inside here -->
 		#{flashbox}
 		<section class="weapon_selection alert alert-info">
@@ -57,8 +57,10 @@
 	end 
 	flash.delete(:Fisticuffs)
 	?>
+	<?r end ?>
 	</aside>
-
+	
+	<?r if session[:access_token] and @username === session[:access_token][:screen_name] ?>
 	<section class="friends">
 			<?r if session[:friends].count > 4 ?>
 		<div class="scroll_arrows" id="left_scroll"><img src="../images/back.png" alt="Backwards"></div>
@@ -119,6 +121,23 @@ var username = '#{@username}';
 		});
 	}
 	</script>
+	<?r end ?>
+	<?r if @introduction ?>
+		<script>
+		$(document).ready(function() {
+			var alert = document.createElement('div'),
+				root = $('.alerts')[0];
+			alert.className = 'alert alert-info';
+			alert.innerHTML = "<a class='close' data-dismiss='alert'>&times;</a><p>Here is your Critter! Isn't it cute.</p><p>These features are given to your Critter based on your last tweet.</p><p>If you wish to adopt your Critter (don't worry we will look after it so no need for pet insurance), just login to Twitter with the button above.</p><p>Then you will be able to compare your Critter to the people you follow, you can also hug them or choose to challenge them to a game of Rock-paper-scissors!</p><a class='btn btn-info' href='#'>Noted</a>";
+			root.appendChild(alert);
+			$(alert).slideToggle(750);
+			$('.alert a').on('click', function() {
+				$(alert).slideToggle(750, function() {
+					$(alert).remove();
+				});
+			});
+		});
+		</script>
 	<?r end ?>
 <?r else ?>
 <p>No Critter called #{@username} exists yet! You can <a href="/user/#{@username}">give life to it though</a>.</p>

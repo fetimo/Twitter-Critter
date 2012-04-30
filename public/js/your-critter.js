@@ -383,7 +383,7 @@ function build(crit, destination, container) {
 											tail.x = 200;
 											tail.y = 300;
 											if (legs.name === 'long') {
-												tail.y = 270;
+												tail.y = 240;
 											}
 										}
 										tail.paused = false;
@@ -538,12 +538,12 @@ function build(crit, destination, container) {
 						eyes.y = 80;
 						if (legs.name === 'long') {
 							legs.x = -105;
-							legs.y = -20;
+							legs.y = -58;
 						} else {
 							legs.x = -110;
 							legs.y = -45;
 						}
-						if (legs.name === 'long') legs.y -= 38;
+						//if (legs.name === 'long') legs.y -= 38;
 						if (arms.name === 'arms long') {
 							arms.x += 50;
 							arms.y = 170;
@@ -591,6 +591,7 @@ function build(crit, destination, container) {
 					if (accessory) if (accessory.name !== 'tail') container.addChild(accessory);
 					
 					destination.removeAllChildren();		
+					
 					if (sentiment) {
 						if (accessory && accessory.name === 'tail' && tailLoaded) {
 							destination.addChild(container);
@@ -601,7 +602,7 @@ function build(crit, destination, container) {
 						} else {
 							//loop until tailLoaded === true
 							function waitForTail() {
-								tailLoaded === false ? _.delay(waitForTail, 100) : destination.addChild(container);
+								!tailLoaded ? _.delay(waitForTail, 100) : destination.addChild(container);
 							}
 							waitForTail();
 						}

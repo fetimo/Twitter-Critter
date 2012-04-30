@@ -18,23 +18,23 @@ require __DIR__('model/init')
 require __DIR__('controller/init')
 
 #Setup memcache
-#Ramaze::Cache.options.session = Ramaze::Cache::MemCache.using(
-#	:compress => true,
-#	:expires_in => 86400
-#)
-#Ramaze::Cache.options.view = Ramaze::Cache::MemCache.using(
-#	:compress => true,
-#	:expires_in => 86400
-#)
+Ramaze::Cache.options.session = Ramaze::Cache::MemCache.using(
+	:compress => true,
+	:expires_in => 86400
+)
+Ramaze::Cache.options.view = Ramaze::Cache::MemCache.using(
+	:compress => true,
+	:expires_in => 86400
+)
 
-# Setup database caching
-#Ramaze::Cache.options.names.push(:sequel)
-#Ramaze::Cache.options.sequel = Ramaze::Cache::Sequel.using(
-#	:connection => Sequel.mysql(
-#		:adapter  => 'mysql2',
-#		:host     => 'mysql.fetimo.com',
-#		:user     => 'fetimocom1',
-#		:password => 'iBMbSSIz',
-#		:database => 'twittercritter'
-#	)
-#)
+#Setup database caching
+Ramaze::Cache.options.names.push(:sequel)
+Ramaze::Cache.options.sequel = Ramaze::Cache::Sequel.using(
+	:connection => Sequel.mysql(
+		:adapter  => 'mysql2',
+		:host     => 'mysql.fetimo.com',
+		:user     => 'fetimocom1',
+		:password => 'iBMbSSIz',
+		:database => 'twittercritter'
+	)
+)

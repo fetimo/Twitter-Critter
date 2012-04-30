@@ -106,7 +106,12 @@ class MainController < Controller
 		DB.fetch('SELECT critter FROM critters WHERE name = ? LIMIT 1', @username) do |row|
 			@critter = row[:critter]
 		end
-
+		
+    	@introduction = true if request.http_variables['HTTP_REFERER'] === 'http://crittr.me/'
+		
+		logger = Ramaze::Logger::RotatingInformer.new('./log')
+    	logger.info request.http_variables['HTTP_REFERER']
+				
 		if session[:access_token] and username == session[:access_token][:screen_name]
 			session.resid!
 			# only do this if you're on your own critter page due to limitations with the twitter api and friends

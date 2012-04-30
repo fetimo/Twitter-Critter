@@ -164,6 +164,17 @@ $(document).ready(function() {
 			success: success
 		});
 		$('.weapon_selection').slideToggle(750) || rebuildWeaponSelection();
+		switch (weapon) {
+			case '1':
+				RPS('scissors');
+			break;
+			case '2':
+				RPS('paper');
+			break;
+			case '3':
+				RPS('rock');
+			break;
+		}
 	}
 	
 	function clickedWeaponRetaliate(e) {

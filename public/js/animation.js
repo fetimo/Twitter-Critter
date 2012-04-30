@@ -257,12 +257,30 @@ function RPS(weapon) {
 	function addToStage(graphic) {
 		var rps = new Shape(graphic);
 		rpsAdded = true;
-		
 		rps.snapToPixel = true;
-		
 		critterApp.yourStage().addChild(rps);
 		rps.scaleX = .5;
 		rps.scaleY = .5;
+		rps.name = graphic.name;
+		if (rps.name === 'rock') {
+			rps.rotation = -45;
+			rps.regX = 25;
+			rps.regY = 15;
+			rps.x = 50;
+		} else if (rps.name === 'paper') {
+			rps.skewX = 260;
+			rps.skewY = 30;
+			rps.scaleX = -.5;
+			rps.scaleY = -.5;
+			rps.x = 120;
+		} else {
+			rps.x = 25;
+			rps.regY = -60;
+			rps.regX = 60;
+			rps.rotation = -30;
+		}
+		
+		console.log(rps);
 		return rps;
 	}
 
@@ -383,6 +401,7 @@ function RPS(weapon) {
 			rock.bezierCurveTo(81.823,3.993,113.198,14.493,119.26,19.618);
 			rock.lineTo(114.974,15.968);
 			rock.closePath();
+			rock.name = 'rock';
 			addToStage(rock);
 			return rock;
 		break;
@@ -415,6 +434,7 @@ function RPS(weapon) {
 			paper.lineTo(87.334,39.666);
 			paper.lineTo(87.334,79.334);
 			paper.closePath();
+			paper.name = 'paper';
 			addToStage(paper);
 			return paper;
 		break;
@@ -425,7 +445,6 @@ function RPS(weapon) {
 			scissors.lineTo(166,87);
 			scissors.lineTo(0,87);
 			scissors.closePath();
-			//scissors.translate(0,0.001);
 			scissors.setStrokeStyle(1,0,0,4);
 			scissors.beginFill("#e2e4e5");
 			scissors.moveTo(3.945,10.241);
@@ -498,6 +517,7 @@ function RPS(weapon) {
 			scissors.bezierCurveTo(149.726,5.717,158.513,13.29,159.262,23.349);
 			scissors.bezierCurveTo(159.609,28.035,158.021,28.817,156.744,29.448);
 			scissors.closePath();
+			scissors.name = 'scissors';
 			addToStage(scissors);
 			return scissors;
 		break;
@@ -536,9 +556,14 @@ function tick() {
 	
 	if (rpsAdded) {
 		var index = critterApp.yourStage().children.length - 1;
-		//can be fairly certain it was the last thing added
-		critterApp.yourStage().children[index].y = critterApp.yours().getArms().children[0]._matrix.ty;
-		critterApp.yourStage().children[index].x = critterApp.yours().getArms().children[0]._matrix.tx;
+		//can be fairly certain it was the last thing added		
+		if (critterApp.yourStage().children[index].name === 'rock') {
+			critterApp.yourStage().children[index].y = critterApp.yours().getArms().children[0]._matrix.ty + 80;
+		} else if (critterApp.yourStage().children[index].name === 'paper') {
+			critterApp.yourStage().children[index].y = critterApp.yours().getArms().children[0]._matrix.ty + 100;
+		} else {
+			critterApp.yourStage().children[index].y = critterApp.yours().getArms().children[0]._matrix.ty + 50;
+		}
 	}
 	
 	if (change) kill(critterApp.yours().getContainer());
