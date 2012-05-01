@@ -1,16 +1,16 @@
-<section>
+<section id="content">
 	<div class="preloader_container"> 
 		<img class="loader" src="../images/spinner.gif">
 	</div>
-    <canvas id="your-critter" width="1000" height="400">
+    <canvas id="your-critter" width="1000" height="500">
         <p>I'm afraid your browser doesn't support canvas so you won't be able to view your pretty Twitter Critter! Here's a kitten instead.</p>
     </canvas>
 </section>
-#{js('jquery')}
+<!-- libraries -->
 #{js('easel/lib/easel')}
 #{js('easel/src/easeljs/filters/Filter')}
 #{js('easel/src/easeljs/filters/ColorFilter')}
 #{js('underscore')}
 #{js('backbone')}
-#{js('animation')}
+<!-- app logic -->
 #{js('ecosystem')}

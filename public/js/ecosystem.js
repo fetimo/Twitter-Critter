@@ -1,5 +1,12 @@
 function build(crit, destination, container) {
+		
+	container.children = []; //reset container's children so we don't end up with duplicates
+	
 	// Always check for properties and methods, to make sure your code doesn't break in other browsers.
+	var elem = document.getElementById('your-critter');
+	var sentiment = null;
+	var tailLoaded = false;
+	
 	if (elem && elem.getContext) {
 		// Remember: you can only initialize one context per element.	
 		var context = elem.getContext('2d');
@@ -9,7 +16,7 @@ function build(crit, destination, container) {
 				var critter = crit.attributes,
 					totalImages = 0,
 					loaded = 0;
-								
+				
 				/*
 					This function takes an unlimited amount of arguments
 					and for each image it receives, adds it to the totalImages
@@ -18,7 +25,8 @@ function build(crit, destination, container) {
 					We then check if the loaded images is equal to the
 					number of images and continue processing the Critter.
 				*/
-				function preload() {					
+				var once = false;
+				function preload() {
 					var args = arguments;
 					totalImages += args.length;
 					if (typeof args === 'object') {
@@ -31,51 +39,101 @@ function build(crit, destination, container) {
 					}
 					if (loaded < totalImages) {
 						_.delay(preload, 500);
-					} else if (loaded === totalImages && colour !== undefined && body_shape !== undefined) {
+					} else if (loaded === totalImages && !once) {
+						once = true;
 						setColour(colour, body_shape);
 					}
 				}
 				
+				//get base colour of critter
+				for (var key in critter) {
+					if (critter.hasOwnProperty(key)) {					
+						switch (key) {
+							case 'body_colour':
+								var body = new Container(),
+									colour = critter[key];
+							break;
+						}
+					}
+				}
+				
+				var fillColour;
+				
+				switch (colour) {
+					case 'green':
+						fillColour = Graphics.getRGB(148, 201, 41);
+					break;
+					case 'blue':
+						fillColour = Graphics.getRGB(46, 158, 214);
+					break;
+					case 'black':
+						fillColour = Graphics.getRGB(230, 158, 40);
+					break;
+					case 'white':
+						fillColour = Graphics.getRGB(230, 230, 230);
+					break;
+					case 'red':
+						fillColour = Graphics.getRGB(217, 84, 77);
+					break;
+					case 'pink':
+						fillColour = Graphics.getRGB(212, 142, 214);
+					break;
+					case 'yellow':
+						fillColour = Graphics.getRGB(225, 196, 88);
+					break;
+					case 'orange':
+						fillColour = Graphics.getRGB(232, 158, 40);
+					break;
+					default:
+						fillColour = Graphics.getRGB(255, 255, 255);
+					break;
+				}
+								
 				for (var key in critter) {
 					if (critter.hasOwnProperty(key)) {					
 						switch (key) {
 							case 'name':
-								var critter_name = new Text('@' + critter[key], '70px Aller Light', '#000');
+								var critter_name = new Text('@' + critter[key], '70px Aller Light', '#fff');
 							break;
 							case 'arms':
-								//var arms = new Image();
-								//arms.src = '../images/critter_assets/arms/'+ critter[key] + '.png';
+								var armG = new Graphics(),
+									arms = new Container();					
 								if (critter[key] === 'short') {
-									var armG = new Graphics();								
-									armG.moveTo(0,0);
-									armG.lineTo(82.801,0);
-									armG.lineTo(82.801,92.375);
-									armG.lineTo(0,92.375);
-									armG.closePath();
 									armG.setStrokeStyle(1, 0, 0, 4);
-									armG.beginFill("#ffffff");
-									armG.moveTo(4.083,53.282);
-									armG.bezierCurveTo(-15.346,75.961,40.222,107.476,52.372,84.193);
-									armG.bezierCurveTo(52.385,84.169,81.1,30.538,81.1,30.538);
-									armG.bezierCurveTo(84.89,24.61,82.127,16.063,74.921,11.453);
-									armG.lineTo(65.382,2.87);
-									armG.bezierCurveTo(58.174,-1.745,49.255,-0.68,45.461,5.246);
-									armG.bezierCurveTo(45.461,5.246,4.198,53.147,4.083,53.282);
+									armG.beginFill(fillColour);
+									armG.moveTo(4,53);
+									armG.bezierCurveTo(-15,76,40,107,52,84);
+									armG.bezierCurveTo(52,84,81,31,81,31);
+									armG.bezierCurveTo(85,25,82,16,75,11);
+									armG.bezierCurveTo(58,-2,49,-0.7,45,5);
+									armG.bezierCurveTo(45,5,4,53,4,53);
 									armG.closePath();
-									var arms = new Container();
 									var armL = new Shape(armG);
 									armL.x = 50;
 									armL.y = 300;
 									var armR = armL.clone();
-									armR.x += 400;
+									armR.x += 310;
 									armR.rotation = 180;
 									armR.skewX = 180;
 									arms.addChild(armL, armR);
-								} else {
-									var arms = new Bitmap('../images/critter_assets/arms/'+ critter[key] + '.png');
+								} else if (critter[key] === 'long'){
+									armG.setStrokeStyle(1, 0, 0, 4);
+									armG.beginFill(fillColour);
+									armG.moveTo(53,336);
+									armG.bezierCurveTo(37,361,89,381,97,356);
+									armG.bezierCurveTo(97,356,141,243,141,243);
+									armG.bezierCurveTo(144,236,140,228,132,225);
+									armG.bezierCurveTo(113,215,105,217,102,224);
+									armG.bezierCurveTo(102,224,53,335,53,336);
+									armG.closePath();
+									var armL = new Shape(armG);
+									var armR = armL.clone();
+									armR.x = 260;
+									armR.rotation = 180;
+									armR.skewX = 180;
+									arms.addChild(armL, armR);
 								}
-								arms.name = critter[key];
-								if (arms.image) preload(arms.image);
+								arms.name = 'arms ' + critter[key];
 							break;
 							case 'eye_colour':
 								var eyes = new Container,
@@ -97,17 +155,56 @@ function build(crit, destination, container) {
 									preload(pattern.image);
 								}
 							break;
-							case 'nose':
-								if (critter[key] !== 'none') {
-									var nose = new Bitmap('../images/critter_assets/noses/'+ critter[key] + '.png');
-									nose.name = critter[key];
-									preload(nose.image);
-								}
-							break;
 							case 'legs':
-								var legs = new Bitmap('../images/critter_assets/legs/'+ critter[key] + '.png');
-								legs.name = critter[key];
-								preload(legs.image);
+								var legs = new Container();
+								legs.name = critter[key];								
+								if (legs.name === 'short') {
+									var leg = new Graphics();
+									leg.moveTo(0,0);
+									leg.lineTo(57,0);
+									leg.lineTo(57,89);
+									leg.lineTo(0,89);
+									leg.closePath();
+									leg.setStrokeStyle(1,0,0,4);
+									leg.beginFill(fillColour);
+									leg.moveTo(286.449,412.373);
+									leg.bezierCurveTo(286.449,419.407,279.512,425.114,270.952,425.114);
+									leg.lineTo(244.609,425.114);
+									leg.bezierCurveTo(236.05,425.114,229.112,419.407,229.112,412.373);
+									leg.lineTo(229.112,348.664);
+									leg.bezierCurveTo(229.112,341.627,236.05,335.921,244.609,335.921);
+									leg.lineTo(270.952,335.921);
+									leg.bezierCurveTo(279.512,335.921,286.449,341.627,286.449,348.664);
+									leg.lineTo(286.449,412.373);
+									leg.closePath();
+									legL = new Shape(leg);
+									var legR = legL.clone();
+									legR.x = 110;
+									legs.addChild(legL, legR);
+								} else {
+									var leg = new Graphics();
+									leg.moveTo(0,0);
+									leg.lineTo(57,0);
+									leg.lineTo(57,152);
+									leg.lineTo(0,152);
+									leg.closePath();
+									leg.setStrokeStyle(1,0,0,4);
+									leg.beginFill(fillColour);
+									leg.moveTo(286.447,475.619);
+									leg.bezierCurveTo(286.447,482.655,279.511,488.361,270.952,488.361);
+									leg.lineTo(244.61,488.361);
+									leg.bezierCurveTo(236.051,488.361,229.112,482.655,229.112,475.619);
+									leg.lineTo(229.112,348.664);
+									leg.bezierCurveTo(229.112,341.627,236.05,335.921,244.61,335.921);
+									leg.lineTo(270.952,335.921);
+									leg.bezierCurveTo(279.511,335.921,286.447,341.627,286.447,348.664);
+									leg.lineTo(286.447,475.619);
+									leg.closePath();
+									legL = new Shape(leg);
+									var legR = legL.clone();
+									legR.x = 100;
+									legs.addChild(legL, legR);
+								}
 							break;
 							case 'ears':
 								if (critter[key] !== 'none') {
@@ -117,46 +214,56 @@ function build(crit, destination, container) {
 								}
 							break;
 							case 'face':
-								if (critter[key] !== 'none' && !nose) {
-									//var face = new Bitmap('../images/critter_assets/face/'+ critter[key] + '.png');
+								if (critter[key] !== 'none') {
 									var face = true;
-									//preload(face.image);
 								}
 							break;
 							case 'mouth':
 								if (critter[key] === 'fangs') {
-									var mouth = new Bitmap('../images/critter_assets/mouths/'+ critter[key] + '.png');
-									mouth.name = critter[key];
-									preload(mouth.image);
-								} else {
+									var mouth;
+
+									$.ajax({
+										url: "http://crittr.me/api/critters/" + crit.attributes.name + "?mood=true"
+									}).done(function(response) {
+										sentiment = response;
+										if(sentiment === 'smile') {
+											mouth = new Bitmap('../images/critter_assets/mouths/smile-fangs.png');
+										} else {
+											mouth = new Bitmap('../images/critter_assets/mouths/fangs.png');
+										}
+										mouth.name = 'fangs';
+										preload(mouth.image);
+										
+										positionMouth();
+									});
+								} else {					
+									
+									//determine happy/sad
+									$.ajax({
+										url: "http://crittr.me/api/critters/" + crit.attributes.name + "?mood=true"
+									}).done(function(response) {
+										sentiment = response;
+										positionMouth();
+									});
 									var mouthG = new Graphics();
-									mouthG.moveTo(0,0);
-									mouthG.lineTo(169,0);
-									mouthG.lineTo(169,13);
-									mouthG.lineTo(0,13);
-									mouthG.closePath();
 									mouthG.setStrokeStyle(1, 0, 0, 4);
-									mouthG.beginFill("#000100");
+									var rgbRegex = /(^rgb\((\d+),\s*(\d+),\s*(\d+)\)$)|(^rgba\((\d+),\s*(\d+),\s*(\d+)(,\s*\d+\.\d+)*\)$)/;
+									var rgb = fillColour.match(rgbRegex);
+									var r = rgb[2] - 150;
+									var g = rgb[3] - 150;
+									var b = rgb[4] - 150;
+									mouthG.beginFill('rgb('+r+','+g+','+b+')');
 									mouthG.moveTo(0,0);
-									mouthG.bezierCurveTo(0,0,16.077,3.867,37.974,4.199);
-									mouthG.bezierCurveTo(50.398,4.388,64.697,3.439,78.995,0);
-									mouthG.bezierCurveTo(78.995,0,43.495,13.75,0,0);
+									mouthG.bezierCurveTo(0,0,16,4,38,4);
+									mouthG.bezierCurveTo(50,4,65,3,79,0);
+									mouthG.bezierCurveTo(79,0,43,14,0,0);
 									mouthG.closePath();
 									var mouth = new Shape(mouthG);
-									mouth.alpha = 0.5;
-									mouth.scaleX = 2.127311405661921;
-									mouth.scaleY = 2.127311405661921;
+									//mouth.alpha = 0.5;
+									mouth.scaleX = 2.12731;
+									mouth.scaleY = 2.12731;
+									mouth.name = 'simple';
 								}
-							break;
-							case 'hands':
-								/*if (critter[key] !== 'none') {
-									var hands = new Bitmap('../images/critter_assets/hands/'+ critter[key] + '.png');
-									preload(hands.image);
-								}*/
-							break;
-							case 'body_colour':
-								var body = new Container(),
-									colour = critter[key];
 							break;
 							case 'body_type':
 								var body_shape = new Bitmap('../images/critter_assets/bodies/'+ critter[key] + '.png');
@@ -174,8 +281,40 @@ function build(crit, destination, container) {
 						}
 					}
 				}
+				
+				function positionMouth() {
+					mouth.x = 70;
+					mouth.y = 220;
+					if (mouth.name === 'fangs') {
+						mouth.y += 10;
+					}
+					if (eyes.name === 'eyes small_black') {
+						mouth.y += -50;
+						mouth.x = 65;
+					}
+					if (sentiment === 'frown' && mouth.name === 'simple') {
+						mouth.scaleX = -2.12731;
+						mouth.scaleY = -2.12731;
+						mouth.x = 240;
+						mouth.y += 20;
+					}
+					if (body.children[0].name === 'furry') {
+						mouth.x = Math.round(eyes.children[0].image.width/2) + 20;
+						if (eyes.name === 'eyes small_black') {
+							mouth.x = 110;
+							mouth.y = 230;
+						}
+						if (face && eyes.name === 'eyes small_black') {
+							mouth.y = 240;
+						}
+						if (sentiment === 'frown' && mouth.name === 'simple') {
+							mouth.x += 165;
+							mouth.y += 20;
+						}
+					}
+				}
 												
-				function setColour(colour, body) {
+				function setColour(colour, body) {					
 					var filter;
 					switch(colour) {
 						case 'green':
@@ -206,27 +345,74 @@ function build(crit, destination, container) {
 							filter = new ColorFilter(1,1,1,1);
 						break;
 					}
+					
 					body.filters = [filter];
-					arms.filters = [filter];
-					legs.filters = [filter];
-					if (accessory && accessory.name === 'tail') accessory.filters = [filter];
 					if (ears) ears.filters = [filter];
 					body.cache(0, 0, body.image.width, body.image.height);
-					arms.cache(0, 0, 450, 400);
-					legs.cache(0, 0, legs.image.width, legs.image.height);
-					if (accessory && accessory.name === 'tail') accessory.cache(0, 0, accessory.image.width, accessory.image.height);
 					if (ears) ears.cache(0, 0, ears.image.width, ears.image.height);
-					
+						
+					if (accessory && accessory.name === 'tail') {
+						function animateTail() {
+							var frames,
+								img = new Image();
+							
+							img.src = "../images/tails/tail-" + colour + ".png";
+							
+							img.onload = function (e) {
+								$.ajax({
+									url: "../images/tails/tail-" + colour + ".json"
+								}).done(function(response) {
+									response = $.parseJSON(response);
+									frames = response.frames;
+									var tailData = {
+									    "images" : ["../images/tails/tail-" + colour + ".png"],
+									    "frames" : frames,
+									    "animations" : {"all": {"frames" : [0, 1]}}
+									};
+									var sheet = new SpriteSheet(tailData);
+									if (!sheet.complete) {
+										// not preloaded, listen for onComplete:
+										sheet.onComplete = animateTail;
+									} else {
+										// add to stage
+										var tail = new BitmapAnimation(sheet);
+										tail.x = 156;
+										tail.y = 270;
+										if (legs.name === 'short') {
+											tail.y = 210;
+											tail.x = 220;
+										}
+										if (body_shape.name === 'furry') {
+											tail.x = 200;
+											tail.y = 300;
+											if (legs.name === 'long') {
+												tail.y = 240;
+											}
+										}
+										tail.paused = false;
+										tail.onAnimationEnd = function() {
+											tail.paused = true;
+											function play() {
+												if (tail.paused === true) tail.paused = false;
+											}
+											var interval = Math.round(Math.random()*(15000));
+											setTimeout(play, interval);
+										};
+										container.addChildAt(tail, 1);
+										tailLoaded = true;
+									}
+								});
+							};
+						}
+						
+						animateTail();
+					}
+															
 					//eyelids
 					var	r = Math.round(filter.redMultiplier * 255)-20,
 						g = Math.round(filter.greenMultiplier * 255)-20,
 						b = Math.round(filter.blueMultiplier * 255)-20,
 						eyelid = new Graphics();
-					eyelid.moveTo(0,0);
-					eyelid.lineTo(52.343,0);
-					eyelid.lineTo(52.343,71.038);
-					eyelid.lineTo(0,71.038);
-					eyelid.closePath();
 					eyelid.setStrokeStyle(1, 0, 0, 4);
 					eyelid.beginFill(Graphics.getRGB(r,g,b));
 					eyelid.moveTo(52.343,35.519);
@@ -235,7 +421,7 @@ function build(crit, destination, container) {
 					eyelid.bezierCurveTo(0,15.903,6.556,0,26.172,0);
 					eyelid.bezierCurveTo(45.787,0,52.343,15.903,52.343,35.519);
 					var el = new Shape(eyelid);
-					if (eyes.name !== 'small_black') {
+					if (eyes.name !== 'eyes small_black') {
 						el.scaleX = 1.45;
 						el.scaleY = 1.45;
 					} else {
@@ -245,7 +431,7 @@ function build(crit, destination, container) {
 					el.alpha = 0;
 					//clone eyelid to make a second
 					var el2 = el.clone();
-					eyes.name !== 'small_black' ? el2.x += 105 : el2.x += 56;
+					eyes.name !== 'eyes small_black' ? el2.x += 105 : el2.x += 56;
 					eyes.addChild(el,el2);
 					
 					var shadow = new Shadow('rgb('+r+','+g+','+b+')', 0 , 4 , 0);
@@ -254,35 +440,25 @@ function build(crit, destination, container) {
 						//have to put this here so it can inherit filter values
 						face = new Container();
 						var noseO = new Graphics();
-						noseO.moveTo(0,0);
-						noseO.lineTo(81.466,0);
-						noseO.lineTo(81.466,52.711);
-						noseO.lineTo(0,52.711);
-						noseO.closePath();
 						noseO.setStrokeStyle(1, 0, 0, 4);
 						var	r = Math.round(filter.redMultiplier * 255)-90,
 							g = Math.round(filter.greenMultiplier * 255)-90,
 							b = Math.round(filter.blueMultiplier * 255)-90;
 						noseO.beginFill(Graphics.getRGB(r,g,b));
-						noseO.moveTo(81.466,31.149);
-						noseO.bezierCurveTo(81.466,48.353,57.937,52.711,40.7339,52.711);
-						noseO.bezierCurveTo(23.53,52.711,0,48.353,0,31.149);
-						noseO.bezierCurveTo(0,13.946,23.53,0,40.734,0);
-						noseO.bezierCurveTo(57.937,0,81.466,13.946,81.466,31.149);
+						noseO.moveTo(81,31);
+						noseO.bezierCurveTo(81,48,58,53,41,53);
+						noseO.bezierCurveTo(24,53,0,48,0,31);
+						noseO.bezierCurveTo(0,14,24,0,41,0);
+						noseO.bezierCurveTo(58,0,81,14,81,31);
 						noseO.closePath();
-						noseI = new Graphics();
-						noseI.moveTo(0,0);
-						noseI.lineTo(81.466,0);
-						noseI.lineTo(81.466,52.711);
-						noseI.lineTo(0,52.711);
-						noseI.closePath();
+						var noseI = new Graphics();
 						noseI.setStrokeStyle(1, 0, 0, 4);
 						noseI.beginFill("#ffffff");
-						noseI.moveTo(62.494,18.011);
-						noseI.bezierCurveTo(62.494,22.462,56.4,23.591,51.953,23.591);
-						noseI.bezierCurveTo(47.5,23.591,41.411,22.462,41.411,18.01);
-						noseI.bezierCurveTo(41.411,13.558,47.501,9.949,51.953,9.949);
-						noseI.bezierCurveTo(56.404,9.949,62.494,13.558,62.494,18.011);
+						noseI.moveTo(62,18);
+						noseI.bezierCurveTo(62,22,56,24,52,24);
+						noseI.bezierCurveTo(48,24,41,22,41,18);
+						noseI.bezierCurveTo(41,14,48,10,52,10);
+						noseI.bezierCurveTo(56,10,62,14,62,18);
 						noseI.closePath();
 						var noseIS = new Shape(noseI);
 						var noseOS = new Shape(noseO);
@@ -292,46 +468,51 @@ function build(crit, destination, container) {
 					position();
 				}
 					
-				function position() {				
+				function position() {
 					//position elements
-					if (eyes.name !== 'small_black') {
+					if (eyes.name !== 'eyes small_black') {
 						eyes.x = Math.round(body.children[0].image.width/5);
 						eyes.y = 60;
 						eyes.children[1].regY = 5;
 					} else {
 						eyes.x = Math.round(body.children[0].image.width/3);
-						eyes.y = 60;
+						eyes.y = 80;
 						eyes.children[1].regY = 5;
 					}
-					legs.x = 70;
-					legs.y = 230;
-					arms.x = -95;
-					arms.y = -100;
-					if (nose) {
-						nose.y = -70;
-						nose.x = -50;
-						if (eyes.name === 'small_black') nose.y = -10; 
+					if (legs.name === 'long') {
+						legs.x = -150;
+						legs.y = -55;
+					} else {
+						legs.x = -150;
+						legs.y = -105;
 					}
-					mouth.x = Math.round(eyes.children[0].image.width/2) - 15;
-					mouth.y = 220;
-					critter_name.x = 400;
-					critter_name.y = 100;
-					if (mouth.name === 'fangs') {
-						mouth.y += 10;
-					}
-					if (eyes.name === 'small_black') {
-						mouth.x += -30;
-						mouth.y += -20;
+					arms.x = -20;
+					arms.y = -90;
+					if (body.children[0].name === 'simple') arms.x = -43;
+					if (body.children[0].name === 'simple' && arms.name === 'arms long') arms.x = -20;
+					arms.children[0].regX = 50;
+					arms.children[0].regY = 40;
+					arms.children[1].regX = 50;
+					arms.children[1].regY = 40;
+					critter_name.x = 350;
+					critter_name.y = 450;
+					if (arms.name === 'arms long') { 
+						arms.y = 150;
+						arms.x += 40;
+						arms.children[0].regX = 125;
+						arms.children[0].regY = 230;
+						arms.children[1].regX = 125;
+						arms.children[1].regY = 230;
 					}
 					if (pattern) {
 						pattern.x = -96;
-						pattern.y = -102;
+						pattern.y = -103;
 						body.addChild(pattern);
 					}
 					if (face) {
 						face.x = Math.round(eyes.children[0].image.width/2 + 20);
 						face.y = eyes.children[0].image.height + 60;
-						if (eyes.name === 'small_black') face.y = -130;
+						if (eyes.name === 'eyes small_black') face.y = -130;
 					}
 					if (accessory && accessory.name === 'horns') {
 						accessory.x = -100;
@@ -359,15 +540,24 @@ function build(crit, destination, container) {
 							pattern.x = 0;
 							pattern.y = 0;
 						}
-						mouth.x = Math.round(eyes.children[0].image.width/2) + 20;
 						eyes.y = 80;
-						legs.x += 30;
-						if (legs.name === 'short') legs.y += 60;
-						if (arms.name === 'long') {
+						if (legs.name === 'long') {
+							legs.x = -105;
+							legs.y = -58;
+						} else {
+							legs.x = -110;
+							legs.y = -45;
+						}
+						//if (legs.name === 'long') legs.y -= 38;
+						if (arms.name === 'arms long') {
 							arms.x += 50;
-							arms.y = -60;
-						} else if (arms.name === 'short') {
-							arms.x += 50;
+							arms.y = 170;
+						} else if (arms.name === 'arms short') {
+							arms.x += 20;
+						}
+						if (eyes.name === 'eyes small_black') {
+							eyes.x = 150;
+							eyes.y = 130;
 						}
 						if (accessory) {
 							accessory.y += 50;
@@ -382,43 +572,70 @@ function build(crit, destination, container) {
 							}
 						}
 						if (face) {
-							//face.x = Math.round(-eyes.children[0].image.width/3);
-							//face.y = eyes.children[0].image.height + 25;
 							face.y += 10;
 							face.x += 35;
-						}
-						if (nose) {
-							//nose.x = Math.round(-eyes.children[0].image.width/3);
-							//nose.y = eyes.children[0].image.height + 25;
-							if (eyes.name === 'small_black') nose.y = -10;
+							if (eyes.name === 'eyes small_black') {
+								face.x += 50;
+								face.y = 180;
+							}
 						}
 					}
-					//container.y = 70;
-					container.x = 30;
+					
+					container.y = 70;
+					container.x = 70;
 					if (legs.name === 'short') {
-						container.y = 30;
+						container.y = 123;
 						if (body.children[0].name === 'simple') {
-							container.y += 65;
+							container.y += 57;
 						}
 					}
+					container.name = crit.get('name');
+					container.uid = crit.get('uid'); //used when you win a battle and tweet
 					container.addChild(legs, body, eyes, arms);
 					if (face) container.addChild(face);
-					if (nose) container.addChild(nose);
 					if (mouth) container.addChild(mouth);
 					if (ears) container.addChild(ears);
-					if (accessory) container.addChild(accessory);
-									
-					destination.addChild(container, critter_name);
+					if (accessory) if (accessory.name !== 'tail') container.addChild(accessory);
 					
+					destination.removeAllChildren();		
+					
+					if (sentiment) {
+						if (accessory && accessory.name === 'tail' && tailLoaded) {
+							destination.addChild(container, critter_name);
+						} else if (accessory && accessory.name !== 'tail') {
+							destination.addChild(container, critter_name);
+						} else if (!accessory) {
+							destination.addChild(container, critter_name);
+						} else {
+							//loop until tailLoaded === true
+							function waitForTail() {
+								!tailLoaded ? _.delay(waitForTail, 100) : destination.addChild(container, critter_name);
+							}
+							waitForTail();
+						}
+					} else {
+						//loop until sentiment is defined
+						function getSentiment() {
+							!sentiment ? _.delay(getSentiment, 100) : destination.addChild(container, critter_name);
+						}
+						getSentiment();
+					}
+					
+					// tickle your critter!
+					container.onClick = function () {
+						container.id === 7 ? jiggle = true : jiggleTheirs = true;
+					};
+												
+				    Ticker.useRAF = true;				    
 					Ticker.addListener(window);
-					Ticker.setFPS(20);
-					$('.loader').fadeOut(100, function() {
-						$('.loader').css('display', 'none');
+					Ticker.setFPS(40);
+					$('.loader').fadeOut(750, function() {
+						$('.loader').css('visibility', 'hidden');
 					});
 				}
 			}
 			function getAttributes() {
-				crit.get('uid') === undefined ? _.delay(getAttributes, 100) : process();
+				if (typeof crit !== 'undefined') crit.get('uid') === undefined ? _.delay(getAttributes, 100) : process();
 			}
 			getAttributes();
 		}
@@ -430,18 +647,36 @@ function build(crit, destination, container) {
 	function getStage() {
 		return destination;
 	}
+	function getArms() {				
+		for (var i=0; i < container.children.length; i+=1) { 
+			if (container.children[i].name && container.children[i].name.substr(0,4) === 'arms') {
+				var arms = container.children[i];
+				break;
+			}
+		}
+		return arms;
+	}
+	function getEyes() {
+		for (var i=0; i < container.children.length; i+=1) { 
+			if (container.children[i].name && container.children[i].name.substr(0,4) === 'eyes') {
+				var eyes = container.children[i];
+				break;
+			}
+		}
+		return eyes;
+	}
+	
 	//your_critter.save(); sends POST request to crittr.me/critters/username
 	return {
 		getContainer: getContainer,
-		getStage: getStage
+		getStage: getStage,
+		getArms: getArms,
+		getEyes: getEyes
 	};
 }
 
-// Get a reference to the element.
 var	critter_container = new Container();
-/*
-	Setup Critter model, url defaults to the username requested
-*/
+
 var Critter = Backbone.Model.extend({
 	initialize: function () {
 		this.url = 'js/latest_critter.json';
@@ -458,7 +693,154 @@ setInterval(function() {
 }, 1000);
 
 your_critter.on('change', function() {
+	$('.loader').fadeIn(750, function() {
+		$('.loader').css('visibility', 'visible');
+	});
 	stage.removeAllChildren();
 	stage.update();
 	critter = build(your_critter, stage, critter_container);
 });
+
+var wave = 0,
+	oscillate = true,
+	jiggle = false;
+
+function animateEyes(critter) {
+	
+	for (var i=0; i < critter.children.length; i+=1) { 
+		if (critter.children[i].name && critter.children[i].name.substr(0,4) === 'eyes') {
+			var eyes = critter.children[i],
+			pupils = eyes.children[1];
+			break;
+		}
+	}
+	
+	if (eyes) {
+		if (eyes.name === 'eyes small_black') {
+			pupils = eyes.children[0];
+		}
+		
+		var eyeAnimations = [0,1,2], //array of available functions
+			waitTime = Math.round(2000+(Math.random()*(8000-2000))),
+			pupils = eyes.children[1];	
+		
+		/* actual animations */
+		function leftToRight() {
+			try {
+				if (eyes.name !== 'eyes small_black') {
+					if (pupils.x <= 3) {
+						pupils.x += Math.round(Math.random()*3.5);
+					} else {
+						setTimeout(function() { pupils.x -= 3 }, waitTime);
+					}
+				}
+			} catch(e) {}
+		}
+		
+		function upDown() {
+			try {
+				if (eyes.name !== 'eyes small_black') {
+					if (pupils.y < 3) {
+						pupils.y += Math.round(Math.random()*4);
+					} else { 
+						setTimeout(function() { pupils.y -= 3 }, waitTime);
+					}
+				}
+			} catch(e) {}
+		}
+		
+		function blink() {
+			try {
+				var el = eyes.children[2],
+					el2 = eyes.children[3];
+				if (eyes.name === 'eyes small_black') {
+					el = eyes.children[1];
+					el2 = eyes.children[2];
+				}	
+				el.alpha = 1;
+				el2.alpha = 1;
+				function clearBlink(el,el2) {
+					el.alpha = 0;
+					el2.alpha = 0;
+				}
+				var blinkTime = Math.round(99+(Math.random()*(100))); //blinking lasts between 200 to 300ms
+				_.delay(clearBlink, blinkTime, el, el2);
+			} catch(e) { }
+		}
+		
+		var animate = Math.round(Math.random()*eyeAnimations.length); //grab a random animation
+		//check which animation will be played
+		if (animate === 0 || animate === 1) {
+			leftToRight();
+		} else if (animate === 2) {
+			upDown();
+		} else if (animate === 3) {
+			blink();
+		}
+	}
+}
+
+function animateArms(critter) {
+		
+	for (var i=0; i < critter.children.length; i+=1) { 
+		if (critter.children[i].name && critter.children[i].name.substr(0,4) === 'arms') {
+			var arms = critter.children[i];
+			arms.uncache();
+			break;
+		}
+	}
+	
+	if (wave !== 42 && critter.id === 7 && arms) {
+		var lArm = arms.children[0];
+		if (wave <= 2) {
+			if (lArm.scaleY > -1) lArm.scaleY -= .4;
+			if (oscillate) {
+				lArm.rotation += 5;
+				if (lArm.rotation > 60) { oscillate = false; wave += 1; }
+			} else if (!oscillate){
+				lArm.rotation -= 5;
+				if (lArm.rotation <= 0) { oscillate = true; }
+			}
+		} else {
+			if (lArm.scaleY < 1) lArm.scaleY += .5;
+			if (lArm.rotation > 0) lArm.rotation -= 5;
+			if (lArm.scaleY === 1 && lArm.rotation === 0) wave = 42; // 42 = waving has finished, used by hug(), dirty reuse of a variable
+		}
+	} else {
+		if (jiggle && arms) {			
+			//jiggle arms
+			var lArm = arms.children[0];
+			var rArm = arms.children[1];
+			var speed = Math.round(Math.random()*8);
+			
+			if (rArm.rotation === 360 || rArm.rotation === -360) rArm.rotation = 0;
+			if (oscillate) {
+				rArm.rotation += speed;
+				lArm.rotation += speed;
+				if (rArm.rotation > 220) {
+					oscillate = false;
+				}
+			} else {
+				rArm.rotation -= speed;
+				lArm.rotation -= speed;
+				if (rArm.rotation <= 180) oscillate = true;
+			}
+		}
+	}
+}
+
+function tick() {
+	//only animate some of the time
+	if (Math.round(Math.random()*40) === 4) { //http://xkcd.com/221/
+		animateEyes(critter.getContainer());
+		if (jiggle) jiggle = false;
+		var randInt = Math.round(Math.random()*40);
+		if (randInt === 4 || randInt === 3 || randInt === 2 || randInt === 1) {
+			if(!jiggle) jiggle = true;
+		}
+	}
+	
+	if (critter) animateArms(critter.getContainer());
+	
+	stage.update();
+}

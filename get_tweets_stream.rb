@@ -102,7 +102,7 @@ $LOG = Logger.new('/tmp/algorithm.log')
 class Critter
 		
 	def initialize(result)
-				
+		begin		
 		@@default_critter = {
 			#default values
 			:name => 'Steve',
@@ -134,6 +134,10 @@ class Critter
 			matched = match_attributes(attributes, RULES)
 			make_critter(matched, @@default_critter)
 		end
+		rescue => e
+			p e.message
+			retry
+		end
 	end
 	
 	def fetch_tweet(result)
@@ -142,12 +146,10 @@ class Critter
 		tweet[:username] = result.user.screen_name
 		#remove hashtag
 		tweet[:tweet] = result.text.sub(/#critter/, '')
-		#tweet[:geocode] = result.geo
 		tweet[:id] = result.id.to_int
 		tweet[:uid] = result.user.id.to_int
 				
 		@@default_critter[:name] = tweet[:username]
-		@@default_critter[:location] = tweet[:geocode]
 		@@default_critter[:uid] = tweet[:uid]
 		
 		tweet
@@ -229,9 +231,9 @@ class Critter
 		critters = DB[:critters]
 		
 		critter = Yajl::Encoder.encode(critter)
-				
+			
 		@@default_critter[:critter] = critter
-				
+						
 		#Thread.new do
 			critters.insert(@@default_critter)
 		#end
@@ -253,7 +255,7 @@ class Critter
 end
 
 begin
-	TweetStream::Client.new.track('amazing') do |result|
+	TweetStream::Client.new.track('drought') do |result|
 		Critter.new(result)
 	end
 rescue Errno::ENOENT
