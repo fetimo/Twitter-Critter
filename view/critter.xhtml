@@ -3,7 +3,7 @@
 	<div class="preloader_container"><img class="loader" alt="Loading icon" src="../images/spinner.gif"></div>	
 	<canvas id="your-critter" class="critter_container" width="1000" height="500">Critter requires canvas, upgrade to a nice browser.</canvas>
 	<aside class="alerts">
-		<?r if @introduction ?>
+		<?r if @introduction and session[:access_token].eql? nil ?>
 		<div class="alert alert-info">
 			<a class='close' data-dismiss='alert'>&times;</a><p>Here is your Critter! Isn't it cute.</p><p>These features are given to your Critter based on your last tweet.</p><p>If you wish to adopt your Critter (don't worry we will look after it so no need for pet insurance), just login to Twitter with the button above.</p><p>Then you will be able to compare your Critter to the people you follow, you can also hug them or choose to challenge them to a game of Rock-paper-scissors!</p><a class='btn btn-info' href='#'>Noted</a>
 		</div>
@@ -157,7 +157,7 @@ var username = '#{@username}';
 	}
 	</script>
 	<?r end ?>
-	<?r if @introduction ?>
+	<?r if @introduction and session[:access_token].eql? nil ?>
 		<script>
 		$(document).ready(function() {
 			var alert = $('.alert')[0];

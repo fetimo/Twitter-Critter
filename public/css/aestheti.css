@@ -291,7 +291,7 @@ footer a {
   
 #carousel_inner ul li {  
 	float: left; 
-	width: 165px; 
+	//width: 165px; 
 }  
   
 #carousel_inner ul li img {  

@@ -2,6 +2,8 @@ function build(crit, destination, container) {
 		
 	container.children = []; //reset container's children so we don't end up with duplicates
 	
+	destination.removeAllChildren();
+	
 	// Always check for properties and methods, to make sure your code doesn't break in other browsers.
 	var elem = document.getElementById('your-critter');
 	var sentiment = null;
@@ -93,7 +95,7 @@ function build(crit, destination, container) {
 					if (critter.hasOwnProperty(key)) {					
 						switch (key) {
 							case 'name':
-								var critter_name = new Text('@' + critter[key], '70px Aller Light', '#fff');
+								var critter_name = new Text('@' + critter[key], '60px Aller Light', '#fff');
 							break;
 							case 'arms':
 								var armG = new Graphics(),
@@ -494,7 +496,7 @@ function build(crit, destination, container) {
 					arms.children[0].regY = 40;
 					arms.children[1].regX = 50;
 					arms.children[1].regY = 40;
-					critter_name.x = 350;
+					critter_name.x = 380;
 					critter_name.y = 450;
 					if (arms.name === 'arms long') { 
 						arms.y = 150;

@@ -103,10 +103,17 @@ class MainController < Controller
 	
 	def critter(username)
 		@username = username
-		DB.fetch('SELECT critter FROM critters WHERE name = ? LIMIT 1', @username) do |row|
-			@critter = row[:critter]
-		end
 		
+		logger = Ramaze::Logger::RotatingInformer.new('./log')
+		
+		begin
+			DB.fetch('SELECT critter FROM critters WHERE name = ? LIMIT 1', @username) do |row|
+				@critter = row[:critter]
+			end
+		rescue => e
+			logger.info "fetching critter from db main.rb:111"
+			logger.error e.message
+		end		
 		#show the intro text if you've been redirected from the homepage
     	@introduction = true if request.http_variables['HTTP_REFERER'] === 'http://crittr.me/'
 				
@@ -121,29 +128,46 @@ class MainController < Controller
 				config.oauth_token_secret = session[:access_token][:oauth_token_secret]
 			end
 			
-			friends = Twitter.friend_ids
+			logger.info "remaining twitter hits #{Twitter.rate_limit_status.remaining_hits}"
+			#if Twitter.rate_limit_status.remaining_hits > 0
+			
+			begin
+				friends = Twitter.friend_ids
+			rescue => e
+				logger.info "getting twitter friend ids main.rb:124"
+				logger.error e.message
+			end
 			
 			if session[:friends].nil?
 				friends_w_critter = Array.new
 				
 				dataset = DB[:critters]
-				
-				friends.ids.each do |f|
-					friends_db = dataset.where(:uid => f).limit(1)
-					friend = friends_db.get(:name)
-					friends_w_critter.push(friend)
-				end
+				begin
+					friends.ids.each do |f|
+						friends_db = dataset.where(:uid => f).limit(1)
+						friend = friends_db.get(:name)
+						friends_w_critter.push(friend)
+					end
+				rescue => e
+					logger.info "processing existing critters from db main.rb:144"
+					logger.error e.message
+				end	
 				
 				friends_w_critter.compact! #removes blank entries leaving us with just the friends
 				session[:friends] = friends_w_critter
 			end
 			
 			if session[:friends].count < 3
-				friend = Twitter.user(friends.ids.sample)
-				@suggested_friend = {
-					'name' => friend[:name],
-					'username' => friend[:screen_name]
-				}
+				begin
+					friend = Twitter.user(friends.ids.sample)
+					@suggested_friend = {
+						'name' => friend[:name],
+						'username' => friend[:screen_name]
+					}
+				rescue => e
+					logger.info "fetching sample friends from twitter main.rb:159"
+					logger.error e.message
+				end	
 			end
 			
 			# lets find out if their latest tweet is happy or sad
@@ -167,25 +191,37 @@ class MainController < Controller
 					end
 				end
 			rescue => e
-				logger = Ramaze::Logger::RotatingInformer.new('./log')
-    			logger.info e.message
-    			logger.info sa.quota
+    			logger.info "sentiment analysis and twitter last tweet main.rb:176"
+    			logger.error e.message
+    			logger.info "sentiment analysis quota #{sa.quota}"
 				#useful for if Twitter is offline
-				critters = DB[:critters]
-				critters.filter('name = ?', session[:access_token][:screen_name]).update(:sentiment => 'frown')
+				#critters = DB[:critters]
+				#critters.filter('name = ?', session[:access_token][:screen_name]).update(:sentiment => 'frown')
+				retry
 			end
 					
 			fight = DB[:interactions]
-			you = fight.where(:uid => session[:access_token][:user_id]).first
 			
+			begin
+				you = fight.where(:uid => session[:access_token][:user_id]).first
+			rescue => e
+				logger.info "fetching #{you} from db main.rb:201"
+				logger.error e.message
+				retry
+			end	
 			if !you
 				fight.insert(:uid => session[:access_token][:user_id])
 				you = fight.where(:uid => session[:access_token][:user_id]).first
 			end
-			
-			if !you[:tutorial]
-				@fisticuffs_tutorial = true
-				fight.where(:uid => session[:access_token][:user_id]).update(:tutorial => 1)
+			begin
+				if !you[:tutorial]
+					@fisticuffs_tutorial = true
+					fight.where(:uid => session[:access_token][:user_id]).update(:tutorial => 1)
+				end
+			rescue
+				logger.info "#{!you[:tutorial].inspect} from db main.rb:216"
+				logger.error e.message
+				retry
 			end
 			if you[:weapon] === nil && you[:opponent]
 				opponent = Twitter.user(you[:opponent]).screen_name
@@ -258,6 +294,8 @@ class MainController < Controller
 								flash[:Fisticuffs] << "<br>Is it okay if I tweet about your victory?<p><a class='btn btn-info' href='#'><span id='victory_tweet'>Tweet</span></a><a class='btn close_btn' href='#'>No, thanks</a></p>"
 							end
 						rescue => e
+							logger.info "main.rb:281"
+							logger.error e.message
 							message = e.message
 						end
 					end
@@ -273,7 +311,6 @@ class MainController < Controller
 			end
 		end
 	end
-	#end
 	
 	def logout
 		session.delete(:friends)
@@ -289,9 +326,14 @@ class MainController < Controller
 				:consumer_key => 'DQicogvXxpbW7oleCfV3Q',
 				:consumer_secret => 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
 			)
-				
-			request_token = client.authentication_request_token(:oauth_callback => 'http://crittr.me/auth')
-						
+			begin
+				request_token = client.authentication_request_token(:oauth_callback => 'http://crittr.me/auth')
+			rescue => e
+				logger.info "getting request_token main.rb:330"
+				logger.error e.message
+				sleep 5
+				retry
+			end	
 			session[:request_token] = request_token
 			
 			redirect request_token.authorize_url

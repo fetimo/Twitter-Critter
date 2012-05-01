@@ -18,8 +18,9 @@ class ApiController < Controller
 		logger = Ramaze::Logger::RotatingInformer.new('./log')
 		if request.get?
 			begin
-				critters = DB[:critters]
-				critter = critters.filter('name = ?', username).first
+				db = Sequel.connect('mysql2://fetimocom1:iBMbSSIz@mysql.fetimo.com/twittercritter')
+				critters = db[:critters]
+				critter = critters.filter(:name => username).first
 				if request.params['mood']
 					@response = critter[:sentiment]
 					return Yajl::Encoder.encode(@response)
@@ -27,6 +28,9 @@ class ApiController < Controller
 					@response = critter[:critter]
 				end
 			rescue => error
+				logger.info "error in fetching critter api.rb:21"
+				logger.debug critters
+				logger.debug critter
 				logger.error error.message
 				retry
 			end

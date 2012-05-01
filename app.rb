@@ -28,13 +28,13 @@ Ramaze::Cache.options.view = Ramaze::Cache::MemCache.using(
 )
 
 #Setup database caching
-Ramaze::Cache.options.names.push(:sequel)
-Ramaze::Cache.options.sequel = Ramaze::Cache::Sequel.using(
-	:connection => Sequel.mysql(
-		:adapter  => 'mysql2',
-		:host     => 'mysql.fetimo.com',
-		:user     => 'fetimocom1',
-		:password => 'iBMbSSIz',
-		:database => 'twittercritter'
-	)
-)
+#Ramaze::Cache.options.names.push(:sequel)
+#Ramaze::Cache.options.sequel = Ramaze::Cache::Sequel.using(
+#	:connection => Sequel.mysql(
+#		:adapter  => 'mysql2',
+#		:host     => 'mysql.fetimo.com',
+#		:user     => 'fetimocom1',
+#		:password => 'iBMbSSIz',
+#		:database => 'twittercritter'
+#	)
+#)
