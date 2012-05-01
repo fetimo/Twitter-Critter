@@ -566,3 +566,24 @@ footer a {
 #carousel_inner ul li#lonely {
 	width: 350px;
 }
+
+.error {
+	width: 80%;
+	margin: 0 auto;
+	position: relative;
+	background: #fff;
+	overflow: auto;
+}
+
+.error h3 {
+	font-size: 4em;
+	line-height: 1.5em;
+}
+
+.error p {
+	font-size: 2em;
+}
+
+.error img {
+	float: right;
+}

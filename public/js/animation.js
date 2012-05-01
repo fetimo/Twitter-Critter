@@ -268,7 +268,7 @@ function RPS(weapon) {
 			rps.regY = 15;
 			rps.x = 50;
 		} else if (rps.name === 'paper') {
-			rps.skewX = 260;
+			rps.skewX = 200;
 			rps.skewY = 30;
 			rps.scaleX = -.5;
 			rps.scaleY = -.5;
@@ -280,7 +280,6 @@ function RPS(weapon) {
 			rps.rotation = -30;
 		}
 		
-		console.log(rps);
 		return rps;
 	}
 
@@ -560,7 +559,7 @@ function tick() {
 		if (critterApp.yourStage().children[index].name === 'rock') {
 			critterApp.yourStage().children[index].y = critterApp.yours().getArms().children[0]._matrix.ty + 80;
 		} else if (critterApp.yourStage().children[index].name === 'paper') {
-			critterApp.yourStage().children[index].y = critterApp.yours().getArms().children[0]._matrix.ty + 100;
+			critterApp.yourStage().children[index].y = critterApp.yours().getArms().children[0]._matrix.ty + 55;
 		} else {
 			critterApp.yourStage().children[index].y = critterApp.yours().getArms().children[0]._matrix.ty + 50;
 		}
