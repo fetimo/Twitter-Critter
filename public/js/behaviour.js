@@ -158,6 +158,7 @@ $(document).ready(function() {
 	
 	function clickedWeapon(e) {
 		var weapon = e.currentTarget.id;
+		if (rps.get() !== null) rps.remove();
 		$.ajax({
 			type: 'POST',
 			url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&opponent=' + friend.get('uid') + '&weapon=' + weapon,
@@ -166,13 +167,13 @@ $(document).ready(function() {
 		$('.weapon_selection').slideToggle(750) || rebuildWeaponSelection();
 		switch (weapon) {
 			case '1':
-				RPS('scissors');
+				rps.set('scissors');
 			break;
 			case '2':
-				RPS('paper');
+				rps.set('paper');
 			break;
 			case '3':
-				RPS('rock');
+				rps.set('rock');
 			break;
 		}
 	}
