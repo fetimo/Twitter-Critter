@@ -294,7 +294,7 @@ class MainController < Controller
 					:consumer_secret => 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
 				)
 					
-				request_token = client.request_token(:oauth_callback => 'http://crittr.me/auth')
+				request_token = client.authentication_request_token(:oauth_callback => 'http://crittr.me/auth')
 							
 				session[:request_token] = request_token
 				
@@ -321,7 +321,7 @@ class MainController < Controller
 	end
 		
 	def auth
-				
+		
 		if request.params['denied']
 			redirect MainController.r(:index)
 		end

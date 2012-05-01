@@ -15,15 +15,20 @@ class ApiController < Controller
 		response['Content-Type'] = 'application/json'
 		
 		username.delete!('@')
-
+		logger = Ramaze::Logger::RotatingInformer.new('./log')
 		if request.get?
-			critters = DB[:critters]
-			critter = critters.filter('name = ?', username).first
-			if request.params['mood']
-				@response = critter[:sentiment]
-				return Yajl::Encoder.encode(@response)
-			else
-				@response = critter[:critter]
+			begin
+				critters = DB[:critters]
+				critter = critters.filter('name = ?', username).first
+				if request.params['mood']
+					@response = critter[:sentiment]
+					return Yajl::Encoder.encode(@response)
+				else
+					@response = critter[:critter]
+				end
+			rescue => error
+				logger.error error.message
+				retry
 			end
 		elsif request.post?
 			unless request.cookies.empty?
