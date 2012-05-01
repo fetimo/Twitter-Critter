@@ -1,6 +1,8 @@
 $(document).ready(function() {	
 		
-	function loadFriend (event, ui) {
+	function loadFriend (event) {
+		$('#carousel_inner ul li').removeClass('active');
+		event.target.parentNode.className += " active";
 		var username = event.currentTarget.id;
 		if (theirs) {
 			theirs.getContainer().removeAllChildren();
