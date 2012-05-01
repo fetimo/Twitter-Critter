@@ -430,7 +430,7 @@ function build(crit, destination, container) {
 						el.scaleX = .62;
 						el.scaleY = .62;
 					}
-					el.alpha = 0;
+					el.visible = false;
 					//clone eyelid to make a second
 					var el2 = el.clone();
 					eyes.name !== 'eyes small_black' ? el2.x += 105 : el2.x += 56;
@@ -759,11 +759,11 @@ function animateEyes(critter) {
 					el = eyes.children[1];
 					el2 = eyes.children[2];
 				}	
-				el.alpha = 1;
-				el2.alpha = 1;
+				el.visible = true;
+				el2.visible = true;
 				function clearBlink(el,el2) {
-					el.alpha = 0;
-					el2.alpha = 0;
+					el.visible = false;
+					el2.visible = false;
 				}
 				var blinkTime = Math.round(99+(Math.random()*(100))); //blinking lasts between 200 to 300ms
 				_.delay(clearBlink, blinkTime, el, el2);

@@ -425,7 +425,7 @@ function build(crit, destination, container) {
 						el.scaleX = .62;
 						el.scaleY = .62;
 					}
-					el.alpha = 0;
+					el.visible = false;
 					//clone eyelid to make a second
 					var el2 = el.clone();
 					eyes.name !== 'eyes small_black' ? el2.x += 105 : el2.x += 56;

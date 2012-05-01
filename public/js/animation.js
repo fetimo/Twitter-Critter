@@ -71,11 +71,11 @@ function animateEyes(critter) {
 					el = eyes.children[1];
 					el2 = eyes.children[2];
 				}	
-				el.alpha = 1;
-				el2.alpha = 1;
+				el.visible = true;
+				el2.visible = true;
 				function clearBlink(el,el2) {
-					el.alpha = 0;
-					el2.alpha = 0;
+					el.visible = false;
+					el2.visible = false;
 				}
 				var blinkTime = Math.round(99+(Math.random()*(100))); //blinking lasts between 200 to 300ms
 				_.delay(clearBlink, blinkTime, el, el2);
@@ -253,12 +253,11 @@ function animateArms(critter) {
 var rpsAdded = false;
 
 function RPS(weapon) {
-
+		
 	function addToStage(graphic) {
 		var rps = new Shape(graphic);
 		rpsAdded = true;
 		rps.snapToPixel = true;
-		critterApp.yourStage().addChild(rps);
 		rps.scaleX = .5;
 		rps.scaleY = .5;
 		rps.name = graphic.name;
@@ -279,7 +278,10 @@ function RPS(weapon) {
 			rps.regX = 60;
 			rps.rotation = -30;
 		}
-		
+		critterApp.yourStage().addChild(rps);
+		rps.removeWeapon = function () {
+			return critterApp.yourStage().removeChild(this);
+		};
 		return rps;
 	}
 
