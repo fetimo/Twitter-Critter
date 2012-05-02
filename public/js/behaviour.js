@@ -2,7 +2,9 @@ $(document).ready(function() {
 		
 	function loadFriend (event) {
 		$('#carousel_inner ul li').removeClass('active');
-		event.target.parentNode.className += " active";
+		event.target.className === 'friend' ?  
+			event.target.className += " active" :
+			event.target.parentNode.className += " active";
 		var username = event.currentTarget.id;
 		if (theirs) {
 			theirs.getContainer().removeAllChildren();
@@ -100,9 +102,9 @@ $(document).ready(function() {
 			weapon_selection.innerHTML = 
 				"<a class='close' data-dismiss='alert'>&times;</a> \
 				<h4>Choose Your Weapon</h4> \
-				<img id='3' src='../images/weapons/rock.png'> \
-				<img id='2' src='../images/weapons/paper.png'> \
-				<img id='1' src='../images/weapons/scissors.png'>";
+				<img width='78' height='62' alt='Icon of rock' id='3' src='../images/weapons/rock.png'> \
+				<img height='64' width='73' alt='Icon of paper' id='2' src='../images/weapons/paper.png'> \
+				<img width='83' height='54' alt='Icon of scissors' id='1' src='../images/weapons/scissors.png'>";
 			
 			root.appendChild(weapon_selection);
 		}

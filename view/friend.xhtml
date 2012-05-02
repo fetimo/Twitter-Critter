@@ -1,4 +1,5 @@
 <li class="friend" id="#{@friend}">
 	<img src="http://img.tweetimag.es/i/#{@friend}_n" alt="#{@friend}'s Critter" title="#{@friend}">
+	<?r @friend = @friend.scan(/.{10}/)[0] << "..." if @friend.length > 10 ?>
 	<p class="username">@#{@friend}</p>
 </li>

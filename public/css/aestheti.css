@@ -242,6 +242,10 @@ canvas {
 	list-style: none;
 }
 
+.friend .username {
+	cursor: pointer;
+}
+
 .friend img {
 	width: 48px;
 	margin: 0 10px 0 0;
@@ -253,9 +257,6 @@ canvas {
 	float: left;
 	margin-top: 0.6em;
 	line-height: 0.8em;
-}
-
-.friend p.username{
 	color: #9f682f;
 }
 
@@ -279,13 +280,13 @@ footer a {
 #carousel_inner {  
 	float: left; 
 	width: 720px;
-	//height: 48px;
+	height: 48px;
 	overflow: hidden;
 	margin-bottom: 2em;
 }  
   
 #carousel_inner ul {  
-	position: relative;  
+	position: relative;
 	left: 0;  
 	width: 9999px; 
 }  
@@ -295,16 +296,16 @@ footer a {
 	//width: 165px; 
 } 
 
-#carousel_inner ul li.active {  
+#carousel_inner .active {  
 	background: #fafafa;
 	border-radius: 3px;
 	-moz-box-shadow: inset 0 0 3px #000;
 	-webkit-box-shadow: inset 0 0 3px #000;
 	box-shadow: inset 0 0 3px #000;
-	padding: 1px;
+	//padding: 1px;
 }
 
-#carousel_inner ul li.active img {
+#carousel_inner .active img {
 	-webkit-border-top-left-radius: 3px;
 	-webkit-border-bottom-left-radius: 3px;
 	-moz-border-radius-topleft: 3px;

@@ -32,7 +32,6 @@ class ApiController < Controller
 				logger.debug critters
 				logger.debug critter
 				logger.error error.message
-				retry
 			end
 		elsif request.post?
 			unless request.cookies.empty?

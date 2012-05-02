@@ -1,5 +1,5 @@
-<div id="content">
 <?r unless @critter.nil? ?>	
+<div id="content">
 	<div class="preloader_container"><img class="loader" alt="Loading icon" src="../images/spinner.gif"></div>	
 	<canvas id="your-critter" class="critter_container" width="1000" height="500">Critter requires canvas, upgrade to a nice browser.</canvas>
 	<aside class="alerts">
@@ -19,9 +19,9 @@
 				<br>
 			<?r end ?>
 			<h4>Choose Your Weapon</h4>
-			<img alt="Icon of rock" id="3" src="../images/weapons/rock.png">
-			<img alt="Icon of paper" id="2" src="../images/weapons/paper.png">
-			<img alt="Icon of scissors" id="1" src="../images/weapons/scissors.png">
+			<img width="78" height="62" alt="Icon of rock" id="3" src="../images/weapons/rock.png">
+			<img height="64" width="73" alt="Icon of paper" id="2" src="../images/weapons/paper.png">
+			<img width="83" height="54" alt="Icon of scissors" id="1" src="../images/weapons/scissors.png">
 		</section>
 		<?r 
 	if flash[:Fisticuffs] and flash[:Fisticuffs].include? 'win'
@@ -170,5 +170,8 @@ var username = '#{@username}';
 		</script>
 	<?r end ?>
 <?r else ?>
-<p>No Critter called #{@username} exists yet! You can <a href="/user/#{@username}">give life to it though</a>.</p>
+<section class="wide">
+	<p>No Critter called #{@username} exists yet! You can <a href="/user/#{@username}">give life to it though</a>.</p>
+	<img alt="An image of a Critter looking forlorn" title="Sad Critter is sad" src="../images/sad-critter.png">
+</section>
 <?r end ?>

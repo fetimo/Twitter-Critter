@@ -234,7 +234,6 @@ function build(crit, destination, container) {
 										positionMouth();
 									});
 								} else {					
-									
 									//determine happy/sad
 									$.ajax({
 										url: "http://crittr.me/api/critters/" + crit.attributes.name + "?mood=true"
@@ -265,6 +264,18 @@ function build(crit, destination, container) {
 							case 'body_type':
 								var body_shape = new Bitmap('../images/critter_assets/bodies/'+ critter[key] + '.png');
 								body_shape.name = critter[key];
+								if (critter[key] === 'furry' && pattern && pattern.name === 'stripy') {
+									var pattern = new Bitmap('../images/critter_assets/body_patterns/stripes-with-fur.png');
+									pattern.name = critter[key];
+									pattern.x = -3;
+									preload(pattern.image);
+								} else if (critter[key] === 'furry' && pattern && pattern.name === 'spotty') {
+									var pattern = new Bitmap('../images/critter_assets/body_patterns/spots-with-fur.png');
+									
+									pattern.name = critter[key];
+									pattern.x = -1;
+									preload(pattern.image);
+								}
 								body.addChild(body_shape);
 								preload(body_shape.image);
 							break;
@@ -431,6 +442,7 @@ function build(crit, destination, container) {
 					eyes.name !== 'eyes small_black' ? el2.x += 105 : el2.x += 56;
 					eyes.addChild(el,el2);
 					
+					//var shadow = new Shadow('rgba('+r+','+g+','+b+',.5)', 0 , 4 , 0); translucent
 					var shadow = new Shadow('rgb('+r+','+g+','+b+')', 0 , 4 , 0);
 					arms.shadow = shadow;
 					if (face) {
@@ -594,24 +606,50 @@ function build(crit, destination, container) {
 					
 					destination.removeAllChildren();		
 					
+					function waitForTail() {
+						if (!tailLoaded) {
+							_.delay(waitForTail, 100);
+						} else {
+							$('.loader').fadeOut(750, function() {
+								$('.loader').css('visibility', 'hidden');
+							});
+							destination.addChild(container);
+						}
+					}
+					
 					if (sentiment) {
 						if (accessory && accessory.name === 'tail' && tailLoaded) {
+							$('.loader').fadeOut(750, function() {
+								$('.loader').css('visibility', 'hidden');
+							});
 							destination.addChild(container);
 						} else if (accessory && accessory.name !== 'tail') {
+							$('.loader').fadeOut(750, function() {
+								$('.loader').css('visibility', 'hidden');
+							});
 							destination.addChild(container);
 						} else if (!accessory) {
+							$('.loader').fadeOut(750, function() {
+								$('.loader').css('visibility', 'hidden');
+							});
 							destination.addChild(container);
 						} else {
 							//loop until tailLoaded === true
-							function waitForTail() {
-								!tailLoaded ? _.delay(waitForTail, 100) : destination.addChild(container);
-							}
 							waitForTail();
 						}
 					} else {
 						//loop until sentiment is defined
 						function getSentiment() {
-							!sentiment ? _.delay(getSentiment, 100) : destination.addChild(container);
+							if (!sentiment) { 
+								_.delay(getSentiment, 100);
+							} else if (!accessory || accessory.name !== 'tail') {
+								$('.loader').fadeOut(750, function() {
+									$('.loader').css('visibility', 'hidden');
+								});
+								destination.addChild(container);
+							} else {
+								waitForTail();
+							}
 						}
 						getSentiment();
 					}
@@ -624,9 +662,6 @@ function build(crit, destination, container) {
 				    Ticker.useRAF = true;				    
 					Ticker.addListener(window);
 					Ticker.setFPS(40);
-					$('.loader').fadeOut(750, function() {
-						$('.loader').css('visibility', 'hidden');
-					});
 				}
 			}
 			function getAttributes() {
