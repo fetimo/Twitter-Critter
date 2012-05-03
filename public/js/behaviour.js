@@ -1,31 +1,38 @@
 $(document).ready(function() {	
 		
-	function loadFriend (event) {
+	function loadFriend(event) {
 		$('#carousel_inner ul li').removeClass('active');
 		event.target.className === 'friend' ?  
 			event.target.className += " active" :
 			event.target.parentNode.className += " active";
-		var username = event.currentTarget.id;
-		if (theirs) {
-			theirs.getContainer().removeAllChildren();
-			critterApp.yourStage().update();
-		} else {
-			var their_critter;
-		}
-		var	critter_container2 = new Container(),
-			Critter = critterApp.model();
-		friend = new Critter(username);
-		critterApp.setFriend(friend);	
-		$('.loader').fadeIn(400, function() {
-			$('.loader').css('visibility', 'visible');
-		});
-		var friend_stage = critterApp.theirStage();
-		theirs = build(friend, friend_stage, critter_container2);
-		their_critter = theirs;
-		if ($('.friends_tab').css('display') === 'none') { 
-			$('.friends_tab').slideDown('quick', function (){
-				$('.friends_tab').css('display','block');
+		
+		if (critterApp.theirStage().children.length) jumpOut = true;
+		if (!jumpOut || theirs.getContainer().y <= -200) {
+			jumpOut = false;
+			var username = event.currentTarget.id;
+			if (theirs) {
+				theirs.getContainer().removeAllChildren();
+				critterApp.yourStage().update();
+			} else {
+				var their_critter;
+			}
+			var	critter_container2 = new Container(),
+				Critter = critterApp.model();
+			friend = new Critter(username);
+			critterApp.setFriend(friend);	
+			$('.loader').fadeIn(400, function() {
+				$('.loader').css('visibility', 'visible');
 			});
+			var friend_stage = critterApp.theirStage();
+			theirs = build(friend, friend_stage, critter_container2);
+			their_critter = theirs;
+			if ($('.friends_tab').css('display') === 'none') { 
+				$('.friends_tab').slideDown('quick', function (){
+					$('.friends_tab').css('display','block');
+				});
+			}
+		} else {
+			_.delay(loadFriend, 100, event);
 		}
 	}
 		

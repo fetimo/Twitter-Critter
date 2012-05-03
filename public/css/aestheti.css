@@ -130,7 +130,7 @@ button {
 	height: 50px;
 	box-shadow: 0px 5px 5px rgba(0,0,0,0.3);
 	position: relative; /* fixes box-shadow issue */
-	z-index: 1;
+	z-index: 10;
 }
 
 #topBar img {
@@ -204,7 +204,7 @@ button {
 }
 
 #content {
-	background: rgb(136,101,45) url('../images/critterbg.jpg') no-repeat;
+	background: rgb(136,101,45) url('../images/critterbg.png') no-repeat;
 	height: 500px;
 	width: 100%;
 	margin: 0 auto;
@@ -611,4 +611,18 @@ footer a {
 
 .error img {
 	float: right;
+}
+
+.tree {
+	position: absolute;
+	z-index: 3;
+	top: 50px;
+}
+
+.tree#right-tree {
+	left: 776px;
+}
+
+.tree#left-tree {
+	left: 0;
 }

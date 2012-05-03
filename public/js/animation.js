@@ -7,6 +7,7 @@ var wave = 0,
 	jiggle = false,
 	jiggleTheirs = false,
 	change = false,
+	jumpOut = false,
 	theirs;
 
 function animateEyes(critter) {
@@ -540,10 +541,20 @@ var rps = (function() {
 	};
 }());
 
+function jumpOutScene() {
+	theirs.getContainer().x += 20;
+	theirs.getContainer().y -= 10.6;
+	if (theirs.getContainer().y < -200) {
+		jumpOut = false;
+	}
+}
+
 function tick() {
+	var yours = critterApp.yours();
+	
 	//only animate some of the time
 	if (Math.round(Math.random()*40) === 4) { //http://xkcd.com/221/
-		animateEyes(critterApp.yours().getContainer());
+		animateEyes(yours.getContainer());
 		if (jiggle) jiggle = false;
 		var randInt = Math.round(Math.random()*40);
 		if (randInt === 4 || randInt === 3 || randInt === 2 || randInt === 1) {
@@ -555,6 +566,10 @@ function tick() {
 			
 		animateArms(theirs.getContainer());
 		
+		if (theirs.getContainer().x > 100 && !jumpOut) theirs.getContainer().x -= 10;
+		
+		if (theirs.getContainer().y < theirs.getContainer().targetY && !jumpOut) theirs.getContainer().y += 10.6;
+		
 		if (Math.round(Math.random()*40) === 4) {
 			animateEyes(theirs.getContainer());
 			if (jiggleTheirs) jiggleTheirs = false;
@@ -564,24 +579,30 @@ function tick() {
 			}
 		}
 	}
+		
+	if (yours.getContainer().x < 100) yours.getContainer().x += 10;
+		
+	if (yours.getContainer().y < yours.getContainer().targetY) yours.getContainer().y += 10.6;
 	
-	if (critterApp.yours()) animateArms(critterApp.yours().getContainer());
+	if (critterApp.yours()) animateArms(yours.getContainer());
 
-	if (hugFriend) hug(critterApp.yours().getContainer());
+	if (hugFriend) hug(yours.getContainer());
 	
 	if (rps.get() !== null) {
 		var index = critterApp.yourStage().children.length - 1;
 		//can be fairly certain it was the last thing added		
 		if (critterApp.yourStage().children[index].name === 'rock') {
-			critterApp.yourStage().children[index].y = critterApp.yours().getArms().children[0]._matrix.ty + 80;
+			critterApp.yourStage().children[index].y = yours.getArms().children[0]._matrix.ty + 80;
 		} else if (critterApp.yourStage().children[index].name === 'paper') {
-			critterApp.yourStage().children[index].y = critterApp.yours().getArms().children[0]._matrix.ty + 55;
+			critterApp.yourStage().children[index].y = yours.getArms().children[0]._matrix.ty + 55;
 		} else {
-			critterApp.yourStage().children[index].y = critterApp.yours().getArms().children[0]._matrix.ty + 50;
+			critterApp.yourStage().children[index].y = yours.getArms().children[0]._matrix.ty + 50;
 		}
 	}
 	
-	if (change) kill(critterApp.yours().getContainer());
+	if (change) kill(yours.getContainer());
+	
+	if (jumpOut) jumpOutScene();
 	
 	critterApp.yourStage().update();
 	if (critterApp.theirStage()) critterApp.theirStage().update(); 

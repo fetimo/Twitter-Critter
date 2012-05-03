@@ -1,7 +1,9 @@
 <?r unless @critter.nil? ?>	
+<img class="tree" id="left-tree" src="../images/tree-left.png">
+<img class="tree" id="right-tree" src="../images/tree-right.png">
 <div id="content">
 	<div class="preloader_container"><img class="loader" alt="Loading icon" src="../images/spinner.gif"></div>	
-	<canvas id="your-critter" class="critter_container" width="1000" height="500">Critter requires canvas, upgrade to a nice browser.</canvas>
+	<canvas id="your-critter" class="critter_container" width="955" height="500">Critter requires canvas, upgrade to a nice browser.</canvas>
 
 	<aside class="alerts">
 		<?r if @introduction and session[:access_token].eql? nil ?>
@@ -146,6 +148,8 @@ var username = '#{@username}';
 		});
 		
 		$('#attributes').children().on('click', function() {
+			<?r @timestamp = @timestamp.to_i ?>
+
 			$.ajax({
 				type: 'POST',
 				url: 'http://crittr.me/api/battle?uid=' + critterApp.yourModel().get('uid') + '&attribute=' + this.id + '&hash='+#{@timestamp},

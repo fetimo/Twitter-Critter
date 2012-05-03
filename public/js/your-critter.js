@@ -271,7 +271,6 @@ function build(crit, destination, container) {
 									pattern.name = critter[key];
 									pattern.x = -3;
 									preload(pattern.image);
-									console.log(pattern);
 								} else if (critter[key] === 'furry' && pattern && pattern.name === 'spotty') {
 									var pattern = new Bitmap('../images/critter_assets/body_patterns/spots-with-fur.png');
 									
@@ -593,14 +592,18 @@ function build(crit, destination, container) {
 						}
 					}
 					
-					container.y = 70;
-					container.x = 70;
+					//container.y = 0;
+					container.targetY = 70;
+					//container.x = 100;
 					if (legs.name === 'short') {
-						container.y = 123;
+						container.targetY = 123;
 						if (body.children[0].name === 'simple') {
-							container.y += 57;
+							container.targetY = container.y + 57;
 						}
 					}
+					
+					if (destination.name === 'friend_stage') container.x = 250;
+					
 					container.name = crit.get('name');
 					container.uid = crit.get('uid'); //used when you win a battle and tweet
 					container.addChild(legs, body, eyes, arms);

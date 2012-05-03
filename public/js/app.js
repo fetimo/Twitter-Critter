@@ -24,6 +24,7 @@ var critterApp = (function() {
 		friend_stage.snapToPixelEnabled = true;
 		friend_stage.autoClear = false;
 		friend_stage.x = 400;
+		friend_stage.name = 'friend_stage';
 		
 		critter = build(your_critter, stage, critter_container);
 		

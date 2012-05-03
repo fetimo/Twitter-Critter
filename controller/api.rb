@@ -174,7 +174,7 @@ class ApiController < Controller
 					
 					you = fight.filter(:uid => uid).first
 						
-					if request.params['hash'].to_i === you[:start] && request.params['attribute']
+					if Time.at(request.params['hash'].to_i) === you[:start] && request.params['attribute']
 						
 						attribute = request.params['attribute']
 						opponent = you[:opponent]

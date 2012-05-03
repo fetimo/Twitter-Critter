@@ -138,7 +138,6 @@ class MainController < Controller
 				config.oauth_token_secret = session[:access_token][:oauth_token_secret]
 			end
 			
-			logger.info "remaining twitter hits #{Twitter.rate_limit_status.remaining_hits}"
 			#if Twitter.rate_limit_status.remaining_hits > 0
 			
 			begin
