@@ -138,7 +138,7 @@ $(document).ready(function() {
 		if (response.response.substring(0,5) !== 'Error') {
 			//not an error, can show tweet related things
 			alert.className = 'alert alert-info';
-			alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Is it ok if I tweet them this message to let them know you\'re fighting them? "' + response.response + '"</p><p><a class="btn btn-info" href="#">No, thanks</a><a class="btn close_btn" href="#"><span id="tweet">Yes, Tweet</span></a></p>';
+			alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Is it ok if I tweet them this message to let them know you\'re fighting them? "' + response.response + '"</p><p><a class="btn btn-info close_btn" href="#">No, thanks</a><a class="btn btn-info close_btn" href="#"><span id="tweet">Yes, Tweet</span></a></p>';
 		} else {
 			//there be errors
 			alert.className = 'alert alert-error';			
