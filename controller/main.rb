@@ -107,12 +107,22 @@ class MainController < Controller
 		logger = Ramaze::Logger::RotatingInformer.new('./log')
 		
 		begin
-			DB.fetch('SELECT critter FROM critters WHERE name = ? LIMIT 1', @username) do |row|
-				@critter = row[:critter]
-			end
+			critters = DB[:critters]
+			@critter = critters.filter(:name => username).first
 		rescue => e
 			logger.info "fetching critter from db main.rb:111"
 			logger.error e.message
+			DB.disconnect
+			DB.connect(
+				:adapter=>'mysql2', 
+				:host=>'mysql.fetimo.com', 
+				:database=>'twittercritter', 
+				:user=>'fetimocom1', 
+				:password=>'iBMbSSIz', 
+				:timeout => 30
+			)
+			sleep 1
+			retry
 		end		
 		#show the intro text if you've been redirected from the homepage
     	@introduction = true if request.http_variables['HTTP_REFERER'] === 'http://crittr.me/'
@@ -248,6 +258,18 @@ class MainController < Controller
 				
 				fight.where(:uid => session[:access_token][:user_id]).update(:ran_away => nil)
 			end
+			
+			#check to see if the battle is a day old and you've not had a result back
+			@request_expire_battle = false
+			if you[:start] and you[:status] == 'waiting'
+				require 'date'
+				start = you[:start].to_datetime
+				yesterday = Date.today - 1
+				@request_expire_battle = true if start <= yesterday
+				@opponent_name = Twitter.user(you[:opponent]).screen_name
+				@opponent_uid = you[:opponent]
+			end
+			
 			if you[:status] === 'ready'
 				#if in battle
 				opponent = fight.where(:uid => you[:opponent]).first
@@ -291,7 +313,7 @@ class MainController < Controller
 									fight.where(:uid => opp).update(:status => opp_status)
 								end
 							else
-								flash[:Fisticuffs] << "<br>Is it okay if I tweet about your victory?<p><a class='btn btn-info' href='#'><span id='victory_tweet'>Tweet</span></a><a class='btn close_btn' href='#'>No, thanks</a></p>"
+								flash[:Fisticuffs] << "<br>Is it okay if I tweet about your victory?<p><a class='btn btn-info' href='#'>No, thanks</a><a class='btn close_btn' href='#'><span id='victory_tweet'>Tweet</span></a></p>"
 							end
 						rescue => e
 							logger.info "main.rb:281"
@@ -306,7 +328,7 @@ class MainController < Controller
 				unless you[:status].include? 'win'
 					fight.where(:uid => you[:uid]).update(:status => nil, :opponent => nil, :weapon => nil, :start => nil)
 				else
-					flash[:Fisticuffs] << "<br>Is it okay if I tweet about your victory?<p><a class='btn btn-info' href='#'><span id='victory_tweet'>Tweet</span></a><a class='btn close_btn' href='#'>No, thanks</a></p>"
+					flash[:Fisticuffs] << "<br>Is it okay if I tweet about your victory?<p><a class='btn btn-info' href='#'>No, thanks</a><a class='btn close_btn' href='#'><span id='victory_tweet'>Tweet</span></a></p>"
 				end
 			end
 		end

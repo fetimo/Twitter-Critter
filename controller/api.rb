@@ -18,20 +18,31 @@ class ApiController < Controller
 		logger = Ramaze::Logger::RotatingInformer.new('./log')
 		if request.get?
 			begin
-				db = Sequel.connect('mysql2://fetimocom1:iBMbSSIz@mysql.fetimo.com/twittercritter')
-				critters = db[:critters]
+				critters = DB[:critters]
 				critter = critters.filter(:name => username).first
 				if request.params['mood']
 					@response = critter[:sentiment]
 					return Yajl::Encoder.encode(@response)
 				else
 					@response = critter[:critter]
-				end
+				end				
 			rescue => error
 				logger.info "error in fetching critter api.rb:21"
 				logger.debug critters
 				logger.debug critter
 				logger.error error.message
+				
+				DB.disconnect
+				DB.connect(
+					:adapter=>'mysql2', 
+					:host=>'mysql.fetimo.com', 
+					:database=>'twittercritter', 
+					:user=>'fetimocom1', 
+					:password=>'iBMbSSIz', 
+					:timeout => 30
+				)
+				sleep 1
+				retry
 			end
 		elsif request.post?
 			unless request.cookies.empty?
@@ -77,6 +88,7 @@ class ApiController < Controller
 	
 	def battle
 		response['Content-Type'] = 'application/json'
+		logger = Ramaze::Logger::RotatingInformer.new('./log')
 		unless request.cookies.empty?
 			fight = DB[:interactions]
 			uid = request.params['uid']
@@ -128,7 +140,36 @@ class ApiController < Controller
 					#update 
 					weapon = request.params['weapon']
 					response = fight.filter(:uid => uid).update(:status => 'ready', :weapon => weapon)
+				elsif request.params['stopFighting']
+					begin
+						DB.transaction do
+							fight.where(:uid => opponent).update(:status => nil, :weapon => nil, :opponent => nil, :start => nil)
+							fight.where(:uid => uid).update(:status => nil, :weapon => nil, :opponent => nil, :start => nil)
+						end
+						
+						response = "Successfully stopped fighting"
 					
+					rescue => e
+						response = "Error: Unable to stop fighting"
+						logger.info response
+						message = e.message
+						logger.debug message
+					end
+				elsif request.params['updateStart']
+					begin
+						DB.transaction do
+							fight.where(:uid => opponent).update(:start => Time.now)
+							fight.where(:uid => uid).update(:start => Time.now)
+						end
+						
+						response = "Successfully updated start time"
+					
+					rescue => e
+						response = "Error: Unable to update start time"
+						logger.info response
+						message = e.message
+						logger.debug message
+					end	
 				elsif request.params['attribute'] and request.params['hash']
 					
 					you = fight.filter(:uid => uid).first
@@ -144,7 +185,7 @@ class ApiController < Controller
 						
 						#insert value into own critter						
 						DB[:critters].filter(:uid => uid).update(attribute => type)
-						you.update(:start => 0)
+						you.update(:start => nil)
 						critter = DB[:critters].filter(:uid => uid).select(:name, :arms, :eye_colour, :ears, :mouth, :legs, :face, :hands, :nose, :body_colour, :body, :body_type, :accessory, :uid).first					
 						critter = Yajl::Encoder.encode(critter)
 						DB[:critters].filter(:uid => uid).update(:critter => critter)
@@ -179,7 +220,7 @@ class ApiController < Controller
 						response = "Successfully hugged!"
 					rescue => e
 						response = e.message
-					end
+					end					
 				else
 					#start new fight
 					weapon = request.params['weapon']
@@ -200,7 +241,7 @@ class ApiController < Controller
 						
 						if check_opp[:opponent] === nil && check_you[:opponent] === nil
 							
-							time = Time.now.to_i
+							time = Time.now
 							
 							critter_exist = 0
 							
