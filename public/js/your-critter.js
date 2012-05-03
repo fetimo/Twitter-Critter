@@ -106,10 +106,10 @@ function build(crit, destination, container) {
 									armG.bezierCurveTo(45,5,4,53,4,53);
 									armG.closePath();
 									var armL = new Shape(armG);
-									armL.x = 50;
+									armL.x = 70;
 									armL.y = 300;
 									var armR = armL.clone();
-									armR.x += 310;
+									armR.x += 260;
 									armR.rotation = 180;
 									armR.skewX = 180;
 									arms.addChild(armL, armR);
@@ -175,6 +175,7 @@ function build(crit, destination, container) {
 									leg.lineTo(286.449,412.373);
 									leg.closePath();
 									legL = new Shape(leg);
+									legL.x = 7;
 									var legR = legL.clone();
 									legR.x = 110;
 									legs.addChild(legL, legR);
@@ -198,6 +199,7 @@ function build(crit, destination, container) {
 									leg.lineTo(286.447,475.619);
 									leg.closePath();
 									legL = new Shape(leg);
+									legL.x = 4;
 									var legR = legL.clone();
 									legR.x = 100;
 									legs.addChild(legL, legR);
@@ -269,6 +271,7 @@ function build(crit, destination, container) {
 									pattern.name = critter[key];
 									pattern.x = -3;
 									preload(pattern.image);
+									console.log(pattern);
 								} else if (critter[key] === 'furry' && pattern && pattern.name === 'spotty') {
 									var pattern = new Bitmap('../images/critter_assets/body_patterns/spots-with-fur.png');
 									
@@ -499,9 +502,9 @@ function build(crit, destination, container) {
 					arms.y = -90;
 					if (body.children[0].name === 'simple') arms.x = -43;
 					if (body.children[0].name === 'simple' && arms.name === 'arms long') arms.x = -20;
-					arms.children[0].regX = 50;
+					arms.children[0].regX = 90;
 					arms.children[0].regY = 40;
-					arms.children[1].regX = 50;
+					arms.children[1].regX = 90;
 					arms.children[1].regY = 40;
 					if (arms.name === 'arms long') { 
 						arms.y = 150;
@@ -512,9 +515,11 @@ function build(crit, destination, container) {
 						arms.children[1].regY = 230;
 					}
 					if (pattern) {
-						pattern.x = -96;
-						pattern.y = -103;
 						body.addChild(pattern);
+						if (pattern.name === 'spotty' && body.children[0].name === 'simple') {
+							pattern.x = -96;
+							pattern.y = -103;
+						}
 					}
 					if (face) {
 						face.x = Math.round(eyes.children[0].image.width/2 + 20);

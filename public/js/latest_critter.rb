@@ -1,14 +1,13 @@
-#response.headers['Content-type'] = 'application/json'
 require 'sequel'
 require 'mysql2'
 
-@db = Sequel.connect('mysql2://fetimocom1:iBMbSSIz@mysql.fetimo.com/twittercritter')
+db = Sequel.connect(:adapter=>'mysql2', :host=>'mysql.fetimo.com', :database=>'twittercritter', :user=>'fetimocom1', :password=>'iBMbSSIz', :timeout => 30)
 		
-@critter = @db[:critters]
+critter = db[:critters]
 
-@max = @critter.max(:id)
+max = critter.max(:id)
 
-@critter = @critter.where('id = ?', @max).first[:critter]
+critter = critter.where('id = ?', max).first[:critter]
 
 local_file = 'latest_critter.json'
 
