@@ -195,9 +195,9 @@ button {
 	padding: .5em;
 	border-radius: 3px;
 	display: none;
-	margin-right: .75em;
+	margin-left: .75em;
 	margin-top: -7px;
-	float: right;
+	float: left;
 	-moz-box-shadow: inset 0 0 2px #000;
 	-webkit-box-shadow: inset 0 0 2px #000;
 	box-shadow: inset 0 0 2px #000;

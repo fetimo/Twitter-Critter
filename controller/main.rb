@@ -343,22 +343,27 @@ class MainController < Controller
 	def evolve(username)
 		
 		if request.post?
-				
-			client = TwitterOAuth::Client.new(
-				:consumer_key => 'DQicogvXxpbW7oleCfV3Q',
-				:consumer_secret => 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
-			)
-			begin
-				request_token = client.authentication_request_token(:oauth_callback => 'http://crittr.me/auth')
-			rescue => e
-				logger.info "getting request_token main.rb:330"
-				logger.error e.message
-				sleep 5
-				retry
-			end	
-			session[:request_token] = request_token
 			
-			redirect request_token.authorize_url
+			begin
+				client = TwitterOAuth::Client.new(
+					:consumer_key => 'DQicogvXxpbW7oleCfV3Q',
+					:consumer_secret => 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
+				)
+				begin
+					request_token = client.authentication_request_token(:oauth_callback => 'http://crittr.me/auth')
+				rescue => e
+					logger.info "getting request_token main.rb:330"
+					logger.error e.message
+					sleep 5
+					retry
+				end	
+				session[:request_token] = request_token
+				
+				redirect request_token.authorize_url
+			rescue OAuth::Unauthorized
+				flash[:error] = 'You were unauthorized by Twitter :('
+				redirect MainController.r(:index)
+			end
 		end
 	end
 		
@@ -406,7 +411,6 @@ class MainController < Controller
 	def error_404
 		render_file("#{Ramaze.options.views[0]}/not-found.xhtml")
 	end
-	
 	
 	# the string returned at the end of the function is used as the html body
 	# if there is no template for the action. if there is a template, the string
