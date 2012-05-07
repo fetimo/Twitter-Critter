@@ -1,0 +1,36 @@
+[2012-05-07 21:08:37] INFO   fetching critter from db main.rb:111
+[2012-05-07 21:08:37] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-07 21:13:59] INFO   fetching critter from db main.rb:111
+[2012-05-07 21:13:59] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-07 21:16:53] INFO   fetching critter from db main.rb:111
+[2012-05-07 21:16:53] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-07 21:21:33] INFO   fetching critter from db main.rb:111
+[2012-05-07 21:21:33] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-07 21:22:45] INFO   fetching critter from db main.rb:111
+[2012-05-07 21:22:45] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-07 21:25:10] INFO   fetching critter from db main.rb:111
+[2012-05-07 21:25:10] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-07 21:28:29] INFO   fetching critter from db main.rb:111
+[2012-05-07 21:28:29] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-07 21:33:12] INFO   fetching critter from db main.rb:111
+[2012-05-07 21:33:12] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-07 21:37:37] INFO   fetching critter from db main.rb:111
+[2012-05-07 21:37:37] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-07 21:53:15] INFO   error in fetching critter api.rb:21
+[2012-05-07 21:53:15] DEBUG  #<Sequel::Mysql2::Dataset: "SELECT * FROM `critters`">
+[2012-05-07 21:53:15] DEBUG  nil
+[2012-05-07 21:53:15] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-07 21:55:23] INFO   fetching critter from db main.rb:111
+[2012-05-07 21:55:23] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-07 21:59:06] INFO   fetching critter from db main.rb:111
+[2012-05-07 21:59:06] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-07 22:08:36] INFO   fetching critter from db main.rb:111
+[2012-05-07 22:08:36] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-07 22:31:42] INFO   fetching critter from db main.rb:111
+[2012-05-07 22:31:42] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-07 22:34:31] INFO   fetching critter from db main.rb:111
+[2012-05-07 22:34:31] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-07 22:37:58] INFO   fetching critter from db main.rb:111
+[2012-05-07 22:37:58] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-07 22:39:45] INFO   fetching critter from db main.rb:111
+[2012-05-07 22:39:45] ERROR  Mysql2::Error: MySQL server has gone away

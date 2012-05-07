@@ -198,7 +198,10 @@ function animateArms(critter) {
 			if (lArm.scaleY > -1) lArm.scaleY -= .4;
 			if (oscillate) {
 				lArm.rotation += 5;
-				if (lArm.rotation > 60) { oscillate = false; wave += 1; }
+				if (lArm.rotation > 60) { 
+					oscillate = false; 
+					wave += 1; 
+				}
 			} else if (!oscillate){
 				lArm.rotation -= 5;
 				if (lArm.rotation <= 0) { oscillate = true; }
@@ -552,8 +555,6 @@ function jumpOutScene() {
 function tick() {
 	var yours = critterApp.yours();
 	
-	//console.log(yours.getContainer().x, hugFriend);
-	
 	//only animate some of the time
 	if (Math.round(Math.random()*40) === 4) { //http://xkcd.com/221/
 		animateEyes(yours.getContainer());
@@ -581,7 +582,7 @@ function tick() {
 			}
 		}
 	}
-		
+	
 	if (yours.getContainer().x < 70) yours.getContainer().x += 10;
 		
 	if (yours.getContainer().y < yours.getContainer().targetY) yours.getContainer().y += 10.6;

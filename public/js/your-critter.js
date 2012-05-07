@@ -223,7 +223,7 @@ function build(crit, destination, container) {
 									var mouth;
 
 									$.ajax({
-										url: "http://crittr.me/api/critters/" + crit.attributes.name + "?mood=true"
+										url: "/api/critters/" + crit.attributes.name + "?mood=true"
 									}).done(function(response) {
 										sentiment = response;
 										if(sentiment === 'smile') {
@@ -239,7 +239,7 @@ function build(crit, destination, container) {
 								} else {					
 									//determine happy/sad
 									$.ajax({
-										url: "http://crittr.me/api/critters/" + crit.attributes.name + "?mood=true"
+										url: "/api/critters/" + crit.attributes.name + "?mood=true"
 									}).done(function(response) {
 										sentiment = response;
 										positionMouth();
@@ -503,17 +503,17 @@ function build(crit, destination, container) {
 					arms.y = -90;
 					if (body.children[0].name === 'simple') arms.x = -43;
 					if (body.children[0].name === 'simple' && arms.name === 'arms long') arms.x = -20;
-					arms.children[0].regX = 90;
-					arms.children[0].regY = 40;
-					arms.children[1].regX = 90;
-					arms.children[1].regY = 40;
+					arms.children[0].regX = 60;
+					arms.children[0].regY = 30;
+					arms.children[1].regX = 60;
+					arms.children[1].regY = 30;
 					if (arms.name === 'arms long') { 
 						arms.y = 150;
 						arms.x += 40;
-						arms.children[0].regX = 125;
-						arms.children[0].regY = 230;
-						arms.children[1].regX = 125;
-						arms.children[1].regY = 230;
+						arms.children[0].regX = 120;
+						arms.children[0].regY = 240;
+						arms.children[1].regX = 120;
+						arms.children[1].regY = 240;
 					}
 					if (pattern) {
 						body.addChild(pattern);
@@ -610,11 +610,11 @@ function build(crit, destination, container) {
 					
 					container.name = crit.get('name');
 					container.uid = crit.get('uid'); //used when you win a battle and tweet
-					container.addChild(legs, body, eyes, arms);
+					container.addChild(legs, body, eyes);
 					if (face) container.addChild(face);
 					if (ears) container.addChild(ears);
 					if (accessory) if (accessory.name !== 'tail') container.addChild(accessory);
-					
+					container.addChild(arms);
 					destination.removeAllChildren();		
 					
 					function waitForTail() {
