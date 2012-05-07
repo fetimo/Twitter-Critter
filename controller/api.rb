@@ -39,48 +39,74 @@ class ApiController < Controller
 					:database=>'twittercritter', 
 					:user=>'fetimocom1', 
 					:password=>'iBMbSSIz', 
-					:timeout => 30
+					:timeout => 60
 				)
 				sleep 1
 				retry
 			end
 		elsif request.post?
 			unless request.cookies.empty?
-				critters = DB[:critters]
-				@response = critters.filter(:name => username).delete
-				
-				@default_critter = {
-					#default values
-					:name => 'Steve',
-					:arms => 'short',
-					:eye_colour => 'blue',
-					:nose => 'none',
-					:legs => 'short',
-					:ears => 'none',
-					:face => 'none',
-					:hands => 'none',
-					:mouth => 'plain',
-					:accessory => 'none',
-					:body => 'plain',
-					:body_colour => 'orange',
-					:body_type => 'simple',
-					:critter => '',
-					:uid => 0
-				}
-				
-				require File.join(File.dirname(__FILE__), 'critter_algorithm')
-				
-				begin
-					@data = Twitter.user_timeline(username).first.text
-					user_info = Twitter.users(username)
-					uid = user_info[0].id
-				rescue
-					#useful for if user 404s or Twitter offline
-					redirect MainController.r(:critter, @user[:username])
+				if request.params['invitee']
+					
+					invitee = request.params['invitee']
+					
+					#check if invitee is a twitter user
+					Twitter.configure do |config|
+						config.consumer_key = 'DQicogvXxpbW7oleCfV3Q'
+						config.consumer_secret = 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
+						config.oauth_token = session[:access_token][:oauth_token]
+						config.oauth_token_secret = session[:access_token][:oauth_token_secret]
+					end
+					
+					begin
+						Twitter.user(invitee)
+						@response = "all ok"
+					rescue Twitter::Error::NotFound
+						@response = "Error: Twitter user not found"
+					rescue Twitter::Error
+						@response = "Error: There was a problem with Twitter"
+					rescue
+						@response = "Error: There was an error"
+					end
+					
+					Twitter.update("@#{invitee} join me on http://crittr.me/ :)")
+				else
+					critters = DB[:critters]
+					@response = critters.filter(:name => username).delete
+					
+					@default_critter = {
+						#default values
+						:name => 'Steve',
+						:arms => 'short',
+						:eye_colour => 'blue',
+						:nose => 'none',
+						:legs => 'short',
+						:ears => 'none',
+						:face => 'none',
+						:hands => 'none',
+						:mouth => 'plain',
+						:accessory => 'none',
+						:body => 'plain',
+						:body_colour => 'orange',
+						:body_type => 'simple',
+						:critter => '',
+						:uid => 0
+					}
+					
+					require File.join(File.dirname(__FILE__), 'critter_algorithm')
+					
+					begin
+						@data = Twitter.user_timeline(username).first.text
+						user_info = Twitter.users(username)
+						uid = user_info[0].id
+					rescue
+						#useful for if user 404s or Twitter offline
+						redirect MainController.r(:critter, @user[:username])
+					end
+					
+					generate = Critter.new(@data, username, @default_critter, uid)
+					@response = generate.critter
 				end
-				
-				generate = Critter.new(@data, username, @default_critter, uid)
-				@response = generate.critter
 			end
 		end
 		@response 

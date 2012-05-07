@@ -50,7 +50,7 @@ var critterApp = (function() {
 	function getTheirs() {
 		return friend;
 	}
-	
+		
 	function getYourCritterModel() {
 		return your_critter;
 	}
@@ -72,8 +72,14 @@ var critterApp = (function() {
 	}
 	
 	function setFriend(newFriend) {
-		friend = newFriend;
+		var friend = newFriend;
 		return friend;
+	}
+	
+	function screenshot() {
+		var canvas 	= document.getElementById("your-critter"),
+			img		= canvas.toDataURL("image/png");
+		return img;
 	}
 	
 	return {
@@ -85,7 +91,8 @@ var critterApp = (function() {
 		model		: getCritterModel,
 		critter		: newCritter,
 		yourModel	: getYourCritterModel,
-		setFriend	: setFriend
+		setFriend	: setFriend,
+		getImage	: screenshot
 	}
 }());
 

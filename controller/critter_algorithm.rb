@@ -163,14 +163,22 @@ class Critter
 	def make_critter(matched, hash)
 		critter = hash.merge!(matched)
 				
-		db = Sequel.connect('mysql2://fetimocom1:iBMbSSIz@mysql.fetimo.com/twittercritter')
-		critters = db[:critters]
+		DB.connect(
+			:adapter=>'mysql2', 
+			:host=>'mysql.fetimo.com', 
+			:database=>'twittercritter', 
+			:user=>'fetimocom1', 
+			:password=>'iBMbSSIz', 
+			:timeout => 60
+		)
+		critters = DB[:critters]
 		
 		critter = Yajl::Encoder.encode(critter)
 		@default_critter[:critter] = critter
 		
 		Thread.new do
 			critters.insert(@default_critter)
+			DB.disconnect
 		end
 		
 		critter

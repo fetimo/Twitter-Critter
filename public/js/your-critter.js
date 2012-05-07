@@ -218,6 +218,7 @@ function build(crit, destination, container) {
 								}
 							break;
 							case 'mouth':
+								var mouthLoaded = false;
 								if (critter[key] === 'fangs') {
 									var mouth;
 
@@ -309,7 +310,7 @@ function build(crit, destination, container) {
 						mouth.y += 20;
 					}
 					if (body.children[0].name === 'furry') {
-						mouth.x = Math.round(eyes.children[0].image.width/2) + 20;
+						mouth.x = 111;
 						if (eyes.name === 'eyes small_black') {
 							mouth.x = 110;
 							mouth.y = 230;
@@ -322,6 +323,7 @@ function build(crit, destination, container) {
 							mouth.y += 20;
 						}
 					}
+					mouthLoaded = true;
 				}
 												
 				function setColour(colour, body) {					
@@ -518,6 +520,10 @@ function build(crit, destination, container) {
 						if (pattern.name === 'spotty' && body.children[0].name === 'simple') {
 							pattern.x = -96;
 							pattern.y = -103;
+						} else if (body.children[0].name === 'simple' && pattern.name === 'stripy') {
+							pattern.snapToPixel = false;
+							pattern.x = -98;
+							pattern.y = -101.5;
 						}
 					}
 					if (face) {
@@ -592,13 +598,11 @@ function build(crit, destination, container) {
 						}
 					}
 					
-					//container.y = 0;
 					container.targetY = 70;
-					//container.x = 100;
 					if (legs.name === 'short') {
 						container.targetY = 123;
 						if (body.children[0].name === 'simple') {
-							container.targetY = container.y + 57;
+							container.targetY = 185;
 						}
 					}
 					
@@ -608,60 +612,82 @@ function build(crit, destination, container) {
 					container.uid = crit.get('uid'); //used when you win a battle and tweet
 					container.addChild(legs, body, eyes, arms);
 					if (face) container.addChild(face);
-					if (mouth) container.addChild(mouth);
 					if (ears) container.addChild(ears);
 					if (accessory) if (accessory.name !== 'tail') container.addChild(accessory);
 					
 					destination.removeAllChildren();		
 					
 					function waitForTail() {
-						if (!tailLoaded) {
+						if (!tailLoaded && !mouthLoaded) {
 							_.delay(waitForTail, 100);
 						} else {
 							$('.loader').fadeOut(750, function() {
 								$('.loader').css('visibility', 'hidden');
 							});
+							container.addChild(mouth);
 							destination.addChild(container);
 						}
 					}
 					
+					function waitForMouth() {
+						if (!mouthLoaded) {
+							_.delay(waitForTail, 100);
+						} else {
+							$('.loader').fadeOut(750, function() {
+								$('.loader').css('visibility', 'hidden');
+							});
+							if (!accessory) {
+								container.addChild(mouth);
+								destination.addChild(container);
+							} else {
+								waitForTail();
+							}
+						}
+					}
+															
 					if (sentiment) {
-						if (accessory && accessory.name === 'tail' && tailLoaded) {
+						if (accessory && accessory.name === 'tail' && tailLoaded && mouthLoaded) {
 							$('.loader').fadeOut(750, function() {
 								$('.loader').css('visibility', 'hidden');
 							});
+							container.addChild(mouth);
 							destination.addChild(container);
-						} else if (accessory && accessory.name !== 'tail') {
+						} else if (accessory && accessory.name !== 'tail' && mouthLoaded) {
 							$('.loader').fadeOut(750, function() {
 								$('.loader').css('visibility', 'hidden');
 							});
+							container.addChild(mouth);
 							destination.addChild(container);
-						} else if (!accessory) {
+						} else if (!accessory && mouthLoaded) {
 							$('.loader').fadeOut(750, function() {
 								$('.loader').css('visibility', 'hidden');
 							});
+							container.addChild(mouth);
 							destination.addChild(container);
 						} else {
-							//loop until tailLoaded === true
-							waitForTail();
+							//loop until tailLoaded, mouthLoaded === true
+							if (accessory) waitForTail();
+							waitForMouth();
 						}
 					} else {
 						//loop until sentiment is defined
 						function getSentiment() {
 							if (!sentiment) { 
 								_.delay(getSentiment, 100);
-							} else if (!accessory || accessory.name !== 'tail') {
+							} else if (!accessory || accessory.name !== 'tail' && mouthLoaded) {
 								$('.loader').fadeOut(750, function() {
 									$('.loader').css('visibility', 'hidden');
 								});
+								container.addChild(mouth);
 								destination.addChild(container);
 							} else {
-								waitForTail();
+								if (accessory) waitForTail();
+								waitForMouth();
 							}
 						}
 						getSentiment();
 					}
-					
+										
 					// tickle your critter!
 					container.onClick = function () {
 						container.id === 7 ? jiggle = true : jiggleTheirs = true;

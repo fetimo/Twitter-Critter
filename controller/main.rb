@@ -26,7 +26,7 @@ class MainController < Controller
 	set_layout 'index' => [:index]
 	
 	trait :flashbox => "<div id='flash_%key' class='alert alert-info fade in %key'><a class='close' data-dismiss='alert'>&times;</a><p><strong>%key</strong> %value</p></div>"
-	
+		
 	def show_flashbox
     	flashbox
     end
@@ -35,6 +35,9 @@ class MainController < Controller
 	end
 	
 	def user(username = nil)
+		
+		logger = Ramaze::Logger::RotatingInformer.new('./log')
+
 		@user = ::User.new
 		if request.post?
 			#gets username from posted query string, uses this to get tweet from timeline
@@ -57,9 +60,23 @@ class MainController < Controller
 		end
 
 		critter_exist = 0
-		
-		DB[:critters].filter(:uid => uid).each do |row|
-			critter_exist += 1
+		begin
+			DB[:critters].filter(:uid => uid).each do |row|
+				critter_exist += 1
+			end
+		rescue => e
+			DB.disconnect
+			DB.connect(
+				:adapter=>'mysql2', 
+				:host=>'mysql.fetimo.com', 
+				:database=>'twittercritter', 
+				:user=>'fetimocom1', 
+				:password=>'iBMbSSIz', 
+				:timeout => 60
+			)
+			retry
+			logger.info "checking critter exists main.rb:75"
+			logger.info e.message
 		end
 		
 		sleep 1.5 #allow for db to be queried
@@ -102,10 +119,10 @@ class MainController < Controller
 	end
 	
 	def critter(username)
-		@username = username
 		
 		logger = Ramaze::Logger::RotatingInformer.new('./log')
-		
+		@username = username
+				
 		begin
 			critters = DB[:critters]
 			@critter = critters.filter(:name => username).first
@@ -119,7 +136,7 @@ class MainController < Controller
 				:database=>'twittercritter', 
 				:user=>'fetimocom1', 
 				:password=>'iBMbSSIz', 
-				:timeout => 30
+				:timeout => 60
 			)
 			sleep 1
 			retry

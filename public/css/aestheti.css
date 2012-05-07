@@ -260,6 +260,15 @@ canvas {
 	color: #9f682f;
 }
 
+.friends.invite {
+	width: 50px;
+	float: right;
+}
+
+.invite input {
+	border-radius: 4px;
+}
+
 footer {
 	width: 35%;
 	margin: 1em auto;
@@ -271,6 +280,10 @@ footer {
 footer p.copyright {
 	font-size: 80%;
 	line-height: 1.2em;
+}
+
+footer p.copyright img {
+	padding-top: .75em;
 }
 
 footer a {

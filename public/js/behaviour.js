@@ -7,7 +7,7 @@ $(document).ready(function() {
 			event.target.parentNode.className += " active";
 		
 		if (critterApp.theirStage().children.length) jumpOut = true;
-		if (!jumpOut || theirs.getContainer().y <= -200) {
+		if (!jumpOut || theirs.getContainer().y <= -100) {
 			jumpOut = false;
 			var username = event.currentTarget.id;
 			if (theirs) {
@@ -253,12 +253,39 @@ $(document).ready(function() {
 		});
 	}
 	
+	function invite() {
+		var change_exist = false;
+		var alert = document.createElement('div'),
+			root = $('.alerts')[0];
+		alert.className = 'alert alert-info';
+		alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Type the name of the friend that you\'d like to invite to Critter (this will send a tweet from your account).</p> \
+		<input id="invitee" type="text" placeholder="Friend\'s username" required> \
+		<a id="invite-btn" class="btn btn-info" href="#">Invite</a>';
+		$('.alert').each(function () {
+			if (this.innerHTML === alert.innerHTML) change_exist = true;	
+		});
+		//if there isn't, append the new alert
+		if (!change_exist) root.appendChild(alert);
+		$('#invite-btn').on('click', function(evt) {
+			var invitee = $('#invitee').val();
+			$.ajax({
+				type: 'POST',
+				url: 'http://crittr.me/api/critters/' + username +'?invitee='+invitee,
+				success: function(e) {
+					//change = true;
+				}
+			});
+		});
+		$(alert).slideToggle(750);
+	}
+	
 	// click handlers	
 	$('#fisticuffs').on('click', prepFight);
 	$('.friend').on('click', loadFriend);
 	$('#hug').on('click', stopFighting);
 	$('#change').on('click', changeCritter);
-	
+	$('.invite').on('click', invite);
+		
 	if ($('.Fisticuffs').length) {
 		$('.Fisticuffs a.btn-success').on('click', prepFightRetaliate);
 		$('.Fisticuffs a.btn-danger').on('click', runAway);

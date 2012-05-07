@@ -2,14 +2,27 @@ require 'ramaze'
 require 'sequel'
 require 'mysql2'
 
-DB = Sequel.connect(
-	:adapter=>'mysql2', 
-	:host=>'mysql.fetimo.com', 
-	:database=>'twittercritter', 
-	:user=>'fetimocom1', 
-	:password=>'iBMbSSIz', 
-	:timeout => 30
-)
+begin
+	DB = Sequel.connect(
+		:adapter=>'mysql2', 
+		:host=>'mysql.fetimo.com', 
+		:database=>'twittercritter', 
+		:user=>'fetimocom1', 
+		:password=>'iBMbSSIz', 
+		:timeout => 60
+	)
+rescue
+	DB.disconnect
+	DB.connect(
+		:adapter=>'mysql2', 
+		:host=>'mysql.fetimo.com', 
+		:database=>'twittercritter', 
+		:user=>'fetimocom1', 
+		:password=>'iBMbSSIz', 
+		:timeout => 60
+	)
+	retry
+end
 
 Ramaze.options.mode = :live
 Ramaze.options.app.name = 'crittr.me'
@@ -35,13 +48,14 @@ Ramaze::Cache.options.view = Ramaze::Cache::MemCache.using(
 )
 
 #Setup database caching
-#Ramaze::Cache.options.names.push(:sequel)
-#Ramaze::Cache.options.sequel = Ramaze::Cache::Sequel.using(
-#	:connection => Sequel.mysql(
-#		:adapter  => 'mysql2',
-#		:host     => 'mysql.fetimo.com',
-#		:user     => 'fetimocom1',
-#		:password => 'iBMbSSIz',
-#		:database => 'twittercritter'
-#	)
-#)
+Ramaze::Cache.options.names.push(:sequel)
+Ramaze::Cache.options.sequel = Ramaze::Cache::Sequel.using(
+	:connection => Sequel.mysql(
+		:adapter  => 'mysql2',
+		:host     => 'mysql.fetimo.com',
+		:user     => 'fetimocom1',
+		:password => 'iBMbSSIz',
+		:database => 'twittercritter',
+		:timeout => 60
+	)
+)

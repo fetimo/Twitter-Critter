@@ -544,7 +544,7 @@ var rps = (function() {
 function jumpOutScene() {
 	theirs.getContainer().x += 20;
 	theirs.getContainer().y -= 10.6;
-	if (theirs.getContainer().y < -200) {
+	if (theirs.getContainer().y < -100) {
 		jumpOut = false;
 	}
 }
@@ -568,7 +568,7 @@ function tick() {
 		
 		if (theirs.getContainer().x > 100 && !jumpOut) theirs.getContainer().x -= 10;
 		
-		if (theirs.getContainer().y < theirs.getContainer().targetY && !jumpOut) theirs.getContainer().y += 10.6;
+		if (theirs.getContainer().y < theirs.getContainer().targetY && !jumpOut) theirs.getContainer().y += 10;
 		
 		if (Math.round(Math.random()*40) === 4) {
 			animateEyes(theirs.getContainer());
