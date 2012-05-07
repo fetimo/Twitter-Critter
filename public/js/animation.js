@@ -110,8 +110,8 @@ function hug(critter) {
 		if (wave === 42 && arms) {
 			//sidle next to them
 			//raise arm
-			var lArm = arms.children[0];
-			var rArm = arms.children[1];
+			var lArm = arms.children[0],
+				rArm = arms.children[1];
 			
 			if (rArm.rotation >= 360) rArm.rotation = 0;
 			if (lArm.rotation >= 360) lArm.rotation = 0;
@@ -552,6 +552,8 @@ function jumpOutScene() {
 function tick() {
 	var yours = critterApp.yours();
 	
+	//console.log(yours.getContainer().x, hugFriend);
+	
 	//only animate some of the time
 	if (Math.round(Math.random()*40) === 4) { //http://xkcd.com/221/
 		animateEyes(yours.getContainer());
@@ -563,10 +565,10 @@ function tick() {
 	}
 	
 	if (theirs && theirs.getArms()) {
-			
+		
 		animateArms(theirs.getContainer());
 		
-		if (theirs.getContainer().x > 100 && !jumpOut) theirs.getContainer().x -= 10;
+		if (theirs.getContainer().x > 100 && !jumpOut && !hugFriend) theirs.getContainer().x -= 10;
 		
 		if (theirs.getContainer().y < theirs.getContainer().targetY && !jumpOut) theirs.getContainer().y += 10;
 		
@@ -580,7 +582,7 @@ function tick() {
 		}
 	}
 		
-	if (yours.getContainer().x < 100) yours.getContainer().x += 10;
+	if (yours.getContainer().x < 70) yours.getContainer().x += 10;
 		
 	if (yours.getContainer().y < yours.getContainer().targetY) yours.getContainer().y += 10.6;
 	

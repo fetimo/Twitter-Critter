@@ -60,7 +60,13 @@ class ApiController < Controller
 					
 					begin
 						Twitter.user(invitee)
-						@response = "all ok"
+						if username == invitee
+							@response = 'Error: There\'s no sense in inviting yourself!'
+						else
+							Twitter.update("@#{invitee} join me on http://crittr.me/ :)")
+							@response = "all ok"
+						end
+						
 					rescue Twitter::Error::NotFound
 						@response = "Error: Twitter user not found"
 					rescue Twitter::Error
@@ -69,7 +75,6 @@ class ApiController < Controller
 						@response = "Error: There was an error"
 					end
 					
-					Twitter.update("@#{invitee} join me on http://crittr.me/ :)")
 				else
 					critters = DB[:critters]
 					@response = critters.filter(:name => username).delete

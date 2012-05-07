@@ -56,7 +56,7 @@ $(document).ready(function() {
 	}
 	
 	function stopFighting() {			
-		if (typeof friend === 'undefined') var friend = critterApp.theirs();
+		var friend = friend || critterApp.theirs();
 		hugFriend = true;
 		
 		$.ajax({
@@ -258,7 +258,7 @@ $(document).ready(function() {
 		var alert = document.createElement('div'),
 			root = $('.alerts')[0];
 		alert.className = 'alert alert-info';
-		alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Type the name of the friend that you\'d like to invite to Critter (this will send a tweet from your account).</p> \
+		alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Type the name of the friend that you\'d like to invite to Critter (this will send a tweet from your account):</p> \
 		<input id="invitee" type="text" placeholder="Friend\'s username" required> \
 		<a id="invite-btn" class="btn btn-info" href="#">Invite</a>';
 		$('.alert').each(function () {
@@ -271,11 +271,32 @@ $(document).ready(function() {
 			$.ajax({
 				type: 'POST',
 				url: 'http://crittr.me/api/critters/' + username +'?invitee='+invitee,
-				success: function(e) {
-					//change = true;
+				complete: function(response) {
+					var callback_alert = document.createElement('div');
+					if (response.responseText.substring(0,5) !== 'Error') {
+						//not an error, can show tweet related things
+						callback_alert.className = 'alert alert-info';
+						callback_alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Type the name of the friend that you\'d like to invite to Critter (this will send a tweet from your account):</p> \
+						<input id="invitee" type="text" placeholder="Friend\'s username" required> \
+						<a id="invite-btn" class="btn btn-info" href="#">Invite</a>';
+					} else {
+						//there be errors
+						callback_alert.className = 'alert alert-error';			
+						callback_alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p><strong>Error!</strong> ' + response.responseText.substring(7) + '.</p>';
+					}
+					
+					$('.alert').each(function () {
+						if (this.innerHTML === callback_alert.innerHTML) change_exist = true;	
+					});
+					//if there isn't, append the new alert
+					if (!change_exist) {
+						root.appendChild(callback_alert);
+						$(callback_alert).slideToggle(750);
+					}
 				}
 			});
 		});
+		
 		$(alert).slideToggle(750);
 	}
 	

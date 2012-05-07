@@ -72,7 +72,7 @@ var critterApp = (function() {
 	}
 	
 	function setFriend(newFriend) {
-		var friend = newFriend;
+		friend = newFriend;
 		return friend;
 	}
 	
