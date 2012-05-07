@@ -276,9 +276,7 @@ $(document).ready(function() {
 					if (response.responseText.substring(0,5) !== 'Error') {
 						//not an error, can show tweet related things
 						callback_alert.className = 'alert alert-info';
-						callback_alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Type the name of the friend that you\'d like to invite to Critter (this will send a tweet from your account):</p> \
-						<input id="invitee" type="text" placeholder="Friend\'s username" required> \
-						<a id="invite-btn" class="btn btn-info" href="#">Invite</a>';
+						callback_alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Your invite has been tweeted! :)</p>';
 					} else {
 						//there be errors
 						callback_alert.className = 'alert alert-error';			

@@ -47,9 +47,9 @@ class ApiController < Controller
 		elsif request.post?
 			unless request.cookies.empty?
 				if request.params['invitee']
-					
 					invitee = request.params['invitee']
-					
+					invitee.delete!('@')
+
 					#check if invitee is a twitter user
 					Twitter.configure do |config|
 						config.consumer_key = 'DQicogvXxpbW7oleCfV3Q'
