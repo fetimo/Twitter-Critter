@@ -1,5 +1,5 @@
 /* @group Reset */
-html, body, a, input, div, section, form, img, label, video, ul, li {
+html, body, a, p, input, div, section, form, img, label, video, ul, li {
 	margin: 0;
 	padding: 0;
 	border: 0;
