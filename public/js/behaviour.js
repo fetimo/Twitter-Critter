@@ -7,8 +7,9 @@ $(document).ready(function() {
 			event.target.parentNode.className += " active";
 		
 		if (critterApp.theirStage().children.length) jumpOut = true;
-		if (!jumpOut || theirs.getContainer().y <= -100) {
+		if (!jumpOut || theirs.getContainer().x >= 500) {
 			jumpOut = false;
+			oscillateJump = true;
 			var username = event.currentTarget.id;
 			if (theirs) {
 				theirs.getContainer().removeAllChildren();
@@ -259,7 +260,7 @@ $(document).ready(function() {
 			root = $('.alerts')[0];
 		alert.className = 'alert alert-info';
 		alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Type the name of the friend that you\'d like to invite to Critter (this will send a tweet from your account):</p> \
-		<input id="invitee" type="text" placeholder="Friend\'s username" required> \
+		<input id="invitee" type="text" placeholder="Friend\'s @username" required> \
 		<a id="invite-btn" class="btn btn-info" href="#">Invite</a>';
 		$('.alert').each(function () {
 			if (this.innerHTML === alert.innerHTML) change_exist = true;	

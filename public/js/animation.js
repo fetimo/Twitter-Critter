@@ -3,6 +3,7 @@ var wave = 0,
 	oscillate = true,
 	oscillateHug = true,
 	oscillateTheirs = true,
+	oscillateJump = true,
 	hugFriend = false,
 	jiggle = false,
 	jiggleTheirs = false,
@@ -546,10 +547,15 @@ var rps = (function() {
 
 function jumpOutScene() {
 	theirs.getContainer().x += 20;
-	theirs.getContainer().y -= 10.6;
-	if (theirs.getContainer().y < -100) {
-		jumpOut = false;
-	}
+	if (oscillateJump) { 
+		theirs.getContainer().y -= 5;
+		if (theirs.getContainer().y < 30) oscillateJump = false;
+	} else if (!oscillateJump) {
+		theirs.getContainer().y += 5;
+		if (theirs.getContainer().y >= 120) oscillateJump = true;
+	}	
+	if (theirs.getContainer().children[0].skewX < 6 && theirs.getContainer().children[0].skewX >= 1) theirs.getContainer().children[0].skewX += 1;
+	if (theirs.getContainer().x > 500) jumpOut = false;
 }
 
 function tick() {
@@ -573,6 +579,8 @@ function tick() {
 		
 		if (theirs.getContainer().y < theirs.getContainer().targetY && !jumpOut) theirs.getContainer().y += 10;
 		
+		if (theirs.getContainer().children[0].skewX > 1 && !jumpOut && !hugFriend) theirs.getContainer().children[0].skewX -= 1; //move legs with jumping in
+		
 		if (Math.round(Math.random()*40) === 4) {
 			animateEyes(theirs.getContainer());
 			if (jiggleTheirs) jiggleTheirs = false;
@@ -586,6 +594,8 @@ function tick() {
 	if (yours.getContainer().x < 70) yours.getContainer().x += 10;
 		
 	if (yours.getContainer().y < yours.getContainer().targetY) yours.getContainer().y += 10.6;
+	
+	if (yours.getContainer().children[0].skewX > 1) yours.getContainer().children[0].skewX -= 1; //move legs with jumping in
 	
 	if (critterApp.yours()) animateArms(yours.getContainer());
 

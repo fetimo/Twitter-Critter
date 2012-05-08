@@ -1,5 +1,5 @@
 /* @group Reset */
-html, body, a, fieldset, div, section, form, img, label, legend, video {
+html, body, a, input, div, section, form, img, label, video, ul, li {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -20,6 +20,11 @@ body {
 a {
 	text-decoration: none;
 	color: inherit;
+	margin:0;
+    padding:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
 }
 
 ul, ol {
@@ -638,4 +643,8 @@ footer a {
 
 .tree#left-tree {
 	left: 0;
+}
+
+#invitee {
+	border-bottom: 2px solid #212121;
 }

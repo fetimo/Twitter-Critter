@@ -1,0 +1,12 @@
+[2012-05-08 15:31:16] INFO   fetching critter from db main.rb:111
+[2012-05-08 15:31:16] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-08 15:33:20] INFO   fetching critter from db main.rb:111
+[2012-05-08 15:33:20] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-08 15:36:06] INFO   fetching critter from db main.rb:111
+[2012-05-08 15:36:06] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-08 15:38:22] INFO   fetching critter from db main.rb:111
+[2012-05-08 15:38:22] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-08 15:40:49] INFO   fetching critter from db main.rb:111
+[2012-05-08 15:40:49] ERROR  Mysql2::Error: MySQL server has gone away
+[2012-05-08 15:43:23] INFO   fetching critter from db main.rb:111
+[2012-05-08 15:43:23] ERROR  Mysql2::Error: MySQL server has gone away

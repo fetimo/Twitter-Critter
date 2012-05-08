@@ -499,6 +499,7 @@ function build(crit, destination, container) {
 						legs.x = -150;
 						legs.y = -105;
 					}
+					legs.skewX = 10;
 					arms.x = -20;
 					arms.y = -90;
 					if (body.children[0].name === 'simple') arms.x = -43;
@@ -689,7 +690,7 @@ function build(crit, destination, container) {
 					}
 										
 					// tickle your critter!
-					container.onClick = function () {
+					container.onClick = function() {
 						container.id === 7 ? jiggle = true : jiggleTheirs = true;
 					};
 												
