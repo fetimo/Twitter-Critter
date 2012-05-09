@@ -212,7 +212,6 @@ function animateArms(critter) {
 			if (lArm.rotation > 0) lArm.rotation -= 5;
 			if (lArm.scaleY === 1 && lArm.rotation === 0) wave = 42; // 42 = waving has finished, used by hug(), dirty reuse of a variable
 		}
-		//arms.uncache();
 	} else {
 		if (jiggle && !hugFriend && critter.id === 7 && arms) {			
 			//jiggle arms
@@ -266,23 +265,21 @@ var rps = (function() {
 		rps.scaleY = .5;
 		rps.name = graphic.name;
 		if (rps.name === 'rock') {
-			rps.rotation = -45;
-			rps.regX = 25;
-			rps.regY = 15;
-			rps.x = 50;
+			rps.x = 40;
+			rps.y = 300;
 		} else if (rps.name === 'paper') {
 			rps.skewX = 200;
 			rps.skewY = 30;
 			rps.scaleX = -.5;
 			rps.scaleY = -.5;
-			rps.x = 120;
+			rps.x = 100;
+			rps.y = 350;
 		} else {
-			rps.x = 25;
-			rps.regY = -60;
-			rps.regX = 60;
-			rps.rotation = -30;
+			rps.y = 420;
+			rps.x = 60;
+			rps.rotation = -90;
 		}
-		critterApp.yourStage().addChild(rps);
+		critterApp.yours().getArms().children[0].addChild(rps);
 		weapon = rps;
 		return rps;
 	}
@@ -292,7 +289,7 @@ var rps = (function() {
 	}
 	
 	function removeWeapon() {
-		var remove = critterApp.yourStage().removeChild(weapon);
+		var remove = critterApp.yours().getArms().children[0].removeChild(weapon);
 		weapon = null;
 		return remove;
 	}
@@ -601,17 +598,18 @@ function tick() {
 
 	if (hugFriend) hug(yours.getContainer());
 	
-	if (rps.get() !== null) {
-		var index = critterApp.yourStage().children.length - 1;
-		//can be fairly certain it was the last thing added		
-		if (critterApp.yourStage().children[index].name === 'rock') {
-			critterApp.yourStage().children[index].y = yours.getArms().children[0]._matrix.ty + 80;
-		} else if (critterApp.yourStage().children[index].name === 'paper') {
-			critterApp.yourStage().children[index].y = yours.getArms().children[0]._matrix.ty + 55;
-		} else {
-			critterApp.yourStage().children[index].y = yours.getArms().children[0]._matrix.ty + 50;
-		}
-	}
+//	if (rps.get() !== null) {
+//		var index = critterApp.yourStage().children.length - 1;
+		//can be fairly certain it was the last thing added
+//		if (critterApp.yourStage().children[index].name === 'rock') {
+//			critterApp.yourStage().children[index].y = critterApp.yours().getArms().y + critterApp.yours().getArms()._matrix.ty + yours.getArms().children[0]._matrix.ty;
+//		} else if (critterApp.yourStage().children[index].name === 'paper') {
+//			critterApp.yourStage().children[index].y = yours.getArms().children[0]._matrix.ty + 55;
+//		} else {
+//			critterApp.yourStage().children[index].y = yours.getArms().children[0]._matrix.ty + 70;
+			//+340 to all weapons for long arms
+//		}
+//	}
 	
 	if (change) kill(yours.getContainer());
 	

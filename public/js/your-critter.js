@@ -105,14 +105,13 @@ function build(crit, destination, container) {
 									armG.bezierCurveTo(58,-2,49,-0.7,45,5);
 									armG.bezierCurveTo(45,5,4,53,4,53);
 									armG.closePath();
+									var armLC = new Container();
 									var armL = new Shape(armG);
-									armL.x = 70;
-									armL.y = 300;
 									var armR = armL.clone();
-									armR.x += 260;
 									armR.rotation = 180;
 									armR.skewX = 180;
-									arms.addChild(armL, armR);
+									armLC.addChild(armL);
+									arms.addChild(armLC, armR);
 								} else if (critter[key] === 'long'){
 									armG.setStrokeStyle(1, 0, 0, 4);
 									armG.beginFill(fillColour);
@@ -123,12 +122,14 @@ function build(crit, destination, container) {
 									armG.bezierCurveTo(113,215,105,217,102,224);
 									armG.bezierCurveTo(102,224,53,335,53,336);
 									armG.closePath();
+									var armLC = new Container();
 									var armL = new Shape(armG);
 									var armR = armL.clone();
 									armR.x = 260;
 									armR.rotation = 180;
 									armR.skewX = 180;
-									arms.addChild(armL, armR);
+									armLC.addChild(armL);
+									arms.addChild(armLC, armR);
 								}
 								arms.name = 'arms ' + critter[key];
 							break;
@@ -199,9 +200,9 @@ function build(crit, destination, container) {
 									leg.lineTo(286.447,475.619);
 									leg.closePath();
 									legL = new Shape(leg);
-									legL.x = 4;
+									legL.x = 9;
 									var legR = legL.clone();
-									legR.x = 100;
+									legR.x = 112;
 									legs.addChild(legL, legR);
 								}
 							break;
@@ -448,7 +449,8 @@ function build(crit, destination, container) {
 					
 					//var shadow = new Shadow('rgba('+r+','+g+','+b+',.5)', 0 , 4 , 0); translucent
 					var shadow = new Shadow('rgb('+r+','+g+','+b+')', 0 , 4 , 0);
-					arms.shadow = shadow;
+					arms.children[0].children[0].shadow = shadow;
+					arms.children[1].shadow = shadow;
 					if (face) {
 						//have to put this here so it can inherit filter values
 						face = new Container();
@@ -500,6 +502,12 @@ function build(crit, destination, container) {
 						legs.y = -105;
 					}
 					legs.skewX = 10;
+					if (arms.name === 'arms short') {
+						arms.children[0].x = 70;
+						arms.children[0].y = 300;
+						arms.children[1].x = 330;
+						arms.children[1].y = 300;
+					}
 					arms.x = -20;
 					arms.y = -90;
 					if (body.children[0].name === 'simple') arms.x = -43;
