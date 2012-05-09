@@ -264,20 +264,37 @@ var rps = (function() {
 		rps.scaleX = .5;
 		rps.scaleY = .5;
 		rps.name = graphic.name;
-		if (rps.name === 'rock') {
-			rps.x = 40;
-			rps.y = 300;
-		} else if (rps.name === 'paper') {
-			rps.skewX = 200;
-			rps.skewY = 30;
-			rps.scaleX = -.5;
-			rps.scaleY = -.5;
-			rps.x = 100;
-			rps.y = 350;
+		if (critterApp.yours().getArms().name === 'arms long') {
+			if (rps.name === 'rock') {
+				rps.x = 40;
+				rps.y = 300;
+			} else if (rps.name === 'paper') {
+				rps.skewX = 200;
+				rps.skewY = 30;
+				rps.scaleX = -.5;
+				rps.scaleY = -.5;
+				rps.x = 100;
+				rps.y = 350;
+			} else {
+				rps.y = 420;
+				rps.x = 60;
+				rps.rotation = -90;
+			}
 		} else {
-			rps.y = 420;
-			rps.x = 60;
-			rps.rotation = -90;
+			if (rps.name === 'rock') {
+				rps.y = 40;
+			} else if (rps.name === 'paper') {
+				rps.skewX = 200;
+				rps.skewY = 30;
+				rps.scaleX = -.5;
+				rps.scaleY = -.5;
+				rps.x = 50;
+				rps.y = 70;
+			} else {
+				rps.x = 5;
+				rps.y = 140;
+				rps.rotation = -90;
+			}
 		}
 		critterApp.yours().getArms().children[0].addChild(rps);
 		weapon = rps;
@@ -597,20 +614,7 @@ function tick() {
 	if (critterApp.yours()) animateArms(yours.getContainer());
 
 	if (hugFriend) hug(yours.getContainer());
-	
-//	if (rps.get() !== null) {
-//		var index = critterApp.yourStage().children.length - 1;
-		//can be fairly certain it was the last thing added
-//		if (critterApp.yourStage().children[index].name === 'rock') {
-//			critterApp.yourStage().children[index].y = critterApp.yours().getArms().y + critterApp.yours().getArms()._matrix.ty + yours.getArms().children[0]._matrix.ty;
-//		} else if (critterApp.yourStage().children[index].name === 'paper') {
-//			critterApp.yourStage().children[index].y = yours.getArms().children[0]._matrix.ty + 55;
-//		} else {
-//			critterApp.yourStage().children[index].y = yours.getArms().children[0]._matrix.ty + 70;
-			//+340 to all weapons for long arms
-//		}
-//	}
-	
+		
 	if (change) kill(yours.getContainer());
 	
 	if (jumpOut) jumpOutScene();

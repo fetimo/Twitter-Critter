@@ -2,9 +2,8 @@
 <img class="tree" id="left-tree" src="../images/tree-left.png" alt="Image of a decorative cartoon tree">
 <img class="tree" id="right-tree" src="../images/tree-right.png" alt="Image of a decorative cartoon tree">
 <div id="content">
-	<div class="preloader_container"><img class="loader" alt="Loading icon" src="../images/spinner.gif"></div>	
+	<div class="preloader_container"><img class="loader" height="68" width="68" alt="Loading icon" src="../images/spinner.gif"></div>	
 	<canvas id="your-critter" class="critter_container" width="955" height="500">Critter requires canvas, upgrade to a nice browser.</canvas>
-
 	<aside class="alerts">
 		<?r if @introduction and session[:access_token].eql? nil ?>
 		<div class="alert alert-info" id="introduction">

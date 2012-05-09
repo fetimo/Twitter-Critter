@@ -633,7 +633,8 @@ function build(crit, destination, container) {
 							$('.loader').fadeOut(750, function() {
 								$('.loader').css('visibility', 'hidden');
 							});
-							container.addChild(mouth);
+							var pos = container.children.length - 1;
+							container.addChildAt(mouth, pos);
 							destination.addChild(container);
 						}
 					}
@@ -646,7 +647,8 @@ function build(crit, destination, container) {
 								$('.loader').css('visibility', 'hidden');
 							});
 							if (!accessory) {
-								container.addChild(mouth);
+								var pos = container.children.length - 1;
+								container.addChildAt(mouth, pos);
 								destination.addChild(container);
 							} else {
 								waitForTail();
@@ -659,19 +661,22 @@ function build(crit, destination, container) {
 							$('.loader').fadeOut(750, function() {
 								$('.loader').css('visibility', 'hidden');
 							});
-							container.addChild(mouth);
+							var pos = container.children.length - 1;
+							container.addChildAt(mouth, pos);
 							destination.addChild(container);
 						} else if (accessory && accessory.name !== 'tail' && mouthLoaded) {
 							$('.loader').fadeOut(750, function() {
 								$('.loader').css('visibility', 'hidden');
 							});
-							container.addChild(mouth);
+							var pos = container.children.length - 1;
+							container.addChildAt(mouth, pos);
 							destination.addChild(container);
 						} else if (!accessory && mouthLoaded) {
 							$('.loader').fadeOut(750, function() {
 								$('.loader').css('visibility', 'hidden');
 							});
-							container.addChild(mouth);
+							var pos = container.children.length - 1;
+							container.addChildAt(mouth, pos);
 							destination.addChild(container);
 						} else {
 							//loop until tailLoaded, mouthLoaded === true
@@ -687,7 +692,8 @@ function build(crit, destination, container) {
 								$('.loader').fadeOut(750, function() {
 									$('.loader').css('visibility', 'hidden');
 								});
-								container.addChild(mouth);
+								var pos = container.children.length - 1;
+								container.addChildAt(mouth, pos);
 								destination.addChild(container);
 							} else {
 								if (accessory) waitForTail();
