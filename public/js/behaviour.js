@@ -262,8 +262,8 @@ $(document).ready(function() {
 			root = $('.alerts')[0];
 		alert.className = 'alert alert-info';
 		alert.innerHTML = '<a class="close" data-dismiss="alert">&times;</a><p>Type the name of the friend that you\'d like to invite to Critter (this will send a tweet from your account):</p> \
-		<input id="invitee" type="text" placeholder="Friend\'s @username" required> \
-		<a id="invite-btn" class="btn btn-info" href="#">Invite</a>';
+		<form><input id="invitee" type="text" placeholder="Friend\'s @username" required> \
+		<input type="submit" id="invite-btn" class="btn btn-info" value="Invite"></form>';
 		$('.alert').each(function () {
 			if (this.innerHTML === alert.innerHTML) change_exist = true;	
 		});

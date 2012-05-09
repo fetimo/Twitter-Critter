@@ -179,7 +179,7 @@ button {
 	top: 1px;
 }
 
-.action_btn:hover, #topBar form button.actions:hover {
+.action_btn:hover, #topBar form button.actions:hover, .main-cta form button:hover {
 	background: #fd6f6f; /* Old browsers */
 	background: -moz-linear-gradient(top, hsl(0,97%,71%) 0%, hsl(0,94%,62%) 0%, hsl(1,44%,42%) 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(0,97%,71%)), color-stop(0%,hsl(0,94%,62%)), color-stop(100%,hsl(1,44%,42%))); /* Chrome,Safari4+ */
