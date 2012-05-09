@@ -253,6 +253,11 @@ class MainController < Controller
 				opponent = Twitter.user(you[:opponent]).screen_name
 				flash[:Fisticuffs] = "#{opponent} has started fisticuffs with you! <p><a class='btn btn-success' href='#'>Arm Yourself</a><a class='btn btn-danger close_btn' href='#'>Run Away</a></p>"
 			end
+			if you[:opponent] and request.http_variables['HTTP_REFERER'] === 'http://crittr.me/'
+				# only show the first time you see your Critter that session (probably)
+				opponent = Twitter.user(you[:opponent]).screen_name
+				flash[:Reminder] = "You're still in fisticuffs with #{opponent}."
+			end
 			if you[:hugged_by]
 				flash[:Hugs] = "You've been hugged by "
 				hugs = you[:hugged_by].split(',')

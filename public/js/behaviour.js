@@ -36,7 +36,9 @@ $(document).ready(function() {
 			_.delay(loadFriend, 100, event);
 		}
 	}
-		
+	
+	var throttleLoadFriend = _.throttle(loadFriend, 1000); 
+	
 	function sendTweet() {
 		$.ajax({
 			type: 'POST',
@@ -301,7 +303,7 @@ $(document).ready(function() {
 	
 	// click handlers	
 	$('#fisticuffs').on('click', prepFight);
-	$('.friend').on('click', loadFriend);
+	$('.friend').on('click', throttleLoadFriend);
 	$('#hug').on('click', stopFighting);
 	$('#change').on('click', changeCritter);
 	$('.invite').on('click', invite);

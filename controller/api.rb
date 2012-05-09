@@ -76,8 +76,27 @@ class ApiController < Controller
 					end
 					
 				else
-					critters = DB[:critters]
-					@response = critters.filter(:name => username).delete
+					begin
+						critters = DB[:critters]
+						@response = critters.filter(:name => username).delete
+					rescue => e
+						logger.info "error in deleting critter api.rb:81"
+						logger.debug critters
+						logger.debug @response
+						logger.error e.message
+						
+						DB.disconnect
+						DB.connect(
+							:adapter=>'mysql2', 
+							:host=>'mysql.fetimo.com', 
+							:database=>'twittercritter', 
+							:user=>'fetimocom1', 
+							:password=>'iBMbSSIz', 
+							:timeout => 60
+						)
+						sleep 1
+						retry
+					end
 					
 					@default_critter = {
 						#default values

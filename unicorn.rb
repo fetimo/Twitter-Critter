@@ -1,4 +1,4 @@
-worker_processes 3
+worker_processes 6
 working_directory "/home/timofe_/crittr.me"
 
 timeout 30

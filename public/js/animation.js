@@ -568,7 +568,7 @@ function jumpOutScene() {
 		theirs.getContainer().y += 5;
 		if (theirs.getContainer().y >= 120) oscillateJump = true;
 	}	
-	if (theirs.getContainer().children[0].skewX < 6 && theirs.getContainer().children[0].skewX >= 1) theirs.getContainer().children[0].skewX += 1;
+	if (theirs.getContainer().children.length && theirs.getContainer().children[0].skewX < 6 && theirs.getContainer().children[0].skewX >= 1) theirs.getContainer().children[0].skewX += 1;
 	if (theirs.getContainer().x > 500) jumpOut = false;
 }
 
@@ -586,7 +586,7 @@ function tick() {
 	}
 	
 	if (theirs && theirs.getArms()) {
-		
+				
 		animateArms(theirs.getContainer());
 		
 		if (theirs.getContainer().x > 100 && !jumpOut && !hugFriend) theirs.getContainer().x -= 10;
@@ -609,7 +609,7 @@ function tick() {
 		
 	if (yours.getContainer().y < yours.getContainer().targetY) yours.getContainer().y += 10.6;
 	
-	if (yours.getContainer().children[0].skewX > 1) yours.getContainer().children[0].skewX -= 1; //move legs with jumping in
+	if (yours.getContainer().children.length && yours.getContainer().children[0].skewX > 1) yours.getContainer().children[0].skewX -= 1; //move legs with jumping in
 	
 	if (critterApp.yours()) animateArms(yours.getContainer());
 
@@ -618,7 +618,7 @@ function tick() {
 	if (change) kill(yours.getContainer());
 	
 	if (jumpOut) jumpOutScene();
-	
+		
 	critterApp.yourStage().update();
 	if (critterApp.theirStage()) critterApp.theirStage().update(); 
 }

@@ -40,9 +40,9 @@ require __DIR__('controller/init')
 #Setup memcache
 Ramaze::Cache.options.session = Ramaze::Cache::MemCache.using(
 	:compress => true,
-	:expires_in => 86400
+	:expires_in => 3600
 )
 Ramaze::Cache.options.view = Ramaze::Cache::MemCache.using(
 	:compress => true,
-	:expires_in => 86400
+	:expires_in => 3600
 )
