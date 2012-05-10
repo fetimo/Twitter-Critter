@@ -36,7 +36,6 @@ class ApiController < Controller
 		username.delete!('@')
 		logger = Ramaze::Logger::RotatingInformer.new('./log')
 		if request.get?
-			retry_times = 3
 			
 			begin
 				critters = DB[:critters]
@@ -220,7 +219,6 @@ class ApiController < Controller
 						logger.debug message
 					end
 				elsif request.params['updateStart']
-					retry_times = 3
 					begin
 						DB.transaction do
 							fight.where(:uid => opponent).update(:start => Time.now)
@@ -245,6 +243,9 @@ class ApiController < Controller
 						attrib = {}
 						type = ''
 						begin
+							#update opponent's status to be lose
+							fight.where(:uid => opponent).update(:status => 'lose')
+							
 							DB.fetch("SELECT #{attribute} FROM critters WHERE uid = ?", opponent) { |row| attrib = row }
 							attrib.each { |key, value| type = value.to_s };
 							
@@ -293,10 +294,12 @@ class ApiController < Controller
 				else
 					#start new fight
 					weapon = request.params['weapon']
-					retry_times = 3
 					begin
 						check_opp = fight.filter(:uid => opponent).first
 						check_you = fight.filter(:uid => uid).first
+						
+						#checks to see if you and/or your opponent already exists in the table
+						#if not then it creates an entry with only the uid
 						
 						if check_opp === nil
 							fight.insert(:uid => opponent)

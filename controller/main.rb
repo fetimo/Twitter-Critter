@@ -334,7 +334,7 @@ class MainController < Controller
 								flash[:Fisticuffs] << "<br>Is it okay if I tweet about your victory?<p><a class='btn btn-info close_btn' href='#'>No, thanks</a><a class='btn close_btn' href='#'><span id='victory_tweet'>Tweet</span></a></p>"
 							end
 						rescue => e
-							logger.info "main.rb:281"
+							logger.info "main.rb:327"
 							logger.error e.message
 							message = e.message
 						end
