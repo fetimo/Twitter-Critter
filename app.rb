@@ -2,27 +2,14 @@ require 'ramaze'
 require 'sequel'
 require 'mysql2'
 
-begin
-	DB = Sequel.connect(
-		:adapter=>'mysql2', 
-		:host=>'mysql.fetimo.com', 
-		:database=>'twittercritter', 
-		:user=>'fetimocom1', 
-		:password=>'iBMbSSIz', 
-		:timeout => 60
-	)
-rescue
-	DB.disconnect
-	DB.connect(
-		:adapter=>'mysql2', 
-		:host=>'mysql.fetimo.com', 
-		:database=>'twittercritter', 
-		:user=>'fetimocom1', 
-		:password=>'iBMbSSIz', 
-		:timeout => 60
-	)
-	retry
-end
+DB = Sequel.connect(
+	:adapter=>'mysql2', 
+	:host=>'mysql.fetimo.com', 
+	:database=>'twittercritter', 
+	:user=>'fetimocom1', 
+	:password=>'iBMbSSIz'
+)
+
 
 Ramaze.options.mode = :live
 Ramaze.options.app.name = 'crittr.me'

@@ -255,7 +255,7 @@ class Critter
 end
 
 begin
-	TweetStream::Client.new.track('drought') do |result|
+	TweetStream::Client.new.track('#launch2012', 'bournemouth', '#bournemouthuni') do |result|
 		Critter.new(result)
 	end
 rescue Errno::ENOENT

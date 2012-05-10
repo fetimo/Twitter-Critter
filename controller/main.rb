@@ -18,6 +18,7 @@ class MainController < Controller
 	# the index action is called automatically when no other action is specified
 	
 	helper :flash
+	helper :aspect
 	
 	layout do |path|
 		:default
@@ -26,7 +27,24 @@ class MainController < Controller
 	set_layout 'index' => [:index]
 	
 	trait :flashbox => "<div id='flash_%key' class='alert alert-info fade in %key'><a class='close' data-dismiss='alert'>&times;</a><p><strong>%key</strong> %value</p></div>"
-		
+	
+	before_all do
+		DB.disconnect
+		unless DB.test_connection
+			DB.connect(
+				:adapter=>'mysql2', 
+				:host=>'mysql.fetimo.com', 
+				:database=>'twittercritter', 
+				:user=>'fetimocom1', 
+				:password=>'iBMbSSIz'
+			)
+		end
+	end
+	
+	after_all do
+		DB.disconnect
+	end
+	
 	def show_flashbox
     	flashbox
     end
@@ -65,16 +83,6 @@ class MainController < Controller
 				critter_exist += 1
 			end
 		rescue => e
-			DB.disconnect
-			DB.connect(
-				:adapter=>'mysql2', 
-				:host=>'mysql.fetimo.com', 
-				:database=>'twittercritter', 
-				:user=>'fetimocom1', 
-				:password=>'iBMbSSIz', 
-				:timeout => 60
-			)
-			retry
 			logger.info "checking critter exists main.rb:75"
 			logger.info e.message
 		end
@@ -122,24 +130,13 @@ class MainController < Controller
 		
 		logger = Ramaze::Logger::RotatingInformer.new('./log')
 		@username = username
-				
+						
 		begin
 			critters = DB[:critters]
 			@critter = critters.filter(:name => username).first
 		rescue => e
-			logger.info "fetching critter from db main.rb:111"
+			logger.info "fetching critter from db main.rb:130"
 			logger.error e.message
-			DB.disconnect
-			DB.connect(
-				:adapter=>'mysql2', 
-				:host=>'mysql.fetimo.com', 
-				:database=>'twittercritter', 
-				:user=>'fetimocom1', 
-				:password=>'iBMbSSIz', 
-				:timeout => 60
-			)
-			sleep 1
-			retry
 		end		
 		#show the intro text if you've been redirected from the homepage
     	@introduction = true if request.http_variables['HTTP_REFERER'] === 'http://crittr.me/'
@@ -163,8 +160,8 @@ class MainController < Controller
 				logger.info "getting twitter friend ids main.rb:124"
 				logger.error e.message
 			end
-			
 			if session[:friends].nil?
+				
 				friends_w_critter = Array.new
 				
 				dataset = DB[:critters]
@@ -334,7 +331,7 @@ class MainController < Controller
 									fight.where(:uid => opp).update(:status => opp_status)
 								end
 							else
-								flash[:Fisticuffs] << "<br>Is it okay if I tweet about your victory?<p><a class='btn btn-info' href='#'>No, thanks</a><a class='btn close_btn' href='#'><span id='victory_tweet'>Tweet</span></a></p>"
+								flash[:Fisticuffs] << "<br>Is it okay if I tweet about your victory?<p><a class='btn btn-info close_btn' href='#'>No, thanks</a><a class='btn close_btn' href='#'><span id='victory_tweet'>Tweet</span></a></p>"
 							end
 						rescue => e
 							logger.info "main.rb:281"
@@ -349,7 +346,7 @@ class MainController < Controller
 				unless you[:status].include? 'win'
 					fight.where(:uid => you[:uid]).update(:status => nil, :opponent => nil, :weapon => nil, :start => nil)
 				else
-					flash[:Fisticuffs] << "<br>Is it okay if I tweet about your victory?<p><a class='btn btn-info' href='#'>No, thanks</a><a class='btn close_btn' href='#'><span id='victory_tweet'>Tweet</span></a></p>"
+					flash[:Fisticuffs] << "<br>Is it okay if I tweet about your victory?<p><a class='btn close_btn' href='#'>No, thanks</a><a class='btn close_btn' href='#'><span id='victory_tweet'>Tweet</span></a></p>"
 				end
 			end
 		end

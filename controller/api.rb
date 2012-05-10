@@ -4,11 +4,30 @@ require 'yajl'
 class ApiController < Controller
 	
 	map '/api'
+	
+	helper :aspect
 		
 	layout do |path|
 		if path === 'critters' || path === 'battle'
 			:api
 		end
+	end
+	
+	before_all do
+		DB.disconnect
+		unless DB.test_connection
+			DB.connect(
+				:adapter=>'mysql2', 
+				:host=>'mysql.fetimo.com', 
+				:database=>'twittercritter', 
+				:user=>'fetimocom1', 
+				:password=>'iBMbSSIz' 
+			)
+		end
+	end
+	
+	after_all do
+		DB.disconnect
 	end
 	
 	def critters (username)
@@ -17,6 +36,8 @@ class ApiController < Controller
 		username.delete!('@')
 		logger = Ramaze::Logger::RotatingInformer.new('./log')
 		if request.get?
+			retry_times = 3
+			
 			begin
 				critters = DB[:critters]
 				critter = critters.filter(:name => username).first
@@ -31,48 +52,53 @@ class ApiController < Controller
 				logger.debug critters
 				logger.debug critter
 				logger.error error.message
-				
-				DB.disconnect
-				DB.connect(
-					:adapter=>'mysql2', 
-					:host=>'mysql.fetimo.com', 
-					:database=>'twittercritter', 
-					:user=>'fetimocom1', 
-					:password=>'iBMbSSIz', 
-					:timeout => 60
-				)
-				sleep 1
-				retry
 			end
 		elsif request.post?
 			unless request.cookies.empty?
 				if request.params['invitee']
 					invitee = request.params['invitee']
 					invitee.delete!('@')
-
-					#check if invitee is a twitter user
-					Twitter.configure do |config|
-						config.consumer_key = 'DQicogvXxpbW7oleCfV3Q'
-						config.consumer_secret = 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
-						config.oauth_token = session[:access_token][:oauth_token]
-						config.oauth_token_secret = session[:access_token][:oauth_token_secret]
+					
+					critter_exist = 0
+					begin
+						DB[:critters].filter(:uid => username).each do |row|
+							critter_exist += 1
+						end
+					rescue => e
+						logger.info "checking critter exists api.rb:69"
+						logger.info e.message
 					end
 					
-					begin
-						Twitter.user(invitee)
-						if username == invitee
-							@response = 'Error: There\'s no sense in inviting yourself!'
-						else
-							Twitter.update("@#{invitee} join me on http://crittr.me/ :)")
-							@response = "all ok"
+					sleep 1.5 #allow for db to be queried
+					
+					if critter_exist === 0
+					
+						#check if invitee is a twitter user
+						Twitter.configure do |config|
+							config.consumer_key = 'DQicogvXxpbW7oleCfV3Q'
+							config.consumer_secret = 'GTYPQnV47dATvuITMXnVUC8PADpIgDPYyN84VKO6o'
+							config.oauth_token = session[:access_token][:oauth_token]
+							config.oauth_token_secret = session[:access_token][:oauth_token_secret]
 						end
 						
-					rescue Twitter::Error::NotFound
-						@response = "Error: Twitter user not found"
-					rescue Twitter::Error
-						@response = "Error: There was a problem with Twitter"
-					rescue
-						@response = "Error: There was an error"
+						begin
+							Twitter.user(invitee)
+							if username == invitee
+								@response = 'Error: There\'s no sense in inviting yourself!'
+							else
+								Twitter.update("@#{invitee} join me on http://crittr.me/ :)")
+								@response = "all ok"
+							end
+							
+						rescue Twitter::Error::NotFound
+							@response = "Error: Twitter user not found"
+						rescue Twitter::Error
+							@response = "Error: There was a problem with Twitter"
+						rescue
+							@response = "Error: There was an error"
+						end
+					else
+						@response = "Error: This person is already on Critter"
 					end
 					
 				else
@@ -84,18 +110,6 @@ class ApiController < Controller
 						logger.debug critters
 						logger.debug @response
 						logger.error e.message
-						
-						DB.disconnect
-						DB.connect(
-							:adapter=>'mysql2', 
-							:host=>'mysql.fetimo.com', 
-							:database=>'twittercritter', 
-							:user=>'fetimocom1', 
-							:password=>'iBMbSSIz', 
-							:timeout => 60
-						)
-						sleep 1
-						retry
 					end
 					
 					@default_critter = {
@@ -206,6 +220,7 @@ class ApiController < Controller
 						logger.debug message
 					end
 				elsif request.params['updateStart']
+					retry_times = 3
 					begin
 						DB.transaction do
 							fight.where(:uid => opponent).update(:start => Time.now)
@@ -213,7 +228,6 @@ class ApiController < Controller
 						end
 						
 						response = "Successfully updated start time"
-					
 					rescue => e
 						response = "Error: Unable to update start time"
 						logger.info response
@@ -230,17 +244,22 @@ class ApiController < Controller
 						opponent = you[:opponent]
 						attrib = {}
 						type = ''
-						DB.fetch("SELECT #{attribute} FROM critters WHERE uid = ?", opponent) { |row| attrib = row }
-						attrib.each { |key, value| type = value.to_s };
-						
-						#insert value into own critter						
-						DB[:critters].filter(:uid => uid).update(attribute => type)
-						you.update(:start => nil)
-						critter = DB[:critters].filter(:uid => uid).select(:name, :arms, :eye_colour, :ears, :mouth, :legs, :face, :hands, :nose, :body_colour, :body, :body_type, :accessory, :uid).first					
-						critter = Yajl::Encoder.encode(critter)
-						DB[:critters].filter(:uid => uid).update(:critter => critter)
-						fight.where(:uid => uid).update(:status => nil, :opponent => nil, :weapon => nil, :start => nil)
-						response = critter
+						begin
+							DB.fetch("SELECT #{attribute} FROM critters WHERE uid = ?", opponent) { |row| attrib = row }
+							attrib.each { |key, value| type = value.to_s };
+							
+							#insert value into own critter						
+							DB[:critters].filter(:uid => uid).update(attribute => type)
+							you.update(:start => nil)
+							critter = DB[:critters].filter(:uid => uid).select(:name, :arms, :eye_colour, :ears, :mouth, :legs, :face, :hands, :nose, :body_colour, :body, :body_type, :accessory, :uid).first					
+							critter = Yajl::Encoder.encode(critter)
+							DB[:critters].filter(:uid => uid).update(:critter => critter)
+							fight.where(:uid => uid).update(:status => nil, :opponent => nil, :weapon => nil, :start => nil)
+							response = critter
+						rescue
+							sleep 1
+							retry
+						end
 					else
 						response = abort("Error: hashes do not match >_<")
 					end
@@ -274,7 +293,7 @@ class ApiController < Controller
 				else
 					#start new fight
 					weapon = request.params['weapon']
-					
+					retry_times = 3
 					begin
 						check_opp = fight.filter(:uid => opponent).first
 						check_you = fight.filter(:uid => uid).first
