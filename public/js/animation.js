@@ -560,21 +560,98 @@ var rps = (function() {
 }());
 
 function jumpOutScene() {
+	
+	var legs, 
+		body;
+	
+	for (var i=0; i < theirs.getContainer().children.length; i+=1) { 
+		if (theirs.getContainer().children[i].name && theirs.getContainer().children[i].name.substr(0,5) === 'short') {
+			legs = 'short';
+			break;
+		}
+	}
+	
+	for (var i=0; i < theirs.getContainer().children.length; i+=1) { 
+		if (theirs.getContainer().children[i].name && theirs.getContainer().children[i].name.substr(0,6) === 'simple') {
+			body = 'simple';
+			break;
+		}
+	}
+	
+	if (legs === 'short' && body === 'simple') {
+		var maxHigh = 185;
+		var maxLow = 140;
+	} else {
+		var maxHigh = 78;
+		var maxLow = 30;
+	}
+	
 	theirs.getContainer().x += 20;
 	if (oscillateJump) { 
 		theirs.getContainer().y -= 5;
-		if (theirs.getContainer().y < 30) oscillateJump = false;
+		if (theirs.getContainer().y < maxLow) oscillateJump = false;
 	} else if (!oscillateJump) {
 		theirs.getContainer().y += 5;
-		if (theirs.getContainer().y >= 120) oscillateJump = true;
+		if (theirs.getContainer().y >= maxHigh) oscillateJump = true;
 	}	
-	if (theirs.getContainer().children.length && theirs.getContainer().children[0].skewX < 6 && theirs.getContainer().children[0].skewX >= 1) theirs.getContainer().children[0].skewX += 1;
-	if (theirs.getContainer().x > 500) jumpOut = false;
+	if (theirs.getContainer().children.length) {
+		if (!body || !legs) {
+			oscillateJump ? 
+				theirs.getContainer().children[0].skewX += 1 : 
+				theirs.getContainer().children[0].skewX -= 1;
+		}
+	}
+	if (theirs.getContainer().x > $(document).width() - 500) jumpOut = false;
+}
+
+function jumpInScene() {
+	
+	var legs, 
+		body;
+	
+	for (var i=0; i < theirs.getContainer().children.length; i+=1) { 
+		if (theirs.getContainer().children[i].name && theirs.getContainer().children[i].name.substr(0,5) === 'short') {
+			legs = 'short';
+			break;
+		}
+	}
+	
+	for (var i=0; i < theirs.getContainer().children.length; i+=1) { 
+		if (theirs.getContainer().children[i].name && theirs.getContainer().children[i].name.substr(0,6) === 'simple') {
+			body = 'simple';
+			break;
+		}
+	}
+	
+	if (legs === 'short' && body === 'simple') {
+		var maxHigh = 185;
+		var maxLow = 140;
+	} else {
+		var maxHigh = 78;
+		var maxLow = 30;
+	}
+	
+	theirs.getContainer().x -= 20;
+	if (oscillateJump) { 
+		theirs.getContainer().y -= 5;
+		if (theirs.getContainer().y < maxLow) oscillateJump = false;
+	} else if (!oscillateJump) {
+		theirs.getContainer().y += 5;
+		if (theirs.getContainer().y >= maxHigh) oscillateJump = true;
+	}	
+	if (theirs.getContainer().children.length) {
+		if (!body || !legs) {
+			oscillateJump ? 
+				theirs.getContainer().children[0].skewX += 1 : 
+				theirs.getContainer().children[0].skewX -= 1;
+		}
+	}
+	if (theirs.getContainer().x <= 100) jumpIn = false;
 }
 
 function tick() {
 	var yours = critterApp.yours();
-	
+	//if (theirs) console.log(theirs.getContainer().x, jumpIn);
 	//only animate some of the time
 	if (Math.round(Math.random()*40) === 4) { //http://xkcd.com/221/
 		animateEyes(yours.getContainer());
@@ -589,11 +666,19 @@ function tick() {
 				
 		animateArms(theirs.getContainer());
 		
-		if (theirs.getContainer().x > 100 && !jumpOut && !hugFriend) theirs.getContainer().x -= 10;
+		if (jumpIn && !jumpOut) jumpInScene();
 		
-		if (theirs.getContainer().y < theirs.getContainer().targetY && !jumpOut) theirs.getContainer().y += 10;
+		if (theirs.getContainer().children[0].skewX > 0 && !jumpIn && !jumpOut) {
+			theirs.getContainer().children[0].skewX -= 1;
+		} else if (theirs.getContainer().children[0].skewX < 0 && !jumpIn && !jumpOut) {
+			theirs.getContainer().children[0].skewX += 1;
+		}
 		
-		if (theirs.getContainer().children[0].skewX > 1 && !jumpOut && !hugFriend) theirs.getContainer().children[0].skewX -= 1; //move legs with jumping in
+		if (theirs.getContainer().x > 100 && !jumpOut && !jumpIn && !hugFriend) theirs.getContainer().x -= 10;
+
+		if (theirs.getContainer().y < theirs.getContainer().targetY && !jumpOut && !jumpIn) theirs.getContainer().y += 10;
+		
+		if (theirs.getContainer().children[0].skewX > 1 && !jumpOut && !jumpIn && !hugFriend) theirs.getContainer().children[0].skewX -= 1; //move legs with jumping in
 		
 		if (Math.round(Math.random()*40) === 4) {
 			animateEyes(theirs.getContainer());

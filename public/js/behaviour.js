@@ -1,13 +1,14 @@
 $(document).ready(function() {	
 		
 	function loadFriend(event) {
+		jumpIn = true;
 		$('#carousel_inner ul li').removeClass('active');
 		event.target.className === 'friend' ?  
 			event.target.className += " active" :
 			event.target.parentNode.className += " active";
 		
 		if (critterApp.theirStage().children.length) jumpOut = true;
-		if (!jumpOut || theirs.getContainer().x >= 500) {
+		if (!jumpOut || theirs.getContainer().x >= $(document).width() - 500) {
 			jumpOut = false;
 			oscillateJump = true;
 			var username = event.currentTarget.id;

@@ -274,10 +274,11 @@ function build(crit, destination, container) {
 									pattern.x = -3;
 									preload(pattern.image);
 								} else if (critter[key] === 'furry' && pattern && pattern.name === 'spotty') {
-									var pattern = new Bitmap('../images/critter_assets/body_patterns/spots-with-fur.png');
+									var pattern = new Bitmap('../images/critter_assets/body_patterns/spots-with-fur-sans-legs.png');
 									
 									pattern.name = critter[key];
-									pattern.x = -1;
+									pattern.x = -11;
+									pattern.y = -6;
 									preload(pattern.image);
 								}
 								body.addChild(body_shape);
@@ -501,7 +502,11 @@ function build(crit, destination, container) {
 						legs.x = -150;
 						legs.y = -105;
 					}
-					legs.skewX = 10;
+					if (legs.name === 'short' && body.children[0].name === 'simple') {
+						legs.skewX = 0;
+					} else {
+						legs.skewX = 10;
+					}
 					if (arms.name === 'arms short') {
 						arms.children[0].x = 70;
 						arms.children[0].y = 300;
@@ -548,6 +553,7 @@ function build(crit, destination, container) {
 						accessory.x = 46;
 						accessory.y = 180;
 						accessory.rotation = -36.2;
+						if (legs.name === 'long' && body.children[0].name === 'simple') accessory.y = 130; 
 					}
 					if (ears) {
 						ears.x = -95;
@@ -615,7 +621,7 @@ function build(crit, destination, container) {
 						}
 					}
 					
-					if (destination.name === 'friend_stage') container.x = 250;
+					if (destination.name === 'friend_stage') container.x = $(document).width() - 700;
 					
 					container.name = crit.get('name');
 					container.uid = crit.get('uid'); //used when you win a battle and tweet

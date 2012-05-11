@@ -17,6 +17,16 @@ var critterApp = (function() {
 		var	elem = document.getElementById('your-critter'),
 			critter_container = new Container();
 		
+		elem.width = $(document).width() - 400; //to account for right tree trunk
+		
+		function updateCanvasWidth() {
+			elem.width = $(document).width() - 400;
+			return elem.width;
+		}
+		
+		var resize = _.throttle(updateCanvasWidth, 1000);
+		$(window).resize(resize);
+		
 		stage = new Stage(elem);
 		friend_stage = new Stage(elem);
 

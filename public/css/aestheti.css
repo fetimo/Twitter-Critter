@@ -209,7 +209,7 @@ button {
 }
 
 #content {
-	background: rgb(136,101,45) url('../images/critterbg.png') no-repeat;
+	background: rgb(136,101,45) url('../images/critterbg-large.jpg') no-repeat;
 	height: 500px;
 	width: 100%;
 	margin: 0 auto;
@@ -235,7 +235,7 @@ canvas {
 	background-color: #fff;
 	border-radius: 4px;
 	box-shadow: 0px 3px 3px rgba(0,0,0,0.3);
-	width: 820px;
+	width: 802px;
 	height: 50px;
 	padding: 1em;
 	margin: auto;
@@ -637,7 +637,17 @@ footer a {
 }
 
 .tree#right-tree {
-	left: 776px;
+	//left: 776px;
+	right: 400px;
+}
+
+.cover {
+	background-color: #88652E;
+    height: 500px;
+    position: absolute;
+    right: 0;
+    width: 400px;
+    z-index: 3;
 }
 
 .tree#left-tree {

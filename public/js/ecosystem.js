@@ -2,8 +2,6 @@ function build(crit, destination, container) {
 		
 	container.children = []; //reset container's children so we don't end up with duplicates
 	
-	destination.removeAllChildren();
-	
 	// Always check for properties and methods, to make sure your code doesn't break in other browsers.
 	var elem = document.getElementById('your-critter');
 	var sentiment = null;
@@ -110,14 +108,13 @@ function build(crit, destination, container) {
 									armG.bezierCurveTo(58,-2,49,-0.7,45,5);
 									armG.bezierCurveTo(45,5,4,53,4,53);
 									armG.closePath();
+									var armLC = new Container();
 									var armL = new Shape(armG);
-									armL.x = 50;
-									armL.y = 300;
 									var armR = armL.clone();
-									armR.x += 310;
 									armR.rotation = 180;
 									armR.skewX = 180;
-									arms.addChild(armL, armR);
+									armLC.addChild(armL);
+									arms.addChild(armLC, armR);
 								} else if (critter[key] === 'long'){
 									armG.setStrokeStyle(1, 0, 0, 4);
 									armG.beginFill(fillColour);
@@ -128,12 +125,14 @@ function build(crit, destination, container) {
 									armG.bezierCurveTo(113,215,105,217,102,224);
 									armG.bezierCurveTo(102,224,53,335,53,336);
 									armG.closePath();
+									var armLC = new Container();
 									var armL = new Shape(armG);
 									var armR = armL.clone();
 									armR.x = 260;
 									armR.rotation = 180;
 									armR.skewX = 180;
-									arms.addChild(armL, armR);
+									armLC.addChild(armL);
+									arms.addChild(armLC, armR);
 								}
 								arms.name = 'arms ' + critter[key];
 							break;
@@ -180,6 +179,7 @@ function build(crit, destination, container) {
 									leg.lineTo(286.449,412.373);
 									leg.closePath();
 									legL = new Shape(leg);
+									legL.x = 7;
 									var legR = legL.clone();
 									legR.x = 110;
 									legs.addChild(legL, legR);
@@ -203,8 +203,9 @@ function build(crit, destination, container) {
 									leg.lineTo(286.447,475.619);
 									leg.closePath();
 									legL = new Shape(leg);
+									legL.x = 9;
 									var legR = legL.clone();
-									legR.x = 100;
+									legR.x = 112;
 									legs.addChild(legL, legR);
 								}
 							break;
@@ -221,11 +222,12 @@ function build(crit, destination, container) {
 								}
 							break;
 							case 'mouth':
+								var mouthLoaded = false;
 								if (critter[key] === 'fangs') {
 									var mouth;
 
 									$.ajax({
-										url: "http://crittr.me/api/critters/" + crit.attributes.name + "?mood=true"
+										url: "/api/critters/" + crit.attributes.name + "?mood=true"
 									}).done(function(response) {
 										sentiment = response;
 										if(sentiment === 'smile') {
@@ -239,10 +241,9 @@ function build(crit, destination, container) {
 										positionMouth();
 									});
 								} else {					
-									
 									//determine happy/sad
 									$.ajax({
-										url: "http://crittr.me/api/critters/" + crit.attributes.name + "?mood=true"
+										url: "/api/critters/" + crit.attributes.name + "?mood=true"
 									}).done(function(response) {
 										sentiment = response;
 										positionMouth();
@@ -270,6 +271,18 @@ function build(crit, destination, container) {
 							case 'body_type':
 								var body_shape = new Bitmap('../images/critter_assets/bodies/'+ critter[key] + '.png');
 								body_shape.name = critter[key];
+								if (critter[key] === 'furry' && pattern && pattern.name === 'stripy') {
+									var pattern = new Bitmap('../images/critter_assets/body_patterns/stripes-with-fur.png');
+									pattern.name = critter[key];
+									pattern.x = -3;
+									preload(pattern.image);
+								} else if (critter[key] === 'furry' && pattern && pattern.name === 'spotty') {
+									var pattern = new Bitmap('../images/critter_assets/body_patterns/spots-with-fur.png');
+									
+									pattern.name = critter[key];
+									pattern.x = -1;
+									preload(pattern.image);
+								}
 								body.addChild(body_shape);
 								preload(body_shape.image);
 							break;
@@ -301,7 +314,7 @@ function build(crit, destination, container) {
 						mouth.y += 20;
 					}
 					if (body.children[0].name === 'furry') {
-						mouth.x = Math.round(eyes.children[0].image.width/2) + 20;
+						mouth.x = 111;
 						if (eyes.name === 'eyes small_black') {
 							mouth.x = 110;
 							mouth.y = 230;
@@ -314,6 +327,7 @@ function build(crit, destination, container) {
 							mouth.y += 20;
 						}
 					}
+					mouthLoaded = true;
 				}
 												
 				function setColour(colour, body) {					
@@ -436,8 +450,10 @@ function build(crit, destination, container) {
 					eyes.name !== 'eyes small_black' ? el2.x += 105 : el2.x += 56;
 					eyes.addChild(el,el2);
 					
+					//var shadow = new Shadow('rgba('+r+','+g+','+b+',.5)', 0 , 4 , 0); translucent
 					var shadow = new Shadow('rgb('+r+','+g+','+b+')', 0 , 4 , 0);
-					arms.shadow = shadow;
+					arms.children[0].children[0].shadow = shadow;
+					arms.children[1].shadow = shadow;
 					if (face) {
 						//have to put this here so it can inherit filter values
 						face = new Container();
@@ -472,6 +488,8 @@ function build(crit, destination, container) {
 					
 				function position() {
 					//position elements
+					critter_name.x = -300;
+					critter_name.y = 450;
 					if (eyes.name !== 'eyes small_black') {
 						eyes.x = Math.round(body.children[0].image.width/5);
 						eyes.y = 60;
@@ -488,28 +506,38 @@ function build(crit, destination, container) {
 						legs.x = -150;
 						legs.y = -105;
 					}
+					if (arms.name === 'arms short') {
+						arms.children[0].x = 70;
+						arms.children[0].y = 300;
+						arms.children[1].x = 330;
+						arms.children[1].y = 300;
+					}
 					arms.x = -20;
 					arms.y = -90;
 					if (body.children[0].name === 'simple') arms.x = -43;
 					if (body.children[0].name === 'simple' && arms.name === 'arms long') arms.x = -20;
-					arms.children[0].regX = 50;
-					arms.children[0].regY = 40;
-					arms.children[1].regX = 50;
-					arms.children[1].regY = 40;
-					critter_name.x = 380;
-					critter_name.y = 450;
+					arms.children[0].regX = 60;
+					arms.children[0].regY = 30;
+					arms.children[1].regX = 60;
+					arms.children[1].regY = 30;
 					if (arms.name === 'arms long') { 
 						arms.y = 150;
 						arms.x += 40;
-						arms.children[0].regX = 125;
-						arms.children[0].regY = 230;
-						arms.children[1].regX = 125;
-						arms.children[1].regY = 230;
+						arms.children[0].regX = 120;
+						arms.children[0].regY = 240;
+						arms.children[1].regX = 120;
+						arms.children[1].regY = 240;
 					}
 					if (pattern) {
-						pattern.x = -96;
-						pattern.y = -103;
 						body.addChild(pattern);
+						if (pattern.name === 'spotty' && body.children[0].name === 'simple') {
+							pattern.x = -96;
+							pattern.y = -103;
+						} else if (body.children[0].name === 'simple' && pattern.name === 'stripy') {
+							pattern.snapToPixel = false;
+							pattern.x = -98;
+							pattern.y = -101.5;
+						}
 					}
 					if (face) {
 						face.x = Math.round(eyes.children[0].image.width/2 + 20);
@@ -584,56 +612,109 @@ function build(crit, destination, container) {
 					}
 					
 					container.y = 70;
-					container.x = 70;
 					if (legs.name === 'short') {
 						container.y = 123;
 						if (body.children[0].name === 'simple') {
-							container.y += 57;
+							container.y = 185;
 						}
 					}
+										
 					container.name = crit.get('name');
 					container.uid = crit.get('uid'); //used when you win a battle and tweet
-					container.addChild(legs, body, eyes, arms);
+					container.addChild(legs, body, eyes);
 					if (face) container.addChild(face);
-					if (mouth) container.addChild(mouth);
 					if (ears) container.addChild(ears);
 					if (accessory) if (accessory.name !== 'tail') container.addChild(accessory);
-					
+					container.addChild(arms);
 					destination.removeAllChildren();		
 					
+					function waitForTail() {
+						if (!tailLoaded && !mouthLoaded) {
+							_.delay(waitForTail, 100);
+						} else {
+							$('.loader').fadeOut(750, function() {
+								$('.loader').css('visibility', 'hidden');
+							});
+							var pos = container.children.length - 1;
+							container.addChildAt(mouth, pos);
+							destination.addChild(container, critter_name);
+						}
+					}
+					
+					function waitForMouth() {
+						if (!mouthLoaded) {
+							_.delay(waitForTail, 100);
+						} else {
+							$('.loader').fadeOut(750, function() {
+								$('.loader').css('visibility', 'hidden');
+							});
+							if (!accessory) {
+								var pos = container.children.length - 1;
+								container.addChildAt(mouth, pos);
+								destination.addChild(container, critter_name);
+							} else {
+								waitForTail();
+							}
+						}
+					}
+															
 					if (sentiment) {
-						if (accessory && accessory.name === 'tail' && tailLoaded) {
+						if (accessory && accessory.name === 'tail' && tailLoaded && mouthLoaded) {
+							$('.loader').fadeOut(750, function() {
+								$('.loader').css('visibility', 'hidden');
+							});
+							var pos = container.children.length - 1;
+							container.addChildAt(mouth, pos);
 							destination.addChild(container, critter_name);
-						} else if (accessory && accessory.name !== 'tail') {
+						} else if (accessory && accessory.name !== 'tail' && mouthLoaded) {
+							$('.loader').fadeOut(750, function() {
+								$('.loader').css('visibility', 'hidden');
+							});
+							var pos = container.children.length - 1;
+							container.addChildAt(mouth, pos);
 							destination.addChild(container, critter_name);
-						} else if (!accessory) {
+						} else if (!accessory && mouthLoaded) {
+							$('.loader').fadeOut(750, function() {
+								$('.loader').css('visibility', 'hidden');
+							});
+							var pos = container.children.length - 1;
+							container.addChildAt(mouth, pos);
 							destination.addChild(container, critter_name);
 						} else {
-							//loop until tailLoaded === true
-							function waitForTail() {
-								!tailLoaded ? _.delay(waitForTail, 100) : destination.addChild(container, critter_name);
-							}
-							waitForTail();
+							//loop until tailLoaded, mouthLoaded === true
+							if (accessory) waitForTail();
+							waitForMouth();
 						}
 					} else {
 						//loop until sentiment is defined
 						function getSentiment() {
-							!sentiment ? _.delay(getSentiment, 100) : destination.addChild(container, critter_name);
+							if (!sentiment) { 
+								_.delay(getSentiment, 100);
+							} else if (!accessory || accessory.name !== 'tail' && mouthLoaded) {
+								$('.loader').fadeOut(750, function() {
+									$('.loader').css('visibility', 'hidden');
+								});
+								var pos = container.children.length - 1;
+								container.addChildAt(mouth, pos);
+								destination.addChild(container, critter_name);
+							} else {
+								if (accessory) waitForTail();
+								waitForMouth();
+							}
 						}
 						getSentiment();
 					}
 					
+					destination.x = 400;
+							
 					// tickle your critter!
-					container.onClick = function () {
+					container.onClick = function() {
 						container.id === 7 ? jiggle = true : jiggleTheirs = true;
 					};
 												
 				    Ticker.useRAF = true;				    
 					Ticker.addListener(window);
 					Ticker.setFPS(40);
-					$('.loader').fadeOut(750, function() {
-						$('.loader').css('visibility', 'hidden');
-					});
 				}
 			}
 			function getAttributes() {
