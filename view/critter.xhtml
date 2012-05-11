@@ -123,7 +123,8 @@ var username = '#{@username}';
 	if (document.getElementById('attributes')) {		
 		var critter_container2 = new Container(),
 			friend = critterApp.critter("#{@theirs}"),
-			theirs = build(friend, critterApp.theirStage(), critter_container2);
+			theirs = build(friend, critterApp.theirStage(), critter_container2),
+			jumpIn = true;
 		
 		$('#flash_Fisticuffs .close_btn').on('click', function(e) {
 			$('#flash_Fisticuffs').slideToggle(750, function() {

@@ -9,6 +9,7 @@ var wave = 0,
 	jiggleTheirs = false,
 	change = false,
 	jumpOut = false,
+	jumpIn = false,
 	theirs;
 
 function animateEyes(critter) {
@@ -622,7 +623,7 @@ function jumpInScene() {
 			break;
 		}
 	}
-	
+			
 	if (legs === 'short' && body === 'simple') {
 		var maxHigh = 185;
 		var maxLow = 140;
@@ -651,7 +652,6 @@ function jumpInScene() {
 
 function tick() {
 	var yours = critterApp.yours();
-	//if (theirs) console.log(theirs.getContainer().x, jumpIn);
 	//only animate some of the time
 	if (Math.round(Math.random()*40) === 4) { //http://xkcd.com/221/
 		animateEyes(yours.getContainer());
@@ -674,7 +674,7 @@ function tick() {
 			theirs.getContainer().children[0].skewX += 1;
 		}
 		
-		if (theirs.getContainer().x > 100 && !jumpOut && !jumpIn && !hugFriend) theirs.getContainer().x -= 10;
+		if (theirs.getContainer().x > 20 && !jumpOut && !jumpIn && !hugFriend) theirs.getContainer().x -= 10;
 
 		if (theirs.getContainer().y < theirs.getContainer().targetY && !jumpOut && !jumpIn) theirs.getContainer().y += 10;
 		

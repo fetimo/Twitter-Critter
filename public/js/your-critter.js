@@ -392,6 +392,7 @@ function build(crit, destination, container) {
 										var tail = new BitmapAnimation(sheet);
 										tail.x = 156;
 										tail.y = 270;
+										if (legs.name === 'long' && body.name === 'simple')  tail.y = 190;
 										if (legs.name === 'short') {
 											tail.y = 210;
 											tail.x = 220;
@@ -553,7 +554,6 @@ function build(crit, destination, container) {
 						accessory.x = 46;
 						accessory.y = 180;
 						accessory.rotation = -36.2;
-						if (legs.name === 'long' && body.children[0].name === 'simple') accessory.y = 130; 
 					}
 					if (ears) {
 						ears.x = -95;
@@ -713,7 +713,7 @@ function build(crit, destination, container) {
 					container.onClick = function() {
 						container.id === 7 ? jiggle = true : jiggleTheirs = true;
 					};
-												
+					
 				    Ticker.useRAF = true;				    
 					Ticker.addListener(window);
 					Ticker.setFPS(40);

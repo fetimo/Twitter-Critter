@@ -245,9 +245,6 @@ canvas {
 .friend {
 	margin: 0 10px;
 	list-style: none;
-}
-
-.friend .username {
 	cursor: pointer;
 }
 
